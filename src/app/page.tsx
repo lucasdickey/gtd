@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Home() {
-  const [text, setText] = useState("Apes On Keys");
+  const [text, setText] = useState("An Ape On Keys");
   const [animationState, setAnimationState] = useState("typing-first");
   const [showMonkey, setShowMonkey] = useState(false);
 
@@ -16,7 +16,7 @@ export default function Home() {
 
       // Wait for deletion to complete
       const deleteTimer = setTimeout(() => {
-        setText("A-OK");
+        setText("We are A-OK");
         setAnimationState("typing-second");
 
         // Add slight delay before showing monkey
