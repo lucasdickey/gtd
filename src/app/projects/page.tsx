@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { Metadata } from 'next';
 
 interface Project {
   id: number;
@@ -46,3 +47,7 @@ export default function Projects() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: 'Projects',
+};
