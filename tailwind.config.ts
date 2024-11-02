@@ -10,6 +10,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        'brand-beige': '#E6D5C3',
+        'brand-brown': '#4A3C31',
+        'brand-gold': '#CFA76E',
+        'action-primary': '#E67E22',
+        'action-secondary': '#7E5C3B',
+        'action-accent': '#D4B483',
         background: "var(--background)",
         foreground: "var(--foreground)",
       },

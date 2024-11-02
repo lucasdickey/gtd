@@ -3,14 +3,35 @@
 @tailwind utilities;
 
 :root {
+  /* System Colors */
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Brand Colors */
+  --brand-beige: #E6D5C3;
+  --brand-brown: #4A3C31;
+  --brand-gold: #CFA76E;
+
+  /* Action Colors */
+  --action-primary: #E67E22;
+  --action-secondary: #7E5C3B;
+  --action-accent: #D4B483;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    
+    /* Brand Colors - slightly adjusted for dark mode */
+    --brand-beige: #D6C5B3;
+    --brand-brown: #5A4C41;
+    --brand-gold: #DFBA7E;
+
+    /* Action Colors - slightly adjusted for dark mode */
+    --action-primary: #F68D31;
+    --action-secondary: #8E6C4B;
+    --action-accent: #E4C493;
   }
 }
 
@@ -18,4 +39,17 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes slow-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slow-fade {
+  animation: slow-fade 3s ease-in;
 }
