@@ -57,6 +57,7 @@ export default function Home() {
             alt="A-OK Monkey"
             width={300}
             height={300}
+            className={monkeyClasses}
           />
         </div>
 
