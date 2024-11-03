@@ -6,6 +6,9 @@ export default defineSchema({
     title: v.string(),
     description: v.string(),
     imageUrl: v.string(),
+    slug: v.string(),
+    content: v.string(),
+    images: v.array(v.string()),
   }),
   tasks: defineTable({
     title: v.string(),
