@@ -58,4 +58,8 @@ export const deleteProject = mutation({
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
   },
+});
+
+export const generateUploadUrl = mutation(async (ctx) => {
+  return await ctx.storage.generateUploadUrl();
 }); 
