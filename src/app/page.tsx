@@ -43,7 +43,7 @@ export default function Home() {
   ].join(' ')
 
   return (
-    <div className="container mx-auto px-8 md:px-4 py-1">
+    <div className="container mx-auto px-8 md:px-4 py-8 max-w-6xl">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto min-h-[600px]">
         {/* Left column - Animation and Image */}
         <div className="flex flex-col items-center justify-center gap-4">

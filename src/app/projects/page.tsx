@@ -33,14 +33,14 @@ export default function Projects() {
   const projects = PROJECTS;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-8 py-8 max-w-6xl">
       <div className="grid grid-cols-12 gap-6">
         {/* Left white space */}
-        <div className="col-span-2" />
+        <div className="hidden md:block col-span-2" />
 
         {/* Center column with projects */}
-        <div className="col-span-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="col-span-12 md:col-span-8">
+          <div className="grid grid-cols-1 gap-6">
             {projects.map((project) => (
               <div
                 key={project._id}
