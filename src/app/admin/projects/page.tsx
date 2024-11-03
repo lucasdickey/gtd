@@ -37,7 +37,7 @@ export default function AdminProjects() {
   const updateProject = useMutation(api.projects.updateProject);  // For editing existing projects
   const deleteProject = useMutation(api.projects.deleteProject);  // For removing projects
 
-  // Use the existing generateUploadUrl mutation
+  // Replace the useUploadFiles hook with useMutation
   const generateUploadUrl = useMutation(api.projects.generateUploadUrl);
 
   // State for managing form inputs
