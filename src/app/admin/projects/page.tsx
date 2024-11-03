@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { useStorageActions } from "convex/react";
 
 // Define the shape of our form data
 interface ProjectFormData {
@@ -37,8 +38,8 @@ export default function AdminProjects() {
   const updateProject = useMutation(api.projects.updateProject);  // For editing existing projects
   const deleteProject = useMutation(api.projects.deleteProject);  // For removing projects
 
-  // Use the existing generateUploadUrl mutation
-  const generateUploadUrl = useMutation(api.projects.generateUploadUrl);
+  // Use Convex's direct storage API
+  const { generateUploadUrl } = useStorageActions();
 
   // State for managing form inputs
   const [formData, setFormData] = useState<ProjectFormData>({
