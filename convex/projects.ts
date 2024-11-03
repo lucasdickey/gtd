@@ -62,7 +62,8 @@ export const deleteProject = mutation({
 
 export const generateUploadUrl = mutation({
   args: {},
-  handler: async (ctx) => {
-    return await ctx.storage.generateUploadUrl();
+  handler: async (ctx): Promise<string> => {
+    const uploadUrl = await ctx.storage.generateUploadUrl();
+    return uploadUrl;
   },
 }); 
