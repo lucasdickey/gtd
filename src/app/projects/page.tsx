@@ -1,25 +1,11 @@
+'use client'
 import Image from 'next/image'
-import type { Metadata } from 'next'
-
-interface Project {
-  id: number
-  title: string
-  description: string
-  imageUrl: string
-}
-
-const projects: Project[] = [
-  {
-    id: 1,
-    title: 'Project One: This Website',
-    description:
-      '0 to 1. NextJS and Convex, deployed via Vercel, with DALL-E helping with the icon and Claude picking the color palette.',
-    imageUrl: '/projectOne.jpg',
-  },
-  // Add more projects as needed
-]
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function Projects() {
+  const projects = useQuery(api.projects.getProjects) || [];
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-12 gap-6">
@@ -58,8 +44,4 @@ export default function Projects() {
       </div>
     </div>
   )
-}
-
-export const metadata: Metadata = {
-  title: 'Projects',
 }

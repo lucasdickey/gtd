@@ -32,7 +32,7 @@ export default function Navigation() {
     <nav
       className="fixed top-0 z-10 w-full shadow-md"
       style={{
-        backgroundColor: 'var(--brand-beige)',
+        backgroundColor: 'var(--brand-gold)',
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,11 +54,11 @@ export default function Navigation() {
             <div className="flex space-x-8 relative">
               {/* Underline */}
               <div
-                className="absolute bottom-0 h-0.5 transition-all duration-300 ease-in-out"
+                className="absolute bottom-0 h-1 transition-all duration-300 ease-in-out"
                 style={{
                   left: activeLeft,
                   width: activeWidth,
-                  backgroundColor: 'var(--action-primary)',
+                  backgroundColor: 'var(--background)',
                 }}
               />
 
@@ -70,13 +70,13 @@ export default function Navigation() {
                   style={{
                     color:
                       pathname === link.href
-                        ? 'var(--action-primary)'
+                        ? 'var(--foreground)'
                         : undefined,
                   }}
                   className={`relative px-3 py-2 transition-colors duration-300 ${
                     pathname === link.href
-                      ? 'font-medium'
-                      : 'text-brand-brown dark:text-brand-beige hover:text-action-secondary dark:hover:text-action-accent'
+                      ? 'font-bold'
+                      : 'text-brand-beige hover:text-action-accent'
                   }`}
                 >
                   {link.label}

@@ -29,7 +29,7 @@ export default function About() {
         </p>
         <p>
           That first draft was ChatGPT with Web Search creating a one-paragraph
-          summary of my LinkedIn profile. It&rsquo;s okay, but not A-OK yet.
+          summary of my LinkedIn profile. It&rsquo;s kind of okay, but not 100% A-OK yet. We'l workshop it when feeling less lazy.
         </p>
       </div>
     </div>
