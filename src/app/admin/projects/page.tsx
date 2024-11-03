@@ -14,6 +14,17 @@ interface ProjectFormData {
   images: string[];  // Array of image URLs for carousel
 }
 
+// First, let's define the project type
+interface Project {
+  _id: string
+  title: string
+  description: string
+  imageUrl: string
+  slug: string
+  content: string
+  images: string[]
+}
+
 export default function AdminProjects() {
   // Fetch all projects from Convex database
   // The '|| []' provides a default empty array if projects is null/undefined
@@ -58,7 +69,7 @@ export default function AdminProjects() {
   };
 
   // Handle clicking edit button for a project
-  const handleEdit = (project: any) => {
+  const handleEdit = (project: Project) => {
     // Set the editing ID to the selected project
     setEditingId(project._id);
     
