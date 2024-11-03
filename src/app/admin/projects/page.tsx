@@ -16,7 +16,7 @@ interface ProjectFormData {
 
 // First, let's define the project type
 interface Project {
-  _id: string
+  _id: Id<"projects">
   title: string
   description: string
   imageUrl: string
