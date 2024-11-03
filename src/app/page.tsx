@@ -43,10 +43,10 @@ export default function Home() {
   ].join(' ')
 
   return (
-    <div className="container mx-auto px-8 md:px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+    <div className="container mx-auto px-8 md:px-4 py-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto min-h-[600px]">
         {/* Left column - Animation and Image */}
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center justify-center gap-4">
           <div className="w-[300px] mb-6">
             <h1 className={headingClasses}>
               {text}
@@ -57,12 +57,11 @@ export default function Home() {
             alt="A-OK Monkey"
             width={300}
             height={300}
-            className={monkeyClasses}
           />
         </div>
 
         {/* Right column - Text content */}
-        <div className="text-sm text-gray-600 flex flex-col justify-center mt-4 border-l-2 border-gray-300 pl-8">
+        <div className="text-sm text-gray-600 flex flex-col justify-center">
           <p className="mb-4">
             <a
               href="https://en.wikipedia.org/wiki/Infinite_monkey_theorem"
