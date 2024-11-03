@@ -9,9 +9,11 @@ interface ProjectFormData {
   title: string;
   description: string;
   imageUrl: string;
+  imageFile?: File;  // New field for file upload
   slug: string;  // URL-friendly version of the title
   content: string;  // Markdown content
   images: string[];  // Array of image URLs for carousel
+  imageFiles?: File[];  // New field for multiple file uploads
 }
 
 // First, let's define the project type
@@ -34,6 +36,9 @@ export default function AdminProjects() {
   const createProject = useMutation(api.projects.createProject);  // For adding new projects
   const updateProject = useMutation(api.projects.updateProject);  // For editing existing projects
   const deleteProject = useMutation(api.projects.deleteProject);  // For removing projects
+
+  // Replace the useUploadFiles hook with useMutation
+  const generateUploadUrl = useMutation(api.projects.generateUploadUrl);
 
   // State for managing form inputs
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -92,6 +97,58 @@ export default function AdminProjects() {
     }
   };
 
+  // Handle single image upload
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      // Get upload URL from Convex
+      const postUrl = await generateUploadUrl();
+      
+      // Upload the file
+      const result = await fetch(postUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+
+      if (result.ok) {
+        const { storageId } = await result.json();
+        setFormData(prev => ({ ...prev, imageUrl: storageId }));
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
+  };
+
+  // Handle multiple image upload
+  const handleImagesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    try {
+      const uploadPromises = files.map(async (file) => {
+        const uploadUrl = await generateUploadUrl();
+        const result = await fetch(uploadUrl, {
+          method: "POST",
+          body: file,
+        });
+        
+        if (result.ok) {
+          const { storageId } = await result.json();
+          return storageId;
+        }
+        return null;
+      });
+
+      const storageIds = (await Promise.all(uploadPromises)).filter(Boolean);
+      setFormData(prev => ({ ...prev, images: [...prev.images, ...storageIds] }));
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
+  };
+
   // Render the admin interface
   return (
     <div className="container mx-auto px-4 py-8">
@@ -118,14 +175,20 @@ export default function AdminProjects() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Image URL</label>
+          <label className="block text-sm font-medium mb-1">Main Image</label>
           <input
-            type="url"
-            value={formData.imageUrl}
-            onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
             className="w-full p-2 border rounded"
-            required
           />
+          {formData.imageUrl && (
+            <img 
+              src={`${process.env.NEXT_PUBLIC_CONVEX_URL}/api/storage/${formData.imageUrl}`}
+              alt="Preview" 
+              className="mt-2 h-32 object-cover"
+            />
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Slug</label>
@@ -147,14 +210,24 @@ export default function AdminProjects() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Images</label>
+          <label className="block text-sm font-medium mb-1">Additional Images</label>
           <input
-            type="text"
-            value={formData.images.join(',')}
-            onChange={(e) => setFormData({ ...formData, images: e.target.value.split(',') })}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImagesUpload}
             className="w-full p-2 border rounded"
-            required
           />
+          <div className="mt-2 flex gap-2 flex-wrap">
+            {formData.images.map((imageId, index) => (
+              <img
+                key={index}
+                src={`${process.env.NEXT_PUBLIC_CONVEX_URL}/api/storage/${imageId}`}
+                alt={`Additional ${index + 1}`}
+                className="h-32 object-cover"
+              />
+            ))}
+          </div>
         </div>
         <button
           type="submit"
