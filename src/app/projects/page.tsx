@@ -17,7 +17,7 @@ const PROJECTS: Project[] = [
     title: 'Project Zero: To One',
     description: 'Vercel. NextJS and Convex config. Deployment. Linting. Ugh. But also logos/icons, fun copywriting, and animations.',
     imageUrl: '/projectOne.jpg',
-    tools: ['NextJS', 'Convex','Vercel', 'Tailwind CSS', 'TypeScript','DALL-E','Cursor with Sonnet','ChatGPT with o1','Warp']
+    tools: ['NextJS for front-end framework', 'Convex for back-end and database','Vercel for deployments and hosting', 'Tailwind CSS for styling and motions', 'TypeScript','DALL-E for logo insipration and hero image','Cursor with Sonnet for all code editing','Claude app for macro asks and color palette','ChatGPT with o1 for alternative POV','Warp as (natural language) terminal','Figma for logo']
   },
   // {
   //   _id: '2',
@@ -59,7 +59,7 @@ export default function Projects() {
                   <p className="text-gray-600 dark:text-gray-300 mb-3">
                     {project.description}
                   </p>
-                  <ul className="grid grid-cols-2 gap-x-4 list-disc list-inside text-gray-600 dark:text-gray-300">
+                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 grid grid-cols-1">
                     {project.tools.map((tool, index) => (
                       <li key={index}>{tool}</li>
                     ))}
