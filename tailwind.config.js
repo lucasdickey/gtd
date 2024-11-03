@@ -1,9 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -21,11 +21,11 @@ module.exports = {
           '100%': { width: '0%' },
         },
         'fade-in-blur': {
-          '0%': { 
+          '0%': {
             opacity: '0',
             filter: 'blur(10px)',
           },
-          '100%': { 
+          '100%': {
             opacity: '1',
             filter: 'blur(0)',
           },
@@ -41,4 +41,3 @@ module.exports = {
   },
   plugins: [],
 }
-

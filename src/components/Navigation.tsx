@@ -1,34 +1,35 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { useRef, useEffect, useState } from "react";
+import Link from 'next/link'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+import { useRef, useEffect, useState } from 'react'
+
+// Move navItems outside component since it's static
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/about', label: 'About' },
+] as const
 
 export default function Navigation() {
-  const pathname = usePathname();
-  const [activeWidth, setActiveWidth] = useState(0);
-  const [activeLeft, setActiveLeft] = useState(0);
-  const navRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-  
-  const navItems = [
-    { href: "/", label: "Home" },
-    { href: "/projects", label: "Projects" },
-    { href: "/about", label: "About" },
-  ];
+  const pathname = usePathname()
+  const [activeWidth, setActiveWidth] = useState(0)
+  const [activeLeft, setActiveLeft] = useState(0)
+  const navRefs = useRef<(HTMLAnchorElement | null)[]>([])
 
   useEffect(() => {
-    const activeIndex = navItems.findIndex((item) => item.href === pathname);
-    const activeRef = navRefs.current[activeIndex];
-    
+    const activeIndex = navItems.findIndex((item) => item.href === pathname)
+    const activeRef = navRefs.current[activeIndex]
+
     if (activeRef) {
-      setActiveWidth(activeRef.offsetWidth);
-      setActiveLeft(activeRef.offsetLeft);
+      setActiveWidth(activeRef.offsetWidth)
+      setActiveLeft(activeRef.offsetLeft)
     }
-  }, [pathname]);
+  }, [pathname]) // Now navItems is not needed in deps array since it's static
 
   return (
-    <nav 
+    <nav
       className="fixed top-0 z-10 w-full shadow-md"
       style={{
         backgroundColor: 'var(--brand-beige)',
@@ -52,7 +53,7 @@ export default function Navigation() {
 
             <div className="flex space-x-8 relative">
               {/* Underline */}
-              <div 
+              <div
                 className="absolute bottom-0 h-0.5 transition-all duration-300 ease-in-out"
                 style={{
                   left: activeLeft,
@@ -60,19 +61,22 @@ export default function Navigation() {
                   backgroundColor: 'var(--action-primary)',
                 }}
               />
-              
+
               {navItems.map((link, index) => (
                 <Link
                   key={link.href}
-                  ref={el => navRefs.current[index] = el}
+                  ref={(el) => (navRefs.current[index] = el)}
                   href={link.href}
                   style={{
-                    color: pathname === link.href ? 'var(--action-primary)' : undefined,
+                    color:
+                      pathname === link.href
+                        ? 'var(--action-primary)'
+                        : undefined,
                   }}
                   className={`relative px-3 py-2 transition-colors duration-300 ${
                     pathname === link.href
-                      ? "font-medium"
-                      : "text-brand-brown dark:text-brand-beige hover:text-action-secondary dark:hover:text-action-accent"
+                      ? 'font-medium'
+                      : 'text-brand-brown dark:text-brand-beige hover:text-action-secondary dark:hover:text-action-accent'
                   }`}
                 >
                   {link.label}
@@ -83,5 +87,5 @@ export default function Navigation() {
         </div>
       </div>
     </nav>
-  );
+  )
 }

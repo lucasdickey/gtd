@@ -1,22 +1,23 @@
-import Image from "next/image";
-import type { Metadata } from 'next';
+import Image from 'next/image'
+import type { Metadata } from 'next'
 
 interface Project {
-  id: number;
-  title: string;
-  description: string;
-  imageUrl: string;
+  id: number
+  title: string
+  description: string
+  imageUrl: string
 }
 
 const projects: Project[] = [
   {
     id: 1,
-    title: "Project One: This Website",
-    description: "0 to 1. NextJS and Convex, deployed via Vercel, with DALL-E helping with the icon and Claude picking the color palette.",
-    imageUrl: "/projectOne.jpg",
+    title: 'Project One: This Website',
+    description:
+      '0 to 1. NextJS and Convex, deployed via Vercel, with DALL-E helping with the icon and Claude picking the color palette.',
+    imageUrl: '/projectOne.jpg',
   },
   // Add more projects as needed
-];
+]
 
 export default function Projects() {
   return (
@@ -24,7 +25,7 @@ export default function Projects() {
       <div className="grid grid-cols-12 gap-6">
         {/* Left white space */}
         <div className="col-span-2" />
-        
+
         {/* Center column with projects */}
         <div className="col-span-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -56,9 +57,9 @@ export default function Projects() {
         <div className="col-span-2" />
       </div>
     </div>
-  );
+  )
 }
 
 export const metadata: Metadata = {
   title: 'Projects',
-};
+}

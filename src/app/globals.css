@@ -8,30 +8,30 @@
   --foreground: #171717;
 
   /* Brand Colors */
-  --brand-beige: #E6D5C3;
-  --brand-brown: #4A3C31;
-  --brand-gold: #CFA76E;
+  --brand-beige: #e6d5c3;
+  --brand-brown: #4a3c31;
+  --brand-gold: #cfa76e;
 
   /* Action Colors */
-  --action-primary: #E67E22;
-  --action-secondary: #7E5C3B;
-  --action-accent: #D4B483;
+  --action-primary: #e67e22;
+  --action-secondary: #7e5c3b;
+  --action-accent: #d4b483;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
-    
+
     /* Brand Colors - slightly adjusted for dark mode */
-    --brand-beige: #D6C5B3;
-    --brand-brown: #5A4C41;
-    --brand-gold: #DFBA7E;
+    --brand-beige: #d6c5b3;
+    --brand-brown: #5a4c41;
+    --brand-gold: #dfba7e;
 
     /* Action Colors - slightly adjusted for dark mode */
-    --action-primary: #F68D31;
-    --action-secondary: #8E6C4B;
-    --action-accent: #E4C493;
+    --action-primary: #f68d31;
+    --action-secondary: #8e6c4b;
+    --action-accent: #e4c493;
   }
 }
 
