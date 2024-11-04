@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import { defineSchema, defineTable } from 'convex/server'
+import { v } from 'convex/values'
 
 export default defineSchema({
   projects: defineTable({
@@ -15,4 +15,13 @@ export default defineSchema({
     completed: v.boolean(),
     createdAt: v.number(),
   }),
-}); 
+  projectFiles: defineTable({
+    projectId: v.id('projects'),
+    fileName: v.string(),
+    fileKey: v.string(),
+    fileUrl: v.string(),
+    fileSize: v.number(),
+    mimeType: v.string(),
+    uploadedAt: v.number(),
+  }).index('by_project', ['projectId']),
+})
