@@ -16,23 +16,9 @@
   --action-primary: #e67e22;
   --action-secondary: #7e5c3b;
   --action-accent: #d4b483;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-
-    /* Brand Colors - slightly adjusted for dark mode */
-    --brand-beige: #d6c5b3;
-    --brand-brown: #5a4c41;
-    --brand-gold: #dfba7e;
-
-    /* Action Colors - slightly adjusted for dark mode */
-    --action-primary: #f68d31;
-    --action-secondary: #8e6c4b;
-    --action-accent: #e4c493;
-  }
+  /* Force light mode only */
+  color-scheme: light only;
 }
 
 body {
