@@ -38,7 +38,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 - 1-off episode summarizer & transcripts (requires user enter own AssemblyAI and Claude API keys -- pass through, don't store)
 - Shopify store via headless ecommm API to sell A-OK gear
-- RAG-based chat "with Lucas"
+- RAG-based text chat "with Lucas"
+- RAG-based voice chat "with Lucas" - https://elevenlabs.io/docs/api-reference/conversational-ai or via OpenAI
 - Turn JJ podcast workflow into simple web UI so anyone can generate the base podcast (sans music beds)
 - Real-time Web Search / Computer Use with RAG for simple 6-company comparison tool
 
