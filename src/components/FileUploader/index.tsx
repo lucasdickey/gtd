@@ -139,6 +139,7 @@ export const FileUploader = ({
       maxSizeMB,
       onUploadComplete,
       onError,
+      uploadFile,
     ]
   )
 
