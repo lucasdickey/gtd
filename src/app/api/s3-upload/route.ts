@@ -2,10 +2,7 @@ import { NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { v4 as uuidv4 } from 'uuid'
 
-export const routeSegmentConfig = {
-  runtime: 'nodejs',
-  dynamic: 'force-dynamic',
-}
+export const runtime = 'nodejs'
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
