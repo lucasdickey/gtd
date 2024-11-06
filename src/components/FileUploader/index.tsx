@@ -1,4 +1,3 @@
-// src/components/FileUploader/types.ts
 export interface FileUploaderProps {
   projectId: string
   onUploadComplete?: (fileData: {
