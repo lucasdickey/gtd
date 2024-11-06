@@ -35,6 +35,7 @@ export const generateUploadURL = async (
     Bucket: process.env.AWS_BUCKET_NAME!, // The S3 bucket to upload to
     Key: fileKey, // The unique file identifier in S3
     ContentType: fileType, // The MIME type of the file
+    ACL: 'public-read', // Add this if you want the uploaded files to be publicly readable
   })
 
   try {
@@ -42,6 +43,7 @@ export const generateUploadURL = async (
     // This URL can be used by the client to upload the file directly to S3
     const uploadUrl = await getSignedUrl(s3Client, putObjectCommand, {
       expiresIn: 3600, // URL expires in 1 hour (in seconds)
+      signableHeaders: new Set(['host', 'content-type']), // Add this line
     })
 
     return {

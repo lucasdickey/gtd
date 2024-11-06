@@ -60,7 +60,16 @@ export const FileUploader = ({
 
       const { fileUrl, fileKey } = await response.json()
 
-      await storeFileReference({
+      console.log('About to store file reference:', {
+        projectId: projectId,
+        fileName: file.name,
+        fileKey,
+        fileUrl,
+        fileSize: file.size,
+        mimeType: file.type,
+      })
+
+      const result = await storeFileReference({
         projectId,
         fileName: file.name,
         fileKey,
@@ -68,6 +77,8 @@ export const FileUploader = ({
         fileSize: file.size,
         mimeType: file.type,
       })
+
+      console.log('Stored file reference result:', result)
 
       return {
         fileKey,

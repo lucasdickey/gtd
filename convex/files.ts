@@ -16,7 +16,7 @@ interface FileData {
 // Store a new file reference
 export const storeFileReference = mutation({
   args: {
-    projectId: v.id('projects'),
+    projectId: v.union(v.id('projects'), v.literal('general')),
     fileName: v.string(),
     fileKey: v.string(),
     fileUrl: v.string(),
@@ -24,35 +24,47 @@ export const storeFileReference = mutation({
     mimeType: v.string(),
   },
   handler: async (ctx, args) => {
-    // Optional: Verify that the project exists
-    const project = await ctx.db.get(args.projectId)
-    if (!project) {
-      throw new Error(`Project ${args.projectId} not found`)
-    }
-
-    // Insert the file reference
-    return await ctx.db.insert('projectFiles', {
-      ...args,
-      uploadedAt: Date.now(),
+    console.log('Storing file reference in Convex:', {
+      projectId: args.projectId,
+      fileName: args.fileName,
+      fileKey: args.fileKey,
+      fileUrl: args.fileUrl,
+      fileSize: args.fileSize,
+      mimeType: args.mimeType,
     })
+
+    try {
+      const id = await ctx.db.insert('files', {
+        projectId: args.projectId,
+        fileName: args.fileName,
+        fileKey: args.fileKey,
+        fileUrl: args.fileUrl,
+        fileSize: args.fileSize,
+        mimeType: args.mimeType,
+      })
+      console.log('Successfully stored file reference with ID:', id)
+      return id
+    } catch (error) {
+      console.error('Error storing file reference:', error)
+      throw error
+    }
   },
 })
 
 // Get all files for a project
-export const getProjectFiles = query({
-  args: { projectId: v.id('projects') },
+export const getFilesByProject = query({
+  args: { projectId: v.union(v.id('projects'), v.literal('general')) },
   handler: async (ctx, args) => {
     return await ctx.db
-      .query('projectFiles')
-      .withIndex('by_project', (q) => q.eq('projectId', args.projectId))
-      .order('desc')
+      .query('files')
+      .withIndex('by_projectId', (q) => q.eq('projectId', args.projectId))
       .collect()
   },
 })
 
 // Delete a file reference
-export const deleteFileReference = mutation({
-  args: { fileId: v.id('projectFiles') },
+export const deleteFile = mutation({
+  args: { fileId: v.id('files') },
   handler: async (ctx, args) => {
     const file = await ctx.db.get(args.fileId)
     if (!file) {
@@ -65,20 +77,20 @@ export const deleteFileReference = mutation({
 })
 
 // Update file metadata
-export const updateFileMetadata = mutation({
+export const updateFile = mutation({
   args: {
-    fileId: v.id('projectFiles'),
-    fileName: v.optional(v.string()),
-    fileUrl: v.optional(v.string()),
+    fileId: v.id('files'),
+    updates: v.object({
+      fileName: v.optional(v.string()),
+      fileUrl: v.optional(v.string()),
+    }),
   },
   handler: async (ctx, args) => {
-    const { fileId, ...updates } = args
-
-    const file = await ctx.db.get(fileId)
+    const file = await ctx.db.get(args.fileId)
     if (!file) {
-      throw new Error(`File ${fileId} not found`)
+      throw new Error(`File ${args.fileId} not found`)
     }
 
-    return await ctx.db.patch(fileId, updates)
+    return await ctx.db.patch(args.fileId, args.updates)
   },
 })
