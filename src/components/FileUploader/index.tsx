@@ -35,7 +35,7 @@ export const FileUploader = ({
       const formData = new FormData()
       formData.append('file', fileToUpload)
 
-      const response = await fetch('/api/s3-upload', {
+      const response = await fetch('/api/upload-s3', {
         method: 'POST',
         body: formData,
       })
