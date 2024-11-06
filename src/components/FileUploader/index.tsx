@@ -33,110 +33,50 @@ export const FileUploader = ({
   const uploadFile = async (file: File) => {
     console.log('Starting upload for file:', file.name, file.type, file.size)
 
-    // Validate file type
     if (!allowedTypes.includes(file.type)) {
-      console.error(
-        'File type validation failed:',
-        file.type,
-        'not in',
-        allowedTypes
-      )
       throw new Error(
         `File type not allowed. Allowed types: ${allowedTypes.join(', ')}`
       )
     }
 
-    // Validate file size
     if (file.size > maxSizeMB * 1024 * 1024) {
       throw new Error(`File size exceeds ${maxSizeMB}MB limit`)
     }
 
     setCurrentFile(file.name)
 
-    // 1. Get presigned URL
-    console.log('Requesting presigned URL...')
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fileName: file.name,
-        fileType: file.type,
-      }),
-    })
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
 
-    if (!response.ok) {
-      console.error(
-        'Failed to get presigned URL:',
-        response.status,
-        response.statusText
-      )
-      const errorText = await response.text()
-      console.error('Error details:', errorText)
-      throw new Error(`Failed to get upload URL: ${response.statusText}`)
-    }
-
-    const { uploadUrl, fileKey } = await response.json()
-    console.log('Received presigned URL:', uploadUrl)
-
-    // 2. Upload to S3 with progress tracking
-    await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest()
-      xhr.open('PUT', uploadUrl)
-      xhr.setRequestHeader('Content-Type', file.type)
-      xhr.setRequestHeader('Access-Control-Allow-Origin', '*')
-      xhr.withCredentials = false
-
-      xhr.upload.addEventListener('progress', (event) => {
-        if (event.lengthComputable) {
-          const percentComplete = (event.loaded / event.total) * 100
-          setProgress(Math.round(percentComplete))
-        }
+      const response = await fetch('/api/s3-upload', {
+        method: 'POST',
+        body: formData,
       })
 
-      xhr.onload = () => {
-        console.log('Upload XHR completed with status:', xhr.status)
-        if (xhr.status === 200) {
-          resolve(xhr.response)
-        } else {
-          console.error(
-            'Upload failed with status:',
-            xhr.status,
-            xhr.statusText
-          )
-          reject(new Error(`Upload failed: ${xhr.statusText}`))
-        }
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`)
       }
 
-      xhr.onerror = () => {
-        console.error('XHR error occurred during upload')
-        reject(new Error('Upload failed'))
+      const { fileUrl, fileKey } = await response.json()
+
+      await storeFileReference({
+        projectId,
+        fileName: file.name,
+        fileKey,
+        fileUrl,
+        fileSize: file.size,
+        mimeType: file.type,
+      })
+
+      return {
+        fileKey,
+        fileUrl,
+        fileName: file.name,
       }
-      xhr.send(file)
-    })
-
-    // 3. Store reference in Convex
-    const fileUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileKey}`
-
-    // Add debug logging to check the constructed URL
-    console.log('Constructed S3 URL:', fileUrl)
-    console.log('Environment variables:', {
-      bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
-      region: process.env.NEXT_PUBLIC_AWS_REGION,
-    })
-
-    await storeFileReference({
-      projectId,
-      fileName: file.name,
-      fileKey,
-      fileUrl,
-      fileSize: file.size,
-      mimeType: file.type,
-    })
-
-    return {
-      fileKey,
-      fileUrl,
-      fileName: file.name,
+    } catch (error) {
+      console.error('Upload error:', error)
+      throw new Error('Upload failed')
     }
   }
 

@@ -3,11 +3,15 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        // Adjust these values according to your image URL pattern
         protocol: 'https',
         hostname: '**',
       },
     ],
+  },
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
   },
 }
 
