@@ -13,73 +13,36 @@ const s3Client = new S3Client({
 
 export async function POST(request: Request) {
   try {
-    // Log environment variables (redact sensitive info)
-    console.log('Environment check:', {
-      region: process.env.AWS_REGION,
-      bucketName: process.env.AWS_BUCKET_NAME,
-      hasAccessKey: !!process.env.AWS_ACCESS_KEY_ID,
-      hasSecretKey: !!process.env.AWS_SECRET_ACCESS_KEY,
-    })
-
-    // Log request details
-    console.log('Request headers:', Object.fromEntries(request.headers))
-
     const formData = await request.formData()
-    const file = formData.get('file') as File
+    const file = formData.get('file')
 
-    if (!file) {
-      console.error('No file in request')
+    if (!file || !(file instanceof Blob)) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // Log file details
-    console.log('File details:', {
-      name: file.name,
-      type: file.type,
-      size: file.size,
-    })
-
+    const buffer = Buffer.from(await file.arrayBuffer())
     const fileKey = `${uuidv4()}-${file.name}`
 
-    try {
-      const buffer = await file.arrayBuffer()
-      console.log(
-        'Successfully converted file to buffer, size:',
-        buffer.byteLength
-      )
+    const command = new PutObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME!,
+      Key: fileKey,
+      Body: buffer,
+      ContentType: file.type,
+    })
 
-      const command = new PutObjectCommand({
-        Bucket: process.env.AWS_BUCKET_NAME!,
-        Key: fileKey,
-        Body: Buffer.from(buffer),
-        ContentType: file.type,
-      })
+    await s3Client.send(command)
 
-      console.log('Attempting S3 upload with params:', {
-        bucket: process.env.AWS_BUCKET_NAME,
-        key: fileKey,
-        contentType: file.type,
-      })
+    const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`
 
-      const result = await s3Client.send(command)
-      console.log('S3 upload successful:', result)
-
-      const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`
-      return NextResponse.json({ fileUrl, fileKey })
-    } catch (uploadError) {
-      console.error('Error during file processing or upload:', uploadError)
-      return NextResponse.json(
-        { error: 'File upload failed', details: uploadError },
-        { status: 500 }
-      )
-    }
+    return NextResponse.json({
+      fileUrl,
+      fileKey,
+      fileName: file.name,
+    })
   } catch (error) {
-    console.error('Top level error:', error)
+    console.error('Upload error:', error)
     return NextResponse.json(
-      {
-        error: 'Failed to process upload request',
-        details: error instanceof Error ? error.message : String(error),
-      },
+      { error: 'Upload failed', details: error },
       { status: 500 }
     )
   }
@@ -87,6 +50,6 @@ export async function POST(request: Request) {
 
 export const config = {
   api: {
-    bodyParser: false, // Disable the default body parser
+    bodyParser: false,
   },
 }

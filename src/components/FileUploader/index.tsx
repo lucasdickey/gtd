@@ -1,53 +1,39 @@
 export interface FileUploaderProps {
-  projectId: string
-  onUploadComplete?: (fileData: {
+  onUploadComplete: (result: {
     fileKey: string
     fileUrl: string
     fileName: string
   }) => void
-  onError?: (error: Error) => void
+  onError: (error: Error) => void
   allowedTypes?: string[]
   maxSizeMB?: number
+  projectId?: string
 }
 
 // src/components/FileUploader/index.tsx
 import { useState, useCallback } from 'react'
-import { useMutation } from 'convex/react'
-import { api } from '../../../convex/_generated/api'
 import { FileUploaderProps } from './types'
 
 export const FileUploader = ({
-  projectId,
   onUploadComplete,
   onError,
-  allowedTypes = ['image/jpeg', 'image/png', 'image/webp'],
-  maxSizeMB = 10,
+  allowedTypes = ['image/jpeg', 'image/png'],
+  maxSizeMB = 5,
 }: FileUploaderProps) => {
   const [uploading, setUploading] = useState(false)
+  const [currentFile, setCurrentFile] = useState<File | null>(null)
+  const [error, setError] = useState<Error | null>(null)
   const [progress, setProgress] = useState(0)
-  const [error, setError] = useState<string | null>(null)
-  const [currentFile, setCurrentFile] = useState<string | null>(null)
 
-  const storeFileReference = useMutation(api.files.storeFileReference)
-
-  const uploadFile = async (file: File) => {
-    console.log('Starting upload for file:', file.name, file.type, file.size)
-
-    if (!allowedTypes.includes(file.type)) {
-      throw new Error(
-        `File type not allowed. Allowed types: ${allowedTypes.join(', ')}`
-      )
-    }
-
-    if (file.size > maxSizeMB * 1024 * 1024) {
-      throw new Error(`File size exceeds ${maxSizeMB}MB limit`)
-    }
-
-    setCurrentFile(file.name)
+  const uploadFile = useCallback(async (fileToUpload: File) => {
+    setError(null)
+    setUploading(true)
+    setCurrentFile(fileToUpload)
+    setProgress(0)
 
     try {
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', fileToUpload)
 
       const response = await fetch('/api/s3-upload', {
         method: 'POST',
@@ -55,78 +41,39 @@ export const FileUploader = ({
       })
 
       if (!response.ok) {
-        throw new Error(`Upload failed: ${response.statusText}`)
+        throw new Error('Upload failed')
       }
 
-      const { fileUrl, fileKey } = await response.json()
-
-      console.log('About to store file reference:', {
-        projectId: projectId,
-        fileName: file.name,
-        fileKey,
-        fileUrl,
-        fileSize: file.size,
-        mimeType: file.type,
-      })
-
-      const result = await storeFileReference({
-        projectId,
-        fileName: file.name,
-        fileKey,
-        fileUrl,
-        fileSize: file.size,
-        mimeType: file.type,
-      })
-
-      console.log('Stored file reference result:', result)
-
+      setProgress(100)
+      const result = await response.json()
+      setUploading(false)
       return {
-        fileKey,
-        fileUrl,
-        fileName: file.name,
+        fileKey: result.fileKey,
+        fileUrl: result.fileUrl,
+        fileName: fileToUpload.name,
       }
-    } catch (error) {
-      console.error('Upload error:', error)
-      throw new Error('Upload failed')
+    } catch (err) {
+      setError(err as Error)
+      setUploading(false)
+      setCurrentFile(null)
+      setProgress(0)
+      throw err
     }
-  }
+  }, [])
 
   const handleFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files
-      if (!files?.length) return
-
-      setUploading(true)
-      setProgress(0)
-      setError(null)
+      const file = event.target.files?.[0]
+      if (!file) return
 
       try {
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i]
-          const result = await uploadFile(file)
-          onUploadComplete?.(result)
-        }
+        const result = await uploadFile(file)
+        onUploadComplete(result)
       } catch (err) {
-        const error = err instanceof Error ? err : new Error('Upload failed')
-        setError(error.message)
-        onError?.(error)
-      } finally {
-        setUploading(false)
-        setCurrentFile(null)
-        setProgress(0)
-        // Reset input value to allow uploading the same files again
-        event.target.value = ''
+        onError(err as Error)
       }
     },
-    [
-      projectId,
-      storeFileReference,
-      allowedTypes,
-      maxSizeMB,
-      onUploadComplete,
-      onError,
-      uploadFile,
-    ]
+    [uploadFile, onUploadComplete, onError]
   )
 
   return (
@@ -134,7 +81,6 @@ export const FileUploader = ({
       <input
         type="file"
         onChange={handleFileUpload}
-        multiple
         disabled={uploading}
         className="hidden"
         id="file-upload"
@@ -154,9 +100,9 @@ export const FileUploader = ({
 
       {/* Progress Bar */}
       {uploading && (
-        <div className="mt-2">
+        <div className="mt-4">
           <div className="flex justify-between text-xs text-gray-600 mb-1">
-            <span>Uploading {currentFile}</span>
+            <span>Uploading {currentFile?.name}</span>
             <span>{progress}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -171,7 +117,7 @@ export const FileUploader = ({
       {/* Error Message */}
       {error && (
         <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-md">
-          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-sm text-red-600">{error.message}</p>
         </div>
       )}
 
