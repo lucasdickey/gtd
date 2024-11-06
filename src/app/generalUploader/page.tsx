@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { FileUploader } from '@/components/FileUploader'
+import Image from 'next/image'
 
 interface UploadedFile {
   fileKey: string
@@ -50,9 +51,11 @@ export default function GeneralUploaderPage() {
                 className="p-4 border rounded-lg bg-white shadow-sm"
               >
                 {file.fileUrl.match(/\.(jpg|jpeg|png|webp|gif)$/i) ? (
-                  <img
+                  <Image
                     src={file.fileUrl}
                     alt={file.fileName}
+                    width={500}
+                    height={192}
                     className="w-full h-48 object-cover rounded-lg mb-2"
                   />
                 ) : (
