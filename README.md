@@ -29,6 +29,19 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Projects/Roadmap:
+1. Shipped: Deployed basic NextJS + Convex app to Vercel
+2. Shipped: JJ's podcast made with NotebookLM, ChatGPT with web search, Eleven Labs, and Udio on AI front
+3. WIP: Image file uploader
+4. CMS for Project page
+5. CMS for Blog page
+
+- 1-off episode summarizer & transcripts (requires user enter own AssemblyAI and Claude API keys -- pass through, don't store)
+- Shopify store via headless ecommm API to sell A-OK gear
+- RAG-based chat "with Lucas"
+- Turn JJ podcast workflow into simple web UI so anyone can generate the base podcast (sans music beds)
+- Real-time Web Search / Computer Use with RAG for simple 6-company comparison tool
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
