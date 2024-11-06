@@ -83,6 +83,8 @@ export const FileUploader = ({
       const xhr = new XMLHttpRequest()
       xhr.open('PUT', uploadUrl)
       xhr.setRequestHeader('Content-Type', file.type)
+      xhr.setRequestHeader('Access-Control-Allow-Origin', '*')
+      xhr.withCredentials = false
 
       xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable) {
