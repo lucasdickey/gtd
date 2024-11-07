@@ -1,22 +1,22 @@
 'use client'
 import { useState } from 'react'
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { useQuery, useMutation } from 'convex/react'
+import { api } from '@/convex/_generated/api'
+import { Id } from '@/convex/_generated/dataModel'
 
 // Define the shape of our form data
 interface ProjectFormData {
-  title: string;
-  description: string;
-  imageUrl: string;
-  slug: string;  // URL-friendly version of the title
-  content: string;  // Markdown content
-  images: string[];  // Array of image URLs for carousel
+  title: string
+  description: string
+  imageUrl: string
+  slug: string // URL-friendly version of the title
+  content: string // Markdown content
+  images: string[] // Array of image URLs for carousel
 }
 
 // First, let's define the project type
 interface Project {
-  _id: Id<"projects">
+  _id: Id<'projects'>
   title: string
   description: string
   imageUrl: string
@@ -25,15 +25,17 @@ interface Project {
   images: string[]
 }
 
+export const dynamic = 'force-dynamic'
+
 export default function AdminProjects() {
   // Fetch all projects from Convex database
   // The '|| []' provides a default empty array if projects is null/undefined
-  const projects = useQuery(api.projects.getProjects) || [];
+  const projects = useQuery(api.projects.getProjects) || []
 
   // Set up mutations (database operations) using Convex hooks
-  const createProject = useMutation(api.projects.createProject);  // For adding new projects
-  const updateProject = useMutation(api.projects.updateProject);  // For editing existing projects
-  const deleteProject = useMutation(api.projects.deleteProject);  // For removing projects
+  const createProject = useMutation(api.projects.createProject) // For adding new projects
+  const updateProject = useMutation(api.projects.updateProject) // For editing existing projects
+  const deleteProject = useMutation(api.projects.deleteProject) // For removing projects
 
   // State for managing form inputs
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -43,36 +45,43 @@ export default function AdminProjects() {
     slug: '',
     content: '',
     images: [],
-  });
+  })
 
   // State to track which project is being edited (null means we're creating a new project)
-  const [editingId, setEditingId] = useState<Id<"projects"> | null>(null);
+  const [editingId, setEditingId] = useState<Id<'projects'> | null>(null)
 
   // Handle form submission for both create and update operations
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();  // Prevent default form submission behavior
-    
+    e.preventDefault() // Prevent default form submission behavior
+
     if (editingId) {
       // If we have an editingId, we're updating an existing project
       await updateProject({
         id: editingId,
         ...formData,
-      });
-      setEditingId(null);  // Clear editing state
+      })
+      setEditingId(null) // Clear editing state
     } else {
       // No editingId means we're creating a new project
-      await createProject(formData);
+      await createProject(formData)
     }
-    
+
     // Reset form after submission
-    setFormData({ title: '', description: '', imageUrl: '', slug: '', content: '', images: [] });
-  };
+    setFormData({
+      title: '',
+      description: '',
+      imageUrl: '',
+      slug: '',
+      content: '',
+      images: [],
+    })
+  }
 
   // Handle clicking edit button for a project
   const handleEdit = (project: Project) => {
     // Set the editing ID to the selected project
-    setEditingId(project._id);
-    
+    setEditingId(project._id)
+
     // Populate form with current project data
     setFormData({
       title: project.title,
@@ -81,29 +90,31 @@ export default function AdminProjects() {
       slug: project.slug,
       content: project.content,
       images: project.images,
-    });
-  };
+    })
+  }
 
   // Handle project deletion with confirmation
-  const handleDelete = async (id: Id<"projects">) => {
+  const handleDelete = async (id: Id<'projects'>) => {
     // Show confirmation dialog before deleting
     if (confirm('Are you sure you want to delete this project?')) {
-      await deleteProject({ id });
+      await deleteProject({ id })
     }
-  };
+  }
 
   // Render the admin interface
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Manage Projects</h1>
-      
+
       <form onSubmit={handleSubmit} className="mb-8 space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Title</label>
           <input
             type="text"
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             className="w-full p-2 border rounded"
             required
           />
@@ -112,7 +123,9 @@ export default function AdminProjects() {
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
             className="w-full p-2 border rounded"
             required
           />
@@ -122,7 +135,9 @@ export default function AdminProjects() {
           <input
             type="url"
             value={formData.imageUrl}
-            onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, imageUrl: e.target.value })
+            }
             className="w-full p-2 border rounded"
             required
           />
@@ -141,7 +156,9 @@ export default function AdminProjects() {
           <label className="block text-sm font-medium mb-1">Content</label>
           <textarea
             value={formData.content}
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, content: e.target.value })
+            }
             className="w-full p-2 border rounded"
             required
           />
@@ -151,7 +168,9 @@ export default function AdminProjects() {
           <input
             type="text"
             value={formData.images.join(',')}
-            onChange={(e) => setFormData({ ...formData, images: e.target.value.split(',') })}
+            onChange={(e) =>
+              setFormData({ ...formData, images: e.target.value.split(',') })
+            }
             className="w-full p-2 border rounded"
             required
           />
@@ -192,5 +211,5 @@ export default function AdminProjects() {
         ))}
       </div>
     </div>
-  );
+  )
 }

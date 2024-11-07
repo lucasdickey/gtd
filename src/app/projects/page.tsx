@@ -3,11 +3,11 @@ import Image from 'next/image'
 
 // Define the Project type
 type Project = {
-  _id: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  tools: string[];
+  _id: string
+  title: string
+  description: string
+  imageUrl: string
+  tools: string[]
 }
 
 // Add constant projects data
@@ -15,9 +15,22 @@ const PROJECTS: Project[] = [
   {
     _id: '1',
     title: 'Project Zero: To One',
-    description: 'Vercel. NextJS and Convex config. Deployment. Linting. Ugh. But also logos/icons, fun copywriting, and animations.',
+    description:
+      'Vercel. NextJS and Convex config. Deployment. Linting. Ugh. But also logos/icons, fun copywriting, and animations.',
     imageUrl: '/projectOne.jpg',
-    tools: ['NextJS for front-end framework', 'Convex for back-end and database','Vercel for deployments and hosting', 'Tailwind CSS for styling and motions', 'TypeScript','DALL-E for logo insipration and hero image','Cursor with Sonnet for all code editing','Claude app for macro asks and color palette','ChatGPT with o1 for alternative POV','Warp as (natural language) terminal','Figma for logo']
+    tools: [
+      'NextJS for front-end framework',
+      'Convex for back-end and database',
+      'Vercel for deployments and hosting',
+      'Tailwind CSS for styling and motions',
+      'TypeScript',
+      'DALL-E for logo insipration and hero image',
+      'Cursor with Sonnet for all code editing',
+      'Claude app for macro asks and color palette',
+      'ChatGPT with o1 for alternative POV',
+      'Warp as (natural language) terminal',
+      'Figma for logo',
+    ],
   },
   // {
   //   _id: '2',
@@ -26,11 +39,13 @@ const PROJECTS: Project[] = [
   //   imageUrl: '/path/to/image2.jpg',
   //   tools: ['Tool1', 'Tool2'],
   // },
-];
+]
+
+export const dynamic = 'force-dynamic'
 
 export default function Projects() {
   // Replace query with constant
-  const projects = PROJECTS;
+  const projects = PROJECTS
 
   return (
     <div className="container mx-auto px-8 py-8 max-w-6xl">
