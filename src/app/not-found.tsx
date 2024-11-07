@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { FC } from 'react'
 
-export default function NotFound() {
+const NotFound: FC = () => {
   return (
     <div className="container mx-auto px-4 py-16 text-center">
       <h2 className="text-3xl font-bold mb-4">404 - The Apes are confused.</h2>
@@ -11,5 +12,7 @@ export default function NotFound() {
     </div>
   )
 }
+
+export default NotFound
 
 export const dynamic = 'force-dynamic'
