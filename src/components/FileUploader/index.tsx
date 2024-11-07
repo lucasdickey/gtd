@@ -12,7 +12,6 @@ export interface FileUploaderProps {
 
 // src/components/FileUploader/index.tsx
 import { useState, useCallback } from 'react'
-import { FileUploaderProps } from './types'
 
 export const FileUploader = ({
   onUploadComplete,

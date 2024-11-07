@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import FileUploader from '@/components/FileUploader'
+import { FileUploader } from '@/components/FileUploader'
 
 const ParentComponent = () => {
   const onUploadComplete = useCallback(
@@ -9,18 +9,8 @@ const ParentComponent = () => {
     []
   )
 
-  const handleError = (error: Error) => {
-    console.error('Upload error:', error)
-  }
-
   return (
-    <FileUploader
-      onUploadComplete={onUploadComplete}
-      onError={handleError}
-      allowedTypes={['image/jpeg', 'image/png']}
-      maxSizeMB={5}
-      projectId="general"
-    />
+    <FileUploader projectId="general" onUploadComplete={onUploadComplete} />
   )
 }
 
