@@ -9,8 +9,16 @@ const ParentComponent = () => {
     []
   )
 
+  const onError = useCallback((error: Error) => {
+    console.error('Upload error:', error)
+  }, [])
+
   return (
-    <FileUploader projectId="general" onUploadComplete={onUploadComplete} />
+    <FileUploader
+      projectId="general"
+      onUploadComplete={onUploadComplete}
+      onError={onError}
+    />
   )
 }
 
