@@ -24,16 +24,24 @@ export const storeFileReference = mutation({
     mimeType: v.string(),
   },
   handler: async (ctx, args) => {
-    console.log('Storing file reference in Convex:', {
-      projectId: args.projectId,
-      fileName: args.fileName,
-      fileKey: args.fileKey,
-      fileUrl: args.fileUrl,
-      fileSize: args.fileSize,
-      mimeType: args.mimeType,
-    })
+    console.log('Starting storeFileReference mutation with args:', args)
+
+    const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB in bytes
+    if (args.fileSize > MAX_FILE_SIZE) {
+      console.error('File size validation failed:', args.fileSize)
+      throw new Error(
+        `File size exceeds maximum limit of ${MAX_FILE_SIZE} bytes`
+      )
+    }
+
+    const ALLOWED_MIME_TYPES = ['application/pdf', 'image/jpeg', 'image/png']
+    if (!ALLOWED_MIME_TYPES.includes(args.mimeType)) {
+      console.error('MIME type validation failed:', args.mimeType)
+      throw new Error(`File type ${args.mimeType} is not supported`)
+    }
 
     try {
+      console.log('Attempting to insert file record into database...')
       const id = await ctx.db.insert('files', {
         projectId: args.projectId,
         fileName: args.fileName,
@@ -42,10 +50,10 @@ export const storeFileReference = mutation({
         fileSize: args.fileSize,
         mimeType: args.mimeType,
       })
-      console.log('Successfully stored file reference with ID:', id)
+      console.log('Successfully inserted file record with ID:', id)
       return id
     } catch (error) {
-      console.error('Error storing file reference:', error)
+      console.error('Database insertion failed:', error)
       throw error
     }
   },

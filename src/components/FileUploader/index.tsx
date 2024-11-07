@@ -1,3 +1,5 @@
+import { Id } from '@/convex/_generated/dataModel'
+
 export interface FileUploaderProps {
   onUploadComplete: (result: {
     fileKey: string
@@ -7,58 +9,80 @@ export interface FileUploaderProps {
   onError: (error: Error) => void
   allowedTypes?: string[]
   maxSizeMB?: number
-  projectId?: string
+  projectId?: Id<'projects'> | 'general'
 }
 
 // src/components/FileUploader/index.tsx
 import { useState, useCallback } from 'react'
+import { useMutation } from 'convex/react'
+import { api } from '@/convex/_generated/api'
 
 export const FileUploader = ({
+  projectId,
   onUploadComplete,
   onError,
   allowedTypes = ['image/jpeg', 'image/png'],
   maxSizeMB = 5,
 }: FileUploaderProps) => {
+  const storeFileReference = useMutation(api.files.storeFileReference)
   const [uploading, setUploading] = useState(false)
   const [currentFile, setCurrentFile] = useState<File | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [progress, setProgress] = useState(0)
 
-  const uploadFile = useCallback(async (fileToUpload: File) => {
-    setError(null)
-    setUploading(true)
-    setCurrentFile(fileToUpload)
-    setProgress(0)
-
-    try {
-      const formData = new FormData()
-      formData.append('file', fileToUpload)
-
-      const response = await fetch('/api/upload-s3', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        throw new Error('Upload failed')
-      }
-
-      setProgress(100)
-      const result = await response.json()
-      setUploading(false)
-      return {
-        fileKey: result.fileKey,
-        fileUrl: result.fileUrl,
-        fileName: fileToUpload.name,
-      }
-    } catch (err) {
-      setError(err as Error)
-      setUploading(false)
-      setCurrentFile(null)
+  const uploadFile = useCallback(
+    async (fileToUpload: File) => {
+      setError(null)
+      setUploading(true)
+      setCurrentFile(fileToUpload)
       setProgress(0)
-      throw err
-    }
-  }, [])
+
+      try {
+        const formData = new FormData()
+        formData.append('file', fileToUpload)
+
+        const response = await fetch('/api/upload-s3', {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (!response.ok) {
+          throw new Error('Upload failed')
+        }
+
+        setProgress(100)
+        const result = await response.json()
+
+        // Store the file reference in Convex after successful S3 upload
+        await storeFileReference({
+          projectId: projectId || 'general',
+          fileName: fileToUpload.name,
+          fileKey: result.fileKey,
+          fileUrl: result.fileUrl,
+          fileSize: fileToUpload.size,
+          mimeType: fileToUpload.type,
+        })
+
+        // Only log success/failure, not the full details
+        console.log('File reference stored successfully')
+
+        setUploading(false)
+        return {
+          fileKey: result.fileKey,
+          fileUrl: result.fileUrl,
+          fileName: fileToUpload.name,
+        }
+      } catch (err) {
+        // Only log that an error occurred, not the full error
+        console.error('Failed to store file reference')
+        setError(err as Error)
+        setUploading(false)
+        setProgress(0)
+        throw err
+      }
+    },
+    [projectId, storeFileReference]
+  )
 
   const handleFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
