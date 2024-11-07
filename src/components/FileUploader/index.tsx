@@ -130,5 +130,3 @@ export const FileUploader = ({
     </div>
   )
 }
-
-export default FileUploader
