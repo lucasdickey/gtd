@@ -41,7 +41,7 @@ export default function Home() {
     .join(' ')
 
   const monkeyClasses = [
-    'float-left mr-8 mb-4 w-[250px]',
+    'float-left mr-8 mb-4 w-[250  px]',
     showMonkey ? 'animate-fade-in-blur' : 'opacity-0',
   ].join(' ')
 
