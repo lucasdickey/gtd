@@ -1,11 +1,10 @@
 import type { Metadata } from 'next'
 // import ContactForm from './ContactForm';
 
+// Add 'use client' directive if you need client-side features
 export const metadata: Metadata = {
   title: 'About',
 }
-
-export const dynamic = 'force-dynamic'
 
 export default function About() {
   return (
