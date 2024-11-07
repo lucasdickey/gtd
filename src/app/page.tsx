@@ -40,18 +40,17 @@ export default function Home() {
     .filter(Boolean)
     .join(' ')
 
-  const monkeyClasses = [
-    'float-left mr-8 mb-4 w-[250  px]',
-    showMonkey ? 'animate-fade-in-blur' : 'opacity-0',
-  ].join(' ')
-
   return (
     <div className="container mx-auto px-8 md:px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <h1 className={headingClasses}>{text}</h1>
 
         <div className="flow-root">
-          <div className={monkeyClasses}>
+          <div
+            className={`float-left mr-8 w-[250px] relative -mt-16 ${
+              showMonkey ? 'animate-fade-in-blur' : 'opacity-0'
+            }`}
+          >
             <Image
               src="/a-okay-monkey-1.png"
               alt="A-OK Monkey"
