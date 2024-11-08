@@ -22,6 +22,16 @@ export const metadata: Metadata = {
   },
   description:
     "I might as well be a monkey. But I'm a monkey with far more than a thousand keyboards.",
+  openGraph: {
+    images: [
+      {
+        url: '/a-okay-monkey-1.png',
+        width: 800,
+        height: 800,
+        alt: 'A-OK Monkey',
+      },
+    ],
+  },
 }
 
 export default function RootLayout({
