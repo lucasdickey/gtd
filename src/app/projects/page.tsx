@@ -57,8 +57,8 @@ const PROJECTS: Project[] = [
     ],
     publishedAt: new Date('2024-11-03'),
     projectUrl:
-      'https://play.pocketcasts.com/discover/podcast/85081fd0-7ec1-013d-727b-0292023d8677',
-    projectUrlText: '"JJ\'s Fun Facts and Interesting Iotas" on Pocket Casts',
+      'https://deepcast.fm/podcast/jjs-fun-facts-and-interesting-iotas',
+    projectUrlText: '"JJ\'s Fun Facts and Interesting Iotas" on DeepCast',
   },
   {
     _id: '3',

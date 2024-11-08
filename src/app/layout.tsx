@@ -17,8 +17,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    template: 'A-OK: %s',
-    default: 'A-OK',
+    template: 'ꓘO-∀: %s',
+    default: 'ꓘO-∀',
   },
   description:
     "I might as well be a monkey. But I'm a monkey with far more than a thousand keyboards.",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
         url: '/a-okay-monkey-1.png',
         width: 800,
         height: 800,
-        alt: 'A-OK Monkey',
+        alt: 'ꓘO-∀ Monkey',
       },
     ],
   },
