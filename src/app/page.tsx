@@ -46,13 +46,13 @@ export default function Home() {
   return (
     <div className="container mx-auto px-8 md:px-4 py-8">
       <div className="max-w-4xl mx-auto">
-        <div className="clearfix mb-8">
+        <div className="mb-8">
           <h1 className={headingClasses}>{text}</h1>
         </div>
 
-        <div className="flow-root">
+        <div className="md:flex items-start gap-8">
           <div
-            className={`float-left mr-8 w-[250px] relative -mt-16 ${
+            className={`md:w-[250px] flex-shrink-0 mb-4 md:mb-0 ${
               showMonkey ? 'animate-fade-in-blur' : 'opacity-0'
             }`}
           >
