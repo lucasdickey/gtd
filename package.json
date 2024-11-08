@@ -9,7 +9,8 @@
     "prepare": "husky install",
     "test": "npm run format:check && npm run lint",
     "dev": "next dev",
-    "build": "next build"
+    "build": "next build",
+    "start": "next start"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
