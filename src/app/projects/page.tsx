@@ -1,5 +1,6 @@
 'use client'
 import Image from 'next/image'
+import { Link2Icon } from '@radix-ui/react-icons'
 
 // Define the Project type
 type Project = {
@@ -55,8 +56,9 @@ const PROJECTS: Project[] = [
       'Human: Spotify for distribution',
     ],
     publishedAt: new Date('2024-11-03'),
-    projectUrl: 'https://open.spotify.com/show/2LMOQGJGnjS6uTFD9nqUOB',
-    projectUrlText: '"JJ\'s Fun Facts and Interesting Iotas" on Spotify',
+    projectUrl:
+      'https://play.pocketcasts.com/discover/podcast/85081fd0-7ec1-013d-727b-0292023d8677',
+    projectUrlText: '"JJ\'s Fun Facts and Interesting Iotas" on Pocket Casts',
   },
   {
     _id: '3',
@@ -98,6 +100,7 @@ export default function Projects() {
             {projects.map((project) => (
               <div
                 key={project._id}
+                id={`project-${project._id}`}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
               >
                 <div className="relative h-48">
@@ -109,7 +112,20 @@ export default function Projects() {
                   />
                 </div>
                 <div className="p-4">
-                  <h2 className="text-xl font-bold mb-2">{project.title}</h2>
+                  <div className="flex items-center gap-2 mb-2">
+                    <h2 className="text-xl font-bold">{project.title}</h2>
+                    <button
+                      onClick={() => {
+                        const url = `${window.location.origin}${window.location.pathname}#project-${project._id}`
+                        navigator.clipboard.writeText(url)
+                        // Optional: Add some visual feedback
+                        alert('Link copied to clipboard!')
+                      }}
+                      className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      <Link2Icon className="w-4 h-4" />
+                    </button>
+                  </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                     {project.publishedAt.toLocaleDateString()}
                   </p>
