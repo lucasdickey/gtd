@@ -40,7 +40,7 @@ const PROJECTS: Project[] = [
   },
   {
     _id: '2',
-    title: 'AI-Created Kids Science Podcast',
+    title: 'Project One: AI-Created Kids Science Podcast',
     description:
       'A kids education podcast using AI tools to create an engaging educational content for kids, based on school curriculum and their interests.',
     imageUrl: '/projectTwoJJPod.jpg',
@@ -57,6 +57,24 @@ const PROJECTS: Project[] = [
     publishedAt: new Date('2024-11-03'),
     projectUrl: 'https://open.spotify.com/show/2LMOQGJGnjS6uTFD9nqUOB',
     projectUrlText: '"JJ\'s Fun Facts and Interesting Iotas" on Spotify',
+  },
+  {
+    _id: '3',
+    title: 'Project Two: General Uploader',
+    description:
+      'A general file uploader to handle image or video uploads as part of the CMS for Projects and Blog',
+    imageUrl:
+      'https://aok-projects-images.s3.us-east-2.amazonaws.com/0afc4622-c850-4532-a882-1086f7f3c4a8-Screenshot%202024-11-07%20at%2011.31.09%E2%80%AFPM.png',
+    tools: [
+      'Cursor with Sonnet for all code editing',
+      'Claude.ai for Vercel build detal misconfiguration debugging',
+      'Images are stored in S3 with references in Convex DB',
+      'Went with S3 for portability, used AWS S3 SDK',
+    ],
+    publishedAt: new Date('2024-11-07'),
+    projectUrl:
+      'https://aok-projects-images.s3.us-east-2.amazonaws.com/0afc4622-c850-4532-a882-1086f7f3c4a8-Screenshot%202024-11-07%20at%2011.31.09%E2%80%AFPM.png',
+    projectUrlText: 'Project Two card image in S3',
   },
 ]
 

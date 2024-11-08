@@ -37,6 +37,9 @@ module.exports = {
         'delete-text': 'delete-text 1s steps(20) forwards',
         'fade-in-blur': 'fade-in-blur 1s ease-out forwards',
       },
+      fontFamily: {
+        courier: ['"Courier New"', 'monospace'],
+      },
     },
   },
   plugins: [],

@@ -6,6 +6,7 @@ export default function Home() {
   const [text, setText] = useState('An Ape On Keys')
   const [animationState, setAnimationState] = useState('typing-first')
   const [showMonkey, setShowMonkey] = useState(false)
+  const [fontClass, setFontClass] = useState('font-courier')
 
   useEffect(() => {
     // Wait for first typewriter to complete
@@ -15,24 +16,26 @@ export default function Home() {
       // Wait for deletion to complete
       const deleteTimer = setTimeout(() => {
         setText('We are A-OK')
+        setFontClass('font-courier')
         setAnimationState('typing-second')
 
         // Add slight delay before showing monkey
         const monkeyTimer = setTimeout(() => {
           setShowMonkey(true)
-        }, 500) // Adjust timing as needed
+        }, 800) // Show monkey after typing completes
 
         return () => clearTimeout(monkeyTimer)
-      }, 1000) // Adjust timing as needed
+      }, 800) // Deletion duration - faster
 
       return () => clearTimeout(deleteTimer)
-    }, 2000) // Adjust timing as needed
+    }, 2000) // Initial typing duration - slower
 
     return () => clearTimeout(firstTimer)
   }, [])
 
   const headingClasses = [
     'text-4xl font-bold overflow-hidden whitespace-nowrap border-r-4 border-black mb-8',
+    fontClass,
     animationState === 'typing-first' && 'animate-typewriter-first',
     animationState === 'deleting' && 'animate-delete-text',
     animationState === 'typing-second' && 'animate-typewriter-second',
@@ -43,7 +46,9 @@ export default function Home() {
   return (
     <div className="container mx-auto px-8 md:px-4 py-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className={headingClasses}>{text}</h1>
+        <div className="clearfix mb-8">
+          <h1 className={headingClasses}>{text}</h1>
+        </div>
 
         <div className="flow-root">
           <div
