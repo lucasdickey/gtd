@@ -1,4 +1,3 @@
-import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
@@ -41,17 +40,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <Navigation />
-          <main className="pt-16">
-            <ConvexClientProvider>{children}</ConvexClientProvider>
-          </main>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <Navigation />
+        <main className="pt-16">
+          <ConvexClientProvider>{children}</ConvexClientProvider>
+        </main>
+      </body>
+    </html>
   )
 }

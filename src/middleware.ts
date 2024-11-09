@@ -1,19 +1,17 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { clerkMiddleware, auth } from '@clerk/nextjs/server'
 
-export default clerkMiddleware()
-
-// Custom middleware for basic auth on admin routes
-export async function middleware(request: NextRequest) {
-  // Handle admin routes with basic auth
+export function middleware(request: NextRequest) {
+  // Check if the request is for an admin route
   if (request.nextUrl.pathname.startsWith('/admin')) {
+    // You could add more sophisticated auth checks here
     const basicAuth = request.headers.get('authorization')
 
     if (basicAuth) {
       const authValue = basicAuth.split(' ')[1]
       const [user, pwd] = atob(authValue).split(':')
 
+      // Replace with your desired username/password
       if (user === 'admin' && pwd === 'Bananas0rKeys$') {
         return NextResponse.next()
       }
@@ -27,18 +25,9 @@ export async function middleware(request: NextRequest) {
     })
   }
 
-  // For all other routes, use Clerk middleware
-  return clerkMiddleware()(request)
+  return NextResponse.next()
 }
 
-// Combined matcher configuration
 export const config = {
-  matcher: [
-    // Admin routes
-    '/admin/:path*',
-    // Clerk routes (excluding Next.js internals and static files)
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
-}
+  matcher: '/admin/:path*',
+} 
