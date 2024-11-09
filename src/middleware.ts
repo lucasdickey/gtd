@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { clerkMiddleware, auth } from '@clerk/nextjs/server'
 
 export default clerkMiddleware()
 
