@@ -30,9 +30,9 @@ To learn more about Next.js, take a look at the following resources:
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
 ## Projects/Roadmap:
-1. Shipped: Deployed basic NextJS + Convex app to Vercel
-2. Shipped: JJ's podcast made with NotebookLM, ChatGPT with web search, Eleven Labs, and Udio on AI front
-3. WIP: Image file uploader
+1. SHIPPED: Deployed basic NextJS + Convex app to Vercel
+2. SHIPPED: JJ's podcast made with NotebookLM, ChatGPT with web search, Eleven Labs, and Udio on AI front
+3. SHIPPED: Image file uploader
 4. CMS for Project page
 5. CMS for Blog page
 
