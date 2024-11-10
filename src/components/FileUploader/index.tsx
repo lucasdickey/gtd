@@ -38,8 +38,13 @@ export const FileUploader = ({
       setProgress(0)
 
       try {
+        const sanitizedFileName = fileToUpload.name
+          .replace(/[^a-zA-Z0-9.]/g, '-')
+          .replace(/-+/g, '-')
+          .toLowerCase()
+
         const formData = new FormData()
-        formData.append('file', fileToUpload)
+        formData.append('file', fileToUpload, sanitizedFileName)
 
         const response = await fetch('/api/upload-s3', {
           method: 'POST',

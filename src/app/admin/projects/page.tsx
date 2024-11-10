@@ -3,18 +3,25 @@ import { useState } from 'react'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
+import ReactMarkdown from 'react-markdown'
+import { FileUploader } from '@/components/FileUploader'
+import Image from 'next/image'
 
 // Define the shape of our form data
 interface ProjectFormData {
   title: string
   description: string
   imageUrl: string
-  slug: string // URL-friendly version of the title
-  content: string // Markdown content
-  images: string[] // Array of image URLs for carousel
+  slug: string
+  content: string
+  images: string[]
+  tools: string[]
+  publishedAt: Date
+  projectUrl?: string
+  projectUrlText?: string
 }
 
-// First, let's define the project type
+// Project type definition
 interface Project {
   _id: Id<'projects'>
   title: string
@@ -23,6 +30,10 @@ interface Project {
   slug: string
   content: string
   images: string[]
+  tools: string[]
+  publishedAt: Date
+  projectUrl?: string
+  projectUrlText?: string
 }
 
 export const dynamic = 'force-dynamic'
@@ -30,7 +41,7 @@ export const dynamic = 'force-dynamic'
 export default function AdminProjects() {
   // Fetch all projects from Convex database
   // The '|| []' provides a default empty array if projects is null/undefined
-  const projects = useQuery(api.projects.getProjects) || []
+  const projects = (useQuery(api.projects.getProjects) as Project[]) || []
 
   // Set up mutations (database operations) using Convex hooks
   const createProject = useMutation(api.projects.createProject) // For adding new projects
@@ -45,6 +56,10 @@ export default function AdminProjects() {
     slug: '',
     content: '',
     images: [],
+    tools: [],
+    publishedAt: new Date(),
+    projectUrl: '',
+    projectUrlText: '',
   })
 
   // State to track which project is being edited (null means we're creating a new project)
@@ -54,27 +69,39 @@ export default function AdminProjects() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault() // Prevent default form submission behavior
 
-    if (editingId) {
-      // If we have an editingId, we're updating an existing project
-      await updateProject({
-        id: editingId,
-        ...formData,
-      })
-      setEditingId(null) // Clear editing state
-    } else {
-      // No editingId means we're creating a new project
-      await createProject(formData)
-    }
+    try {
+      if (editingId) {
+        // If we have an editingId, we're updating an existing project
+        await updateProject({
+          id: editingId,
+          ...formData,
+          publishedAt: formData.publishedAt.getTime(), // Convert Date to timestamp
+        })
+        setEditingId(null) // Clear editing state
+      } else {
+        // No editingId means we're creating a new project
+        await createProject({
+          ...formData,
+          publishedAt: formData.publishedAt.getTime(), // Convert Date to timestamp
+        })
+      }
 
-    // Reset form after submission
-    setFormData({
-      title: '',
-      description: '',
-      imageUrl: '',
-      slug: '',
-      content: '',
-      images: [],
-    })
+      // Reset form after submission
+      setFormData({
+        title: '',
+        description: '',
+        imageUrl: '',
+        slug: '',
+        content: '',
+        images: [],
+        tools: [],
+        publishedAt: new Date(),
+        projectUrl: '',
+        projectUrlText: '',
+      })
+    } catch (error) {
+      console.error('Error saving project:', error)
+    }
   }
 
   // Handle clicking edit button for a project
@@ -90,6 +117,10 @@ export default function AdminProjects() {
       slug: project.slug,
       content: project.content,
       images: project.images,
+      tools: project.tools || [],
+      publishedAt: new Date(project.publishedAt),
+      projectUrl: project.projectUrl || '',
+      projectUrlText: project.projectUrlText || '',
     })
   }
 
@@ -131,18 +162,6 @@ export default function AdminProjects() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Image URL</label>
-          <input
-            type="url"
-            value={formData.imageUrl}
-            onChange={(e) =>
-              setFormData({ ...formData, imageUrl: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div>
           <label className="block text-sm font-medium mb-1">Slug</label>
           <input
             type="text"
@@ -152,28 +171,74 @@ export default function AdminProjects() {
             required
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Content</label>
-          <textarea
-            value={formData.content}
-            onChange={(e) =>
-              setFormData({ ...formData, content: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            required
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Content (Markdown)
+            </label>
+            <textarea
+              value={formData.content}
+              onChange={(e) =>
+                setFormData({ ...formData, content: e.target.value })
+              }
+              className="w-full p-2 border rounded h-96 font-mono"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Preview</label>
+            <div className="prose dark:prose-invert max-w-none p-4 border rounded h-96 overflow-y-auto bg-gray-50">
+              <ReactMarkdown>{formData.content}</ReactMarkdown>
+            </div>
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Images</label>
-          <input
-            type="text"
-            value={formData.images.join(',')}
-            onChange={(e) =>
-              setFormData({ ...formData, images: e.target.value.split(',') })
-            }
-            className="w-full p-2 border rounded"
-            required
-          />
+          <div className="space-y-4">
+            <FileUploader
+              projectId={editingId || 'general'}
+              onUploadComplete={(result) => {
+                setFormData({
+                  ...formData,
+                  images: [...formData.images, result.fileUrl],
+                  imageUrl: formData.imageUrl || result.fileUrl, // Use first uploaded image as imageUrl if not set
+                })
+              }}
+              onError={(error) => {
+                console.error('Upload error:', error)
+                alert('Failed to upload image: ' + error.message)
+              }}
+              allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
+              maxSizeMB={5}
+            />
+
+            {/* Display uploaded images with remove option */}
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              {formData.images.map((imageUrl, index) => (
+                <div key={index} className="relative group">
+                  <Image
+                    src={imageUrl}
+                    alt={`Project image ${index + 1}`}
+                    width={200}
+                    height={200}
+                    className="object-cover rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newImages = formData.images.filter(
+                        (_, i) => i !== index
+                      )
+                      setFormData({ ...formData, images: newImages })
+                    }}
+                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
         <button
           type="submit"
