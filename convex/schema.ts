@@ -17,6 +17,10 @@ export default defineSchema({
     slug: v.string(),
     content: v.string(),
     images: v.array(v.string()),
+    tools: v.array(v.string()),
+    publishedAt: v.number(),
+    projectUrl: v.optional(v.string()),
+    projectUrlText: v.optional(v.string()),
   }),
   tasks: defineTable({
     title: v.string(),
