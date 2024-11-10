@@ -36,12 +36,32 @@ interface Project {
   projectUrlText?: string
 }
 
+// Type for project as stored in database
+interface DbProject {
+  _id: Id<'projects'>
+  _creationTime: number
+  title: string
+  description: string
+  imageUrl: string
+  slug: string
+  content: string
+  images: string[]
+  tools?: string[]
+  publishedAt: number
+  projectUrl?: string
+  projectUrlText?: string
+}
+
 export const dynamic = 'force-dynamic'
 
 export default function AdminProjects() {
-  // Fetch all projects from Convex database
-  // The '|| []' provides a default empty array if projects is null/undefined
-  const projects = (useQuery(api.projects.getProjects) as Project[]) || []
+  // Fetch and map projects from Convex database
+  const dbProjects = useQuery(api.projects.getProjects) || []
+  const projects: Project[] = (dbProjects as DbProject[]).map((dbProject) => ({
+    ...dbProject,
+    publishedAt: new Date(dbProject.publishedAt), // Convert number to Date
+    tools: dbProject.tools || [], // Ensure tools exists
+  }))
 
   // Set up mutations (database operations) using Convex hooks
   const createProject = useMutation(api.projects.createProject) // For adding new projects
@@ -76,6 +96,7 @@ export default function AdminProjects() {
           id: editingId,
           ...formData,
           publishedAt: formData.publishedAt.getTime(), // Convert Date to timestamp
+          tools: formData.tools || [], // Ensure tools is sent
         })
         setEditingId(null) // Clear editing state
       } else {
@@ -83,6 +104,7 @@ export default function AdminProjects() {
         await createProject({
           ...formData,
           publishedAt: formData.publishedAt.getTime(), // Convert Date to timestamp
+          tools: formData.tools || [], // Ensure tools is sent
         })
       }
 
