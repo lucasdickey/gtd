@@ -56,7 +56,7 @@ export const dynamic = 'force-dynamic'
 
 export default function AdminProjects() {
   // Fetch and map projects from Convex database
-  const dbProjects = useQuery(api.projects.getProjects) || []
+  const dbProjects = useQuery(api.projects.getAllProjects) || []
   const projects: Project[] = (dbProjects as DbProject[]).map((dbProject) => ({
     ...dbProject,
     publishedAt: new Date(dbProject.publishedAt), // Convert number to Date
@@ -212,6 +212,34 @@ export default function AdminProjects() {
             <div className="prose dark:prose-invert max-w-none p-4 border rounded h-96 overflow-y-auto bg-gray-50">
               <ReactMarkdown>{formData.content}</ReactMarkdown>
             </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Tools (One per line)
+            </label>
+            <textarea
+              value={formData.tools.join('\n')}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  tools: e.target.value
+                    .split('\n')
+                    .filter((tool) => tool.trim() !== ''),
+                })
+              }
+              className="w-full p-2 border rounded h-48 font-mono"
+              placeholder="NextJS for front-end framework&#10;Convex for back-end and database&#10;Vercel for deployments"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Preview</label>
+            <ul className="list-disc list-inside p-4 border rounded h-48 overflow-y-auto bg-gray-50">
+              {formData.tools.map((tool, index) => (
+                <li key={index}>{tool}</li>
+              ))}
+            </ul>
           </div>
         </div>
         <div>

@@ -1,9 +1,10 @@
 import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
 
-export const getProjects = query({
+export const getAllProjects = query({
   handler: async (ctx) => {
-    return await ctx.db.query('projects').collect()
+    const projects = await ctx.db.query('projects').collect()
+    return projects
   },
 })
 

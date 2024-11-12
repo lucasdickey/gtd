@@ -1,4 +1,6 @@
 'use client'
+import { useQuery } from 'convex/react'
+import { api } from '@/convex/_generated/api'
 import Image from 'next/image'
 import { Link2Icon } from '@radix-ui/react-icons'
 
@@ -8,6 +10,7 @@ type Project = {
   title: string
   description: string
   imageUrl: string
+  content: string
   tools: string[]
   publishedAt: Date
   projectUrl?: string // Optional URL
@@ -22,6 +25,8 @@ const PROJECTS: Project[] = [
     description:
       'Vercel. NextJS and Convex config. Deployment. Linting. Ugh. But also logos/icons, fun copywriting, and animations.',
     imageUrl: '/projectOne.jpg',
+    content:
+      'Vercel. NextJS and Convex config. Deployment. Linting. Ugh. But also logos/icons, fun copywriting, and animations.',
     tools: [
       'NextJS for front-end framework',
       'Convex for back-end and database',
@@ -45,6 +50,8 @@ const PROJECTS: Project[] = [
     description:
       'A kids education podcast using AI tools to create an engaging educational content for kids, based on school curriculum and their interests.',
     imageUrl: '/projectTwoJJPod.jpg',
+    content:
+      'A kids education podcast using AI tools to create an engaging educational content for kids, based on school curriculum and their interests.',
     tools: [
       'ChatGPT with Web Search for topic research',
       'Claude/ChatGPT for SEO optimization (titles & descriptions)',
@@ -67,6 +74,8 @@ const PROJECTS: Project[] = [
       'A general file uploader to handle image or video uploads as part of the CMS for Projects and Blog',
     imageUrl:
       'https://aok-projects-images.s3.us-east-2.amazonaws.com/0afc4622-c850-4532-a882-1086f7f3c4a8-Screenshot%202024-11-07%20at%2011.31.09%E2%80%AFPM.png',
+    content:
+      'A general file uploader to handle image or video uploads as part of the CMS for Projects and Blog',
     tools: [
       'Cursor with Sonnet for all code editing',
       'Claude.ai for Vercel build detal misconfiguration debugging',
@@ -83,9 +92,13 @@ const PROJECTS: Project[] = [
 export const dynamic = 'force-dynamic'
 
 export default function Projects() {
-  // Sort projects by date (newest first)
-  const projects = [...PROJECTS].sort(
-    (a, b) => b.publishedAt.getTime() - a.publishedAt.getTime()
+  // Fetch projects from Convex
+  const dbProjects = useQuery(api.projects.getAllProjects) || []
+
+  // Combine and sort all projects by date
+  const allProjects = [...(dbProjects || []), ...PROJECTS].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
 
   return (
@@ -97,7 +110,7 @@ export default function Projects() {
         {/* Center column with projects */}
         <div className="col-span-12 md:col-span-8">
           <div className="grid grid-cols-1 gap-6">
-            {projects.map((project) => (
+            {allProjects.map((project) => (
               <div
                 key={project._id}
                 id={`project-${project._id}`}
@@ -127,7 +140,7 @@ export default function Projects() {
                     </button>
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                    {project.publishedAt.toLocaleDateString()}
+                    {new Date(project.publishedAt).toLocaleDateString()}
                   </p>
                   <p className="text-gray-600 dark:text-gray-300 mb-3">
                     {project.description}
