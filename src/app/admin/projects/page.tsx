@@ -262,6 +262,53 @@ export default function AdminProjects() {
             </div>
           </div>
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Published Date
+            </label>
+            <input
+              type="datetime-local"
+              value={formData.publishedAt.toISOString().slice(0, 16)}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  publishedAt: new Date(e.target.value),
+                })
+              }
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Project URL
+            </label>
+            <input
+              type="url"
+              value={formData.projectUrl || ''}
+              onChange={(e) =>
+                setFormData({ ...formData, projectUrl: e.target.value })
+              }
+              className="w-full p-2 border rounded"
+              placeholder="https://example.com"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Project URL Text
+          </label>
+          <input
+            type="text"
+            value={formData.projectUrlText || ''}
+            onChange={(e) =>
+              setFormData({ ...formData, projectUrlText: e.target.value })
+            }
+            className="w-full p-2 border rounded"
+            placeholder="View Project Demo"
+          />
+        </div>
         <button
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
