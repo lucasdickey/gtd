@@ -3,6 +3,7 @@ import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import Image from 'next/image'
 import { Link2Icon } from '@radix-ui/react-icons'
+import ReactMarkdown from 'react-markdown'
 
 // Define the Project type
 type Project = {
@@ -145,6 +146,9 @@ export default function Projects() {
                   <p className="text-gray-600 dark:text-gray-300 mb-3">
                     {project.description}
                   </p>
+                  <div className="prose dark:prose-invert max-w-none mb-4">
+                    <ReactMarkdown>{project.content}</ReactMarkdown>
+                  </div>
                   <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 grid grid-cols-1 mb-4">
                     {project.tools.map((tool, index) => (
                       <li key={index}>{tool}</li>
