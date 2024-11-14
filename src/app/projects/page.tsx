@@ -5,19 +5,6 @@ import Image from 'next/image'
 import { Link2Icon } from '@radix-ui/react-icons'
 import ReactMarkdown from 'react-markdown'
 
-// Define the Project type
-type Project = {
-  _id: string
-  title: string
-  description: string
-  imageUrl: string
-  content: string
-  tools: string[]
-  publishedAt: Date
-  projectUrl?: string // Optional URL
-  projectUrlText?: string // Optional text for the URL
-}
-
 export const dynamic = 'force-dynamic'
 
 export default function Projects() {
