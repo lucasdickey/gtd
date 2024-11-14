@@ -30,7 +30,7 @@ export default function Navigation() {
 
   return (
     <nav
-      className="fixed top-0 z-10 w-full shadow-md"
+      className="fixed top-0 z-10 w-full"
       style={{
         backgroundColor: 'var(--brand-gold)',
       }}
@@ -44,9 +44,9 @@ export default function Navigation() {
                 <Image
                   src="/a-ok-face.png"
                   alt="A-OK Face Logo"
-                  width={40}
-                  height={40}
-                  className="mr-6 animate-slow-fade"
+                  width={75}
+                  height={55}
+                  className="mr-2 -ml-5 mt-5 animate-slow-fade"
                 />
               </Link>
             </div>
@@ -69,9 +69,7 @@ export default function Navigation() {
                   href={link.href}
                   style={{
                     color:
-                      pathname === link.href
-                        ? 'var(--foreground)'
-                        : undefined,
+                      pathname === link.href ? 'var(--foreground)' : undefined,
                   }}
                   className={`relative px-3 py-2 transition-colors duration-300 ${
                     pathname === link.href

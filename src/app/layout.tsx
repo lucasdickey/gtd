@@ -48,8 +48,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${vt323.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${vt323.variable} antialiased relative`}
       >
+        <div className="corner-triangle corner-triangle-top" />
+        <div className="corner-triangle corner-triangle-bottom" />
         <Navigation />
         <main className="pt-16">
           <ConvexClientProvider>{children}</ConvexClientProvider>

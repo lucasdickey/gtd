@@ -39,3 +39,24 @@ body {
 .animate-slow-fade {
   animation: slow-fade 3s ease-in;
 }
+
+.corner-triangle {
+  position: fixed;
+  width: 12vw;
+  height: 12vw;
+  background-color: var(--brand-gold);
+  z-index: -1;
+}
+
+.corner-triangle-top {
+  top: 0;
+  left: 0;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.corner-triangle-bottom {
+  bottom: 0;
+  right: 0;
+  transform: translateX(25%) translateY(25%) rotate(-15deg);
+  clip-path: polygon(100% 100%, 0 100%, 100% 0);
+}

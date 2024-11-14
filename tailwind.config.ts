@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        vt323: ['var(--font-vt323)'],
+        vt323: ['var(--font-vt323)', 'sans-serif'],
       },
       colors: {
         'brand-beige': '#E6D5C3',

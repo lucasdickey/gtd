@@ -6,7 +6,6 @@ export default function Home() {
   const [text, setText] = useState('An Ape On Keys')
   const [animationState, setAnimationState] = useState('typing-first')
   const [showMonkey, setShowMonkey] = useState(false)
-  const [fontClass, setFontClass] = useState('--font-vt323')
 
   useEffect(() => {
     // Wait for first typewriter to complete
@@ -16,7 +15,6 @@ export default function Home() {
       // Wait for deletion to complete
       const deleteTimer = setTimeout(() => {
         setText('We are A-OK')
-        setFontClass('--font-vt323')
         setAnimationState('typing-second')
 
         // Add slight delay before showing monkey
