@@ -18,86 +18,14 @@ type Project = {
   projectUrlText?: string // Optional text for the URL
 }
 
-// Add constant projects data
-const PROJECTS: Project[] = [
-  {
-    _id: '1',
-    title: 'Project Zero: To One',
-    description:
-      'Vercel. NextJS and Convex config. Deployment. Linting. Ugh. But also logos/icons, fun copywriting, and animations.',
-    imageUrl: '/projectOne.jpg',
-    content:
-      'Vercel. NextJS and Convex config. Deployment. Linting. Ugh. But also logos/icons, fun copywriting, and animations.',
-    tools: [
-      'NextJS for front-end framework',
-      'Convex for back-end and database',
-      'Vercel for deployments and hosting',
-      'Tailwind CSS for styling and motions',
-      'TypeScript',
-      'DALL-E for logo insipration and hero image',
-      'Cursor with Sonnet for all code editing',
-      'Claude app for macro asks and color palette',
-      'ChatGPT with o1 for alternative POV',
-      'Warp as (natural language) terminal',
-      'Figma for logo',
-    ],
-    publishedAt: new Date('2024-11-01'),
-    projectUrl: 'https://github.com/lucasdickey/gtd',
-    projectUrlText: 'The project repo on GitHub',
-  },
-  {
-    _id: '2',
-    title: 'Project One: AI-Created Kids Science Podcast',
-    description:
-      'A kids education podcast using AI tools to create an engaging educational content for kids, based on school curriculum and their interests.',
-    imageUrl: '/projectTwoJJPod.jpg',
-    content:
-      'A kids education podcast using AI tools to create an engaging educational content for kids, based on school curriculum and their interests.',
-    tools: [
-      'ChatGPT with Web Search for topic research',
-      'Claude/ChatGPT for SEO optimization (titles & descriptions)',
-      'NotebookLM for summarization and TTS 2-agent conversation',
-      'Eleven Labs for voice cloning and TTS for my sons voice',
-      'Udio for intro/outro and music bed',
-      'Human: Multi-track editor for final assembly',
-      'Grok 2 for artwork, plus some Figma work',
-      'Human: Spotify for distribution',
-    ],
-    publishedAt: new Date('2024-11-03'),
-    projectUrl:
-      'https://deepcast.fm/podcast/jjs-fun-facts-and-interesting-iotas',
-    projectUrlText: '"JJ\'s Fun Facts and Interesting Iotas" on DeepCast',
-  },
-  {
-    _id: '3',
-    title: 'Project Two: General Uploader',
-    description:
-      'A general file uploader to handle image or video uploads as part of the CMS for Projects and Blog',
-    imageUrl:
-      'https://aok-projects-images.s3.us-east-2.amazonaws.com/0afc4622-c850-4532-a882-1086f7f3c4a8-Screenshot%202024-11-07%20at%2011.31.09%E2%80%AFPM.png',
-    content:
-      'A general file uploader to handle image or video uploads as part of the CMS for Projects and Blog',
-    tools: [
-      'Cursor with Sonnet for all code editing',
-      'Claude.ai for Vercel build detal misconfiguration debugging',
-      'Images are stored in S3 with references in Convex DB',
-      'Went with S3 for portability, used AWS S3 SDK',
-    ],
-    publishedAt: new Date('2024-11-07'),
-    projectUrl:
-      'https://aok-projects-images.s3.us-east-2.amazonaws.com/0afc4622-c850-4532-a882-1086f7f3c4a8-Screenshot%202024-11-07%20at%2011.31.09%E2%80%AFPM.png',
-    projectUrlText: 'Project Two card image in S3',
-  },
-]
-
 export const dynamic = 'force-dynamic'
 
 export default function Projects() {
   // Fetch projects from Convex
-  const dbProjects = useQuery(api.projects.getAllProjects) || []
+  const projects = useQuery(api.projects.getAllProjects) || []
 
-  // Combine and sort all projects by date
-  const allProjects = [...(dbProjects || []), ...PROJECTS].sort(
+  // Sort projects by date
+  const sortedProjects = [...projects].sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
@@ -111,7 +39,7 @@ export default function Projects() {
         {/* Center column with projects */}
         <div className="col-span-12 md:col-span-8">
           <div className="grid grid-cols-1 gap-6">
-            {allProjects.map((project) => (
+            {sortedProjects.map((project) => (
               <div
                 key={project._id}
                 id={`project-${project._id}`}
