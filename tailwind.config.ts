@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        vt323: ['var(--font-vt323)'],
+      },
       colors: {
         'brand-beige': '#E6D5C3',
         'brand-brown': '#4A3C31',
