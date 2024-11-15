@@ -30,7 +30,7 @@ export default function Projects() {
               <div
                 key={project._id}
                 id={`project-${project._id}`}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
+                className="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden"
               >
                 <div className="relative h-48">
                   <Image
@@ -55,16 +55,16 @@ export default function Projects() {
                       <Link2Icon className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                  <p className="text-sm text-gray-500 dark:text-gray-500 mb-2">
                     {new Date(project.publishedAt).toLocaleDateString()}
                   </p>
-                  <p className="text-gray-600 dark:text-gray-300 mb-3">
+                  <p className="text-gray-600 dark:text-gray-600 mb-3">
                     {project.description}
                   </p>
                   <div className="prose dark:prose-invert max-w-none mb-4">
                     <ReactMarkdown>{project.content}</ReactMarkdown>
                   </div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 grid grid-cols-1 mb-4">
+                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-600 grid grid-cols-1 mb-4">
                     {project.tools.map((tool, index) => (
                       <li key={index}>{tool}</li>
                     ))}
