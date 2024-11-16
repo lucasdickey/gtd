@@ -1,21 +1,22 @@
 // lib/embeddings.ts
 import { Pinecone } from '@pinecone-database/pinecone'
-import { AnthropicEmbeddings } from 'langchain/embeddings/anthropic'
-import { Document } from 'langchain/document'
-import { PineconeStore } from 'langchain/vectorstores/pinecone'
+import { Anthropic } from '@anthropic-ai/sdk'
+import { Document } from '@langchain/core/documents'
+import { PineconeStore } from '@langchain/pinecone'
 
 export class ProjectEmbeddingsService {
   private pinecone: Pinecone
-  private embeddings: AnthropicEmbeddings
+  private embeddings: Anthropic
   private indexName: string
+  private anthropic: Anthropic
 
   constructor() {
     this.pinecone = new Pinecone({
       apiKey: process.env.PINECONE_API_KEY!,
     })
 
-    this.embeddings = new AnthropicEmbeddings({
-      modelName: 'claude-3.5-haiku-20240307',
+    this.embeddings = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY!,
     })
 
     this.indexName = process.env.PINECONE_INDEX_NAME!
@@ -55,6 +56,11 @@ export class ProjectEmbeddingsService {
         Tags: ${project.tags.join(', ')}
       `.trim()
 
+      const response = await this.anthropic.embeddings.create({
+        model: 'claude-3-haiku-20240307',
+        input: documentText,
+      })
+
       const document = new Document({
         pageContent: documentText,
         metadata: {
@@ -62,6 +68,7 @@ export class ProjectEmbeddingsService {
           title: project.title,
           tags: project.tags,
         },
+        embedding: response.embeddings[0],
       })
 
       // Store in Pinecone using LangChain's vectorstore
@@ -86,6 +93,11 @@ export class ProjectEmbeddingsService {
         this.embeddings,
         { pineconeIndex: index }
       )
+
+      const response = await this.anthropic.embeddings.create({
+        model: 'claude-3-haiku-20240307',
+        input: query,
+      })
 
       const results = await vectorStore.similaritySearch(query, limit)
       return results
