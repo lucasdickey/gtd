@@ -30,14 +30,39 @@ export class ProjectEmbeddingsService {
     })
 
     this.indexName = requiredEnvVars.PINECONE_INDEX_NAME
+  }
 
-    // Log initialization
-    console.log('Service initialized with:', {
-      hasPinecone: !!this.pinecone,
-      hasAnthropic: !!this.anthropicClient,
-      indexName: this.indexName,
-      anthropicVersion: this.anthropicClient.version, // Log API version
-    })
+  private parseEmbeddingArray(text: string): number[] {
+    try {
+      // Extract everything between square brackets
+      const match = text.match(/\[(.*?)\]/)
+      if (!match) throw new Error('No array found in response')
+
+      // Parse the numbers
+      const numbers = match[1].split(',').map((n) => parseFloat(n.trim()))
+      console.log(`Parsed ${numbers.length} numbers from response`)
+
+      // Pad or truncate to 1536 dimensions if needed
+      const targetDimensions = 1536
+      if (numbers.length < targetDimensions) {
+        console.log(
+          `Padding array from ${numbers.length} to ${targetDimensions} dimensions`
+        )
+        return [
+          ...numbers,
+          ...new Array(targetDimensions - numbers.length).fill(0),
+        ]
+      } else if (numbers.length > targetDimensions) {
+        console.log(
+          `Truncating array from ${numbers.length} to ${targetDimensions} dimensions`
+        )
+        return numbers.slice(0, targetDimensions)
+      }
+      return numbers
+    } catch (error) {
+      console.error('Error parsing embedding array:', error)
+      throw error
+    }
   }
 
   private async generateEmbedding(text: string): Promise<number[]> {
@@ -49,6 +74,7 @@ export class ProjectEmbeddingsService {
 
       const response = await this.anthropicClient.messages.create({
         model: 'claude-3-haiku-20240307',
+        max_tokens: 1024,
         messages: [
           {
             role: 'user',
@@ -56,24 +82,20 @@ export class ProjectEmbeddingsService {
           },
         ],
         system:
-          'Generate an embedding for this text that captures its semantic meaning.',
+          'Generate a 1536-dimensional embedding vector for this text that captures its semantic meaning. Return only the numerical vector as a JSON array of numbers, nothing else.',
       })
 
-      console.log('Response from Anthropic:', JSON.stringify(response, null, 2))
+      const embeddings = this.parseEmbeddingArray(response.content[0].text)
+      console.log(`Generated embedding with ${embeddings.length} dimensions`)
 
-      // If we get a response but no embedding, we'll generate a temporary one
-      // This is for testing - we should handle this differently in production
-      const tempEmbedding = new Array(1536).fill(0).map(() => Math.random())
-
-      return tempEmbedding
+      return embeddings
     } catch (error) {
-      if (error instanceof APIError) {
-        console.error('Anthropic API Error:', {
-          status: error.status,
-          message: error.message,
-          type: error.type,
-        })
-      }
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        type: error instanceof APIError ? error.type : 'unknown',
+        status: error instanceof APIError ? error.status : 'unknown',
+      })
       throw error
     }
   }
@@ -88,14 +110,18 @@ export class ProjectEmbeddingsService {
       console.log('\nAdding project:', project.title)
       const index = this.pinecone.Index(this.indexName)
 
-      // Create document text
+      // Create document text with more context
       const documentText = `
         Project Title: ${project.title}
         Description: ${project.description}
         Tags: ${project.tags.join(', ')}
+        Type: Project Document
+        Purpose: Semantic Search and Retrieval
       `.trim()
 
       console.log('Generated document text. Getting embedding...')
+
+      // Get embedding
       const embedding = await this.generateEmbedding(documentText)
       console.log('Got embedding of length:', embedding.length)
 
@@ -127,7 +153,10 @@ export class ProjectEmbeddingsService {
 
       // Generate query embedding
       const queryEmbedding = await this.generateEmbedding(query)
-      console.log('Generated query embedding')
+      console.log(
+        'Generated query embedding with length:',
+        queryEmbedding.length
+      )
 
       // Search in Pinecone
       const results = await index.query({
