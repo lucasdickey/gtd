@@ -27,4 +27,17 @@ export default defineSchema({
     completed: v.boolean(),
     createdAt: v.number(),
   }),
+  chatHistory: defineTable({
+    userId: v.string(),
+    question: v.string(),
+    answer: v.string(),
+    relevantProjects: v.array(
+      v.object({
+        projectId: v.string(),
+        title: v.string(),
+        tags: v.array(v.string()),
+      })
+    ),
+    timestamp: v.number(),
+  }),
 })
