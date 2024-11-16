@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { initializeServices } from '@/lib/initialize'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // Check if the request is for an admin route
   if (request.nextUrl.pathname.startsWith('/admin')) {
     // You could add more sophisticated auth checks here
@@ -25,9 +26,22 @@ export function middleware(request: NextRequest) {
     })
   }
 
+  // Only run for API routes that need the services
+  if (request.nextUrl.pathname.startsWith('/api/projects')) {
+    try {
+      await initializeServices()
+    } catch (error) {
+      console.error('Service initialization failed:', error)
+      return NextResponse.json(
+        { error: 'Service initialization failed' },
+        { status: 500 }
+      )
+    }
+  }
+
   return NextResponse.next()
 }
 
 export const config = {
   matcher: '/admin/:path*',
-} 
+}
