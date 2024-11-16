@@ -7,6 +7,7 @@ export class ProjectEmbeddingsService {
   private pinecone: Pinecone
   private anthropicClient: Anthropic
   private indexName: string
+  private readonly DIMENSIONS = 1536
 
   constructor() {
     // Validate environment variables
@@ -32,72 +33,22 @@ export class ProjectEmbeddingsService {
     this.indexName = requiredEnvVars.PINECONE_INDEX_NAME
   }
 
-  private parseEmbeddingArray(text: string): number[] {
-    try {
-      // Extract everything between square brackets
-      const match = text.match(/\[(.*?)\]/)
-      if (!match) throw new Error('No array found in response')
+  private generateDeterministicEmbedding(text: string): number[] {
+    // This is a temporary solution that generates deterministic embeddings
+    // based on the text content. This ensures consistent vectors for testing.
+    const encoder = new TextEncoder()
+    const bytes = encoder.encode(text)
+    const embedding = new Array(this.DIMENSIONS).fill(0)
 
-      // Parse the numbers
-      const numbers = match[1].split(',').map((n) => parseFloat(n.trim()))
-      console.log(`Parsed ${numbers.length} numbers from response`)
-
-      // Pad or truncate to 1536 dimensions if needed
-      const targetDimensions = 1536
-      if (numbers.length < targetDimensions) {
-        console.log(
-          `Padding array from ${numbers.length} to ${targetDimensions} dimensions`
-        )
-        return [
-          ...numbers,
-          ...new Array(targetDimensions - numbers.length).fill(0),
-        ]
-      } else if (numbers.length > targetDimensions) {
-        console.log(
-          `Truncating array from ${numbers.length} to ${targetDimensions} dimensions`
-        )
-        return numbers.slice(0, targetDimensions)
-      }
-      return numbers
-    } catch (error) {
-      console.error('Error parsing embedding array:', error)
-      throw error
+    for (let i = 0; i < bytes.length && i < this.DIMENSIONS; i++) {
+      embedding[i] = (bytes[i] / 255) * 2 - 1 // Scale to [-1, 1]
     }
-  }
 
-  private async generateEmbedding(text: string): Promise<number[]> {
-    try {
-      console.log(
-        'Generating embedding for text:',
-        text.substring(0, 50) + '...'
-      )
-
-      const response = await this.anthropicClient.messages.create({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 1024,
-        messages: [
-          {
-            role: 'user',
-            content: text,
-          },
-        ],
-        system:
-          'Generate a 1536-dimensional embedding vector for this text that captures its semantic meaning. Return only the numerical vector as a JSON array of numbers, nothing else.',
-      })
-
-      const embeddings = this.parseEmbeddingArray(response.content[0].text)
-      console.log(`Generated embedding with ${embeddings.length} dimensions`)
-
-      return embeddings
-    } catch (error) {
-      console.error('Error details:', {
-        name: error.name,
-        message: error.message,
-        type: error instanceof APIError ? error.type : 'unknown',
-        status: error instanceof APIError ? error.status : 'unknown',
-      })
-      throw error
-    }
+    // Normalize the embedding
+    const magnitude = Math.sqrt(
+      embedding.reduce((sum, val) => sum + val * val, 0)
+    )
+    return embedding.map((val) => val / magnitude)
   }
 
   async addProject(project: {
@@ -119,10 +70,10 @@ export class ProjectEmbeddingsService {
         Purpose: Semantic Search and Retrieval
       `.trim()
 
-      console.log('Generated document text. Getting embedding...')
+      console.log('Generated document text. Creating embedding...')
 
-      // Get embedding
-      const embedding = await this.generateEmbedding(documentText)
+      // Use deterministic embedding for now
+      const embedding = this.generateDeterministicEmbedding(documentText)
       console.log('Got embedding of length:', embedding.length)
 
       // Store in Pinecone
@@ -151,8 +102,8 @@ export class ProjectEmbeddingsService {
       console.log('\nSearching for:', query)
       const index = this.pinecone.Index(this.indexName)
 
-      // Generate query embedding
-      const queryEmbedding = await this.generateEmbedding(query)
+      // Use deterministic embedding for query
+      const queryEmbedding = this.generateDeterministicEmbedding(query)
       console.log(
         'Generated query embedding with length:',
         queryEmbedding.length
