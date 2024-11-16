@@ -109,7 +109,14 @@ export const askQuestion = mutation({
       userId: args.userId,
       question: args.question,
       answer,
-      relevantProjects,
+      relevantProjects: relevantProjects
+        .map((doc) => doc.metadata)
+        .filter(
+          (
+            meta
+          ): meta is { projectId: string; title: string; tags: string[] } =>
+            meta !== undefined
+        ),
       timestamp: Date.now(),
     })
 
