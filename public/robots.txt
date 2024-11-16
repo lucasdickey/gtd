@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /chilled-monkey-brains
+Disallow: /admin/projects
