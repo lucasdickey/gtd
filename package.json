@@ -26,13 +26,13 @@
     ]
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.32.1",
+    "@anthropic-ai/sdk": "^0.17.1",
+    "@langchain/core": "^0.1.48",
+    "@langchain/pinecone": "^0.0.3",
+    "@pinecone-database/pinecone": "^2.0.0",
     "@aws-sdk/client-s3": "^3.685.0",
     "@aws-sdk/client-secrets-manager": "^3.686.0",
     "@aws-sdk/s3-request-presigner": "^3.685.0",
-    "@langchain/core": "^0.3.18",
-    "@langchain/pinecone": "^0.1.2",
-    "@radix-ui/react-icons": "^1.3.1",
     "convex": "^1.17.0",
     "framer-motion": "^11.11.11",
     "langchain": "^0.3.5",
@@ -45,7 +45,6 @@
     "uuid": "^11.0.2"
   },
   "devDependencies": {
-    "@pinecone-database/pinecone": "^4.0.0",
     "@types/node": "^20.17.6",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",
