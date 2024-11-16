@@ -24,7 +24,13 @@ export default function ChilledMonkeyBrains() {
   const onSubmit = async (data: NoteFormData) => {
     console.log('Form submitted with data:', data)
     try {
-      await createNote(data)
+      const { title, note, externalRefUrl, projectCardUrl } = data
+      await createNote({
+        title,
+        note,
+        externalRefUrl: externalRefUrl || '',
+        projectCardUrl: projectCardUrl || '',
+      })
       console.log('Note saved successfully')
       reset()
     } catch (error) {
