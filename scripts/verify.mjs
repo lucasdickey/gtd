@@ -40,15 +40,26 @@ async function verifySetup() {
     console.log('\nVerifying Pinecone connection...')
     const pinecone = new Pinecone({
       apiKey: process.env.PINECONE_API_KEY ?? '',
-      environment: process.env.PINECONE_ENVIRONMENT ?? '',
     })
 
     const indexes = await pinecone.listIndexes()
     console.log('✓ Successfully connected to Pinecone')
-    console.log(`✓ Available indexes: ${indexes.join(', ')}`)
+
+    // Log the indexes to see what is returned
+    console.log('Indexes response:', indexes)
+
+    // Check if indexes is an array and handle accordingly
+    if (Array.isArray(indexes)) {
+      console.log(`✓ Available indexes: ${indexes.join(', ')}`)
+    } else {
+      console.error(
+        '❌ Expected indexes to be an array, but got:',
+        typeof indexes
+      )
+    }
 
     const indexName = process.env.PINECONE_INDEX_NAME ?? ''
-    if (!indexes.includes(indexName)) {
+    if (!Array.isArray(indexes) || !indexes.includes(indexName)) {
       console.log(`\nCreating new index: ${indexName}`)
       await pinecone.createIndex({
         name: indexName,
