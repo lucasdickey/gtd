@@ -15,6 +15,7 @@ async function testEmbeddings() {
     const envPath = join(process.cwd(), '.env.local')
     dotenv.config({ path: envPath })
 
+    // Check environment variables
     console.log('Checking environment variables:')
     console.log('PINECONE_API_KEY:', process.env.PINECONE_API_KEY ? '✓' : '✗')
     console.log('ANTHROPIC_API_KEY:', process.env.ANTHROPIC_API_KEY ? '✓' : '✗')
@@ -26,7 +27,6 @@ async function testEmbeddings() {
     // Initialize service
     console.log('\nInitializing embeddings service...')
     const embeddingsService = new ProjectEmbeddingsService()
-    await embeddingsService.initializeService()
     console.log('✓ Service initialized')
 
     // Test project
@@ -48,7 +48,7 @@ async function testEmbeddings() {
       'test project embeddings'
     )
     console.log('✓ Successfully searched for projects')
-    console.log('Search results:', results)
+    console.log('Search results:', JSON.stringify(results, null, 2))
 
     console.log('\n✅ All embeddings tests passed successfully!')
     process.exit(0)
