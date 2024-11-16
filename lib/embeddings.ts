@@ -1,13 +1,13 @@
 // lib/embeddings.ts
 import { Pinecone } from '@pinecone-database/pinecone'
-import { Anthropic } from '@anthropic-ai/sdk' // Changed to named import
+import { Anthropic } from '@anthropic-ai/sdk'
 import { Document } from '@langchain/core/documents'
 import { PineconeStore } from '@langchain/pinecone'
 import { EmbeddingsInterface } from '@langchain/core/embeddings'
 
 export class ProjectEmbeddingsService {
   private pinecone: Pinecone
-  private anthropic: Anthropic
+  private anthropicClient: Anthropic
   private indexName: string
 
   constructor() {
@@ -25,17 +25,15 @@ export class ProjectEmbeddingsService {
       apiKey: process.env.PINECONE_API_KEY,
     })
 
-    // Create Anthropic client with the correct constructor
-    this.anthropic = new Anthropic({
+    this.anthropicClient = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
     })
 
     this.indexName = process.env.PINECONE_INDEX_NAME
 
-    // Debug log to verify client initialization
     console.log('Clients initialized:', {
       hasPinecone: !!this.pinecone,
-      hasAnthropic: !!this.anthropic,
+      hasAnthropic: !!this.anthropicClient,
       indexName: this.indexName,
     })
   }
@@ -44,17 +42,22 @@ export class ProjectEmbeddingsService {
     try {
       console.log('Getting embeddings for text:', text.substring(0, 50) + '...')
 
-      if (!this.anthropic) {
+      if (!this.anthropicClient) {
         throw new Error('Anthropic client not initialized')
       }
 
-      const response = await this.anthropic.embeddings.create({
+      // Create a message to embed
+      const response = await this.anthropicClient.messages.create({
         model: 'claude-3-haiku-20240307',
-        input: text,
+        messages: [{ role: 'user', content: text }],
       })
 
-      console.log('Embeddings received, length:', response.embeddings[0].length)
-      return response.embeddings[0]
+      // For debugging
+      console.log('Response from Anthropic:', response)
+
+      // Get the embeddings from the response
+      const embeddings = response.content[0]?.text || ''
+      return embeddings.split(',').map(Number)
     } catch (error) {
       console.error('Error getting embeddings:', error)
       throw error
