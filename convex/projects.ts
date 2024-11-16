@@ -36,6 +36,8 @@ export const createProject = mutation({
   handler: async (ctx, args) => {
     const projectId = await ctx.db.insert('projects', {
       ...args,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     })
     return projectId
   },
