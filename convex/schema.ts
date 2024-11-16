@@ -1,4 +1,4 @@
-import { defineSchema, defineTable } from 'convex/server'
+import { defineSchema, defineTable } from 'convex-dev/server'
 import { v } from 'convex/values'
 
 export default defineSchema({
@@ -21,6 +21,12 @@ export default defineSchema({
     publishedAt: v.number(),
     projectUrl: v.optional(v.string()),
     projectUrlText: v.optional(v.string()),
+  }),
+  notes: defineTable({
+    title: v.string(),
+    note: v.string(),
+    externalRefUrl: v.optional(v.string()),
+    projectCardUrl: v.optional(v.string()),
   }),
   tasks: defineTable({
     title: v.string(),
