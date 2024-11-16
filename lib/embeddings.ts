@@ -59,7 +59,14 @@ export class ProjectEmbeddingsService {
     id: string
     title: string
     description: string
-    tags: string[]
+    imageUrl: string
+    slug: string
+    content: string
+    images: string[]
+    tools: string[]
+    publishedAt: number
+    projectUrl?: string
+    projectUrlText?: string
   }) {
     const index = this.pinecone.Index(this.indexName)
 
@@ -67,7 +74,14 @@ export class ProjectEmbeddingsService {
     const documentText = `
       Project Title: ${project.title}
       Project Description: ${project.description}
-      Project Tags: ${project.tags.join(', ')}
+      Project Image URL: ${project.imageUrl}
+      Project Slug: ${project.slug}
+      Project Content: ${project.content}
+      Project Images: ${project.images.join(', ')}
+      Project Tools: ${project.tools.join(', ')}
+      Project Published At: ${project.publishedAt}
+      Project URL: ${project.projectUrl || ''}
+      Project URL Text: ${project.projectUrlText || ''}
       Project ID: ${project.id}
     `.trim()
 
@@ -77,6 +91,14 @@ export class ProjectEmbeddingsService {
         projectId: project.id,
         title: project.title,
         tags: project.tags,
+        imageUrl: project.imageUrl,
+        slug: project.slug,
+        content: project.content,
+        images: project.images,
+        tools: project.tools,
+        publishedAt: project.publishedAt,
+        projectUrl: project.projectUrl,
+        projectUrlText: project.projectUrlText,
       },
     })
 
@@ -116,7 +138,14 @@ export class ProjectEmbeddingsService {
     id: string
     title: string
     description: string
-    tags: string[]
+    imageUrl: string
+    slug: string
+    content: string
+    images: string[]
+    tools: string[]
+    publishedAt: number
+    projectUrl?: string
+    projectUrlText?: string
   }) {
     try {
       // First delete the old project embeddings
