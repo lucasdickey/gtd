@@ -22,6 +22,12 @@ export default defineSchema({
     projectUrl: v.optional(v.string()),
     projectUrlText: v.optional(v.string()),
   }),
+  notes: defineTable({
+    title: v.string(),
+    note: v.string(),
+    externalRefUrl: v.optional(v.string()),
+    projectCardUrl: v.optional(v.string()),
+  }),
   tasks: defineTable({
     title: v.string(),
     completed: v.boolean(),

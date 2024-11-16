@@ -60,3 +60,30 @@ body {
   transform: translateX(25%) translateY(25%) rotate(-15deg);
   clip-path: polygon(100% 100%, 0 100%, 100% 0);
 }
+
+.brains-input-wrapper {
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  width: 100%; /* Ensure the container takes full width */
+}
+
+.flex-col input,
+.flex-col textarea {
+  width: 100%; /* Make input and textarea fill the width of the parent */
+  box-sizing: border-box; /* Include padding and border in the element's total width */
+  margin-bottom: 10px; /* Add some space between fields */
+  padding: 10px; /* Add padding for better usability */
+}
+
+.flex-col button {
+  width: auto; /* Change from 100% to auto */
+  max-width: 200px; /* Set a maximum width */
+  padding: 10px; /* Maintain padding for usability */
+  align-self: flex-start; /* Align the button to the start of the container */
+}
