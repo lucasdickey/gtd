@@ -8,7 +8,9 @@ export class ProjectEmbeddingsService {
   private pinecone: Pinecone
   private embeddings: Anthropic
   private indexName: string
-  private anthropic: Anthropic
+  private anthropic: Anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY!,
+  })
 
   constructor() {
     this.pinecone = new Pinecone({
