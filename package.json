@@ -13,7 +13,8 @@
     "build": "next build",
     "start": "next start",
     "verify": "NODE_NO_WARNINGS=1 node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' scripts/verify.mjs",
-    "test-setup": "NODE_NO_WARNINGS=1 node scripts/test.mjs"
+    "test-setup": "NODE_NO_WARNINGS=1 node scripts/test.mjs",
+    "test-embeddings": "NODE_NO_WARNINGS=1 node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' scripts/test-embeddings.mjs"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

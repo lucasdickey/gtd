@@ -6,4 +6,4 @@ register({
 })
 
 // Load the script you want to run
-import('./scripts/verify-setup.ts').catch(console.error)
+import('./scripts/verify.mjs').catch(console.error)
