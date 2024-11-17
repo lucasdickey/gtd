@@ -4,6 +4,7 @@ import { api } from '@/convex/_generated/api'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
+import TwitterShareButton from '@/components/TwitterShareButton'
 
 export default function ProjectPage({ params }: { params: { slug: string } }) {
   const project = useQuery(api.projects.getProjectBySlug, { slug: params.slug })
@@ -27,6 +28,12 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   return (
     <div className="container mx-auto px-8 py-8 max-w-6xl scroll-smooth">
       <h1 className="text-3xl font-bold mb-6">{project.title}</h1>
+
+      {/* Twitter Share Button */}
+      <TwitterShareButton
+        projectId={project._id}
+        projectUrl={`https://apesonkeys.com/projects/${project.slug}`}
+      />
 
       {/* Image Carousel */}
       <div className="relative h-96 mb-8">
