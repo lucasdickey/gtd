@@ -4,6 +4,26 @@ import { v } from 'convex/values'
 import { api } from './_generated/api'
 import { Id } from './_generated/dataModel'
 
+// Define the Anthropic API response interface
+interface AnthropicResponse {
+  content: Array<{ text: string }>
+}
+
+// Define the shape of the project
+interface Project {
+  _id: Id<'projects'>
+  title: string
+  description: string
+  imageUrl: string
+  slug: string
+  content: string
+  images: string[]
+  tools?: string[]
+  publishedAt: number
+  projectUrl?: string
+  projectUrlText?: string
+}
+
 // Helper function to generate Claude prompt
 function generatePrompt(
   title: string,
@@ -22,11 +42,17 @@ export const generateProjectSummary = action({
   args: {
     projectId: v.id('projects'),
   },
-  handler: async (ctx, args) => {
+  handler: async (
+    ctx: ActionCtx,
+    args: { projectId: Id<'projects'> }
+  ): Promise<string | null> => {
     // Get project details
-    const project = await ctx.runQuery(api.projects.getProjectById, {
-      id: args.projectId,
-    })
+    const project: Project | null = await ctx.runQuery(
+      api.projects.getProjectById,
+      {
+        id: args.projectId,
+      }
+    )
 
     if (!project) {
       console.log('Project not found:', args.projectId)
@@ -34,8 +60,8 @@ export const generateProjectSummary = action({
     }
 
     try {
-      // Call Claude API
-      const ANTHROPIC_API_KEY = await ctx.env.ANTHROPIC_API_KEY
+      // Access the API key from environment variables
+      const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -59,7 +85,8 @@ export const generateProjectSummary = action({
         }),
       })
 
-      const result = await response.json()
+      const result: AnthropicResponse =
+        (await response.json()) as AnthropicResponse
 
       if (!response.ok) {
         console.log('Claude API error:', result)

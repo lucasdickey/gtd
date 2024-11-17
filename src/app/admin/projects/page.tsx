@@ -35,8 +35,6 @@ interface Project {
   projectUrl?: string
   projectUrlText?: string
 }
-
-// Type for project as stored in database
 interface DbProject {
   _id: Id<'projects'>
   _creationTime: number
