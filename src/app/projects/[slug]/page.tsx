@@ -32,7 +32,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
       {/* Twitter Share Button */}
       <TwitterShareButton
         projectId={project._id}
-        projectUrl={`https://apesonkeys.com/projects/${project.slug}`}
+        projectUrl={`/projects/${project.slug}`}
       />
 
       {/* Image Carousel */}
