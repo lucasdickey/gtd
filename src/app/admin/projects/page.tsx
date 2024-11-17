@@ -67,6 +67,9 @@ export default function AdminProjects() {
   const createProject = useMutation(api.projects.createProject) // For adding new projects
   const updateProject = useMutation(api.projects.updateProject) // For editing existing projects
   const deleteProject = useMutation(api.projects.deleteProject) // For removing projects
+  const generateProjectSummary = useMutation(
+    api.projects.generateProjectSummary
+  ) // For generating project summaries
 
   // State for managing form inputs
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -90,23 +93,30 @@ export default function AdminProjects() {
     e.preventDefault() // Prevent default form submission behavior
 
     try {
+      let projectId: Id<'projects'>
+
       if (editingId) {
-        // If we have an editingId, we're updating an existing project
+        // Update existing project
         await updateProject({
           id: editingId,
           ...formData,
           publishedAt: formData.publishedAt.getTime(), // Convert Date to timestamp
           tools: formData.tools || [], // Ensure tools is sent
         })
-        setEditingId(null) // Clear editing state
+        projectId = editingId
       } else {
-        // No editingId means we're creating a new project
-        await createProject({
+        // Create new project
+        projectId = await createProject({
           ...formData,
           publishedAt: formData.publishedAt.getTime(), // Convert Date to timestamp
           tools: formData.tools || [], // Ensure tools is sent
         })
       }
+
+      // Generate summary asynchronously
+      generateProjectSummary({ projectId }).catch((error) =>
+        console.log('Error generating summary:', error)
+      )
 
       // Reset form after submission
       setFormData({
@@ -121,6 +131,7 @@ export default function AdminProjects() {
         projectUrl: '',
         projectUrlText: '',
       })
+      setEditingId(null)
     } catch (error) {
       console.error('Error saving project:', error)
     }
