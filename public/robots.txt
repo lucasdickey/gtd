@@ -1,3 +1,9 @@
+# *
 User-agent: *
-Disallow: /chilled-monkey-brains
-Disallow: /admin/projects
+Allow: /
+
+# Host
+Host: https://apesonkeys.com
+
+# Sitemaps
+Sitemap: https://apesonkeys.com/sitemap.xml
