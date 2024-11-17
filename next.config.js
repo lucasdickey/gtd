@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-const { withSitemap } = require('next-sitemap')
 
 const nextConfig = {
   images: {
@@ -11,5 +10,3 @@ const nextConfig = {
     ],
   },
 }
-
-module.exports = withSitemap(nextConfig)
