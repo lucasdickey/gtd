@@ -16,6 +16,7 @@ import type {
 import type * as files from "../files.js";
 import type * as notes from "../notes.js";
 import type * as projects from "../projects.js";
+import type * as summaries from "../summaries.js";
 import type * as tasks from "../tasks.js";
 
 /**
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   files: typeof files;
   notes: typeof notes;
   projects: typeof projects;
+  summaries: typeof summaries;
   tasks: typeof tasks;
 }>;
 export declare const api: FilterApi<

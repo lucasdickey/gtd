@@ -33,4 +33,12 @@ export default defineSchema({
     completed: v.boolean(),
     createdAt: v.number(),
   }),
+  contentSummaries: defineTable({
+    sourceId: v.id('projects'), // References the source content (project in this case)
+    useCase: v.string(), // e.g., "project card summary"
+    summary: v.string(), // The Claude-generated summary
+    generatedAt: v.number(), // Timestamp of generation
+  })
+    .index('by_sourceId', ['sourceId'])
+    .index('by_useCase', ['useCase']),
 })
