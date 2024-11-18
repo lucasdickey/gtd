@@ -142,3 +142,5 @@ export const getProjectSummary = query({
     return summaries
   },
 })
+
+console.log(api)

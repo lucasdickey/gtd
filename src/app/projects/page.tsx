@@ -32,14 +32,16 @@ export default function Projects() {
                 id={`project-${project._id}`}
                 className="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden"
               >
-                <div className="relative h-48">
-                  <Image
-                    src={project.imageUrl}
-                    alt={project.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+                {project.imageUrl && (
+                  <div className="relative h-48">
+                    <Image
+                      src={project.imageUrl}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <h2 className="text-xl font-bold">{project.title}</h2>
@@ -47,7 +49,6 @@ export default function Projects() {
                       onClick={() => {
                         const url = `${window.location.origin}${window.location.pathname}#project-${project._id}`
                         navigator.clipboard.writeText(url)
-                        // Optional: Add some visual feedback
                         alert('Link copied to clipboard!')
                       }}
                       className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
