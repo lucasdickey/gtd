@@ -25,12 +25,12 @@ export default function Projects() {
 
         {/* Center column with projects */}
         <div className="col-span-12 md:col-span-8">
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-10">
             {sortedProjects.map((project) => (
               <div
                 key={project._id}
                 id={`project-${project._id}`}
-                className="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden"
+                className="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden border border-black"
               >
                 {project.imageUrl && (
                   <div className="relative h-48">
