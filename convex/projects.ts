@@ -1,5 +1,6 @@
 import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
+import { Id } from '../_generated/dataModel'
 
 export const getAllProjects = query({
   handler: async (ctx) => {
@@ -76,6 +77,10 @@ export const getProjectById = query({
   },
 })
 
-export const generateProjectSummary = async ({ projectId }) => {
+export const generateProjectSummary = async ({
+  projectId,
+}: {
+  projectId: Id<'projects'>
+}) => {
   // Logic to generate the project summary
 }
