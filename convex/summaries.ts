@@ -1,5 +1,5 @@
 // summaries.ts
-import { mutation, action, query } from './_generated/server'
+import { mutation, action, query, ActionCtx } from './_generated/server'
 import { v } from 'convex/values'
 import { api } from './_generated/api'
 import { Id } from './_generated/dataModel'
