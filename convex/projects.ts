@@ -75,3 +75,7 @@ export const getProjectById = query({
     return await ctx.db.get(args.id)
   },
 })
+
+export const generateProjectSummary = async ({ projectId }) => {
+  // Logic to generate the project summary
+}
