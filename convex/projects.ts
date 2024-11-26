@@ -77,10 +77,14 @@ export const getProjectById = query({
   },
 })
 
-export const generateProjectSummary = async ({
-  projectId,
-}: {
-  projectId: Id<'projects'>
-}) => {
-  // Logic to generate the project summary
-}
+export const generateProjectSummary = mutation({
+  args: {
+    projectId: v.id('projects'),
+  },
+  handler: async (ctx, args) => {
+    const { projectId } = args
+    // Logic to generate the project summary
+    // For example, you might call an external API or process data here
+    return { summary: 'Generated summary for project' }
+  },
+})
