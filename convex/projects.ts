@@ -2,6 +2,7 @@ import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
 import { Id } from './_generated/dataModel'
 
+
 export const getAllProjects = query({
   handler: async (ctx) => {
     const projects = await ctx.db.query('projects').collect()
