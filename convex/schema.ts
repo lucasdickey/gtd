@@ -37,7 +37,7 @@ export default defineSchema({
     title: v.string(),
     body: v.string(),
     publishDate: v.number(),
-    updateDate: v.number(),
+    updateDate: v.optional(v.number()),
     slug: v.string(),
   })
     .index('by_publish_date', ['publishDate'])

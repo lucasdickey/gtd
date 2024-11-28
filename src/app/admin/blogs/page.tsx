@@ -65,7 +65,16 @@ export default function AdminBlogs() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Manage Blog Posts</h1>
 
-      <form onSubmit={handleSubmit} className="mb-8 space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="mb-8 space-y-4"
+        onKeyDown={(e) => {
+          // Prevent form submission on space
+          if (e.key === ' ' || e.code === 'Space') {
+            e.stopPropagation()
+          }
+        }}
+      >
         <div>
           <label
             htmlFor="blog-title"
@@ -122,6 +131,12 @@ export default function AdminBlogs() {
         <button
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          onKeyDown={(e) => {
+            if (e.key === ' ' || e.code === 'Space') {
+              e.stopPropagation()
+              e.preventDefault()
+            }
+          }}
         >
           {editingId ? 'Update Blog Post' : 'Add Blog Post'}
         </button>
