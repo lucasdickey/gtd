@@ -6,6 +6,7 @@ import { Id } from '@/convex/_generated/dataModel'
 import ReactMarkdown from 'react-markdown'
 import { FileUploader } from '@/components/FileUploader'
 import Image from 'next/image'
+import MarkdownEditor from '@/components/MarkdownEditor'
 
 // Define the shape of our form data
 interface ProjectFormData {
@@ -195,16 +196,12 @@ export default function AdminProjects() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Content (Markdown)
-            </label>
-            <textarea
-              value={formData.content}
-              onChange={(e) =>
-                setFormData({ ...formData, content: e.target.value })
+            <label className="block text-sm font-medium mb-1">Content</label>
+            <MarkdownEditor
+              content={formData.content}
+              onChange={(markdown) =>
+                setFormData({ ...formData, content: markdown })
               }
-              className="w-full p-2 border rounded h-96 font-mono"
-              required
             />
           </div>
           <div>
