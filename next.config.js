@@ -6,8 +6,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'aok-projects-images.s3.us-east-2.amazonaws.com',
+        port: '',
+        pathname: '/**',
       },
     ],
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    formats: ['image/avif', 'image/webp'],
   },
   async redirects() {
     return [
@@ -31,6 +37,8 @@ const nextConfig = {
       },
     ]
   },
+  reactStrictMode: true,
+  swcMinify: true,
 }
 
 module.exports = nextConfig
