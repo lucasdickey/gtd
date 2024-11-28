@@ -6,7 +6,11 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'aok-projects-images.s3.us-east-2.amazonaws.com',
+        port: '',
+        pathname: '/**',
       },
     ],
   },
 }
+
+module.exports = nextConfig
