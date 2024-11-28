@@ -5,10 +5,11 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useRef, useEffect, useState } from 'react'
 
-// Move navItems outside component since it's static
+// Update navItems to include Blog
 const navItems = [
   { href: '/', label: 'Home' },
   { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Musings' },
   { href: '/about', label: 'About' },
 ] as const
 
