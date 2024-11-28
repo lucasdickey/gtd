@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
@@ -23,9 +24,15 @@ export default function MarkdownEditor({
   content,
   onChange,
 }: MarkdownEditorProps) {
+  const [isMounted, setIsMounted] = useState(false)
+
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        heading: {
+          levels: [2, 3],
+        },
+      }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
@@ -41,9 +48,18 @@ export default function MarkdownEditor({
       },
     },
     onUpdate: ({ editor }) => {
-      onChange(editor.storage.markdown.getMarkdown())
+      const markdown = editor.getText()
+      onChange(markdown)
     },
   })
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return null
+  }
 
   if (!editor) {
     return null
