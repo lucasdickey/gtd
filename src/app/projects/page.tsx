@@ -4,6 +4,7 @@ import { api } from '@/convex/_generated/api'
 import Image from 'next/image'
 import { Link2Icon } from '@radix-ui/react-icons'
 import ReactMarkdown from 'react-markdown'
+import { showToast } from '@/utils/toast'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,6 +17,9 @@ export default function Projects() {
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
+
+  // Add this debug log
+  console.log('Projects data:', projects)
 
   return (
     <div className="container mx-auto px-8 py-8 max-w-6xl">
@@ -33,12 +37,19 @@ export default function Projects() {
                 className="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden"
               >
                 <div className="relative h-48">
-                  <Image
-                    src={project.imageUrl}
-                    alt={project.title}
-                    fill
-                    className="object-cover"
-                  />
+                  {project.imageUrl ? (
+                    <Image
+                      src={project.imageUrl}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+                      <span className="text-gray-400">Image not available</span>
+                    </div>
+                  )}
                 </div>
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-2">
@@ -47,8 +58,7 @@ export default function Projects() {
                       onClick={() => {
                         const url = `${window.location.origin}${window.location.pathname}#project-${project._id}`
                         navigator.clipboard.writeText(url)
-                        // Optional: Add some visual feedback
-                        alert('Link copied to clipboard!')
+                        showToast('Link copied to clipboard!', 3000)
                       }}
                       className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
                     >
