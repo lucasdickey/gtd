@@ -4,7 +4,7 @@ import { api } from '@/convex/_generated/api'
 import Image from 'next/image'
 import { Link2Icon } from '@radix-ui/react-icons'
 import ReactMarkdown from 'react-markdown'
-import { useState } from 'react'
+import { showToast } from '@/utils/toast'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,8 +17,6 @@ export default function Projects() {
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
-
-  const [imageError, setImageError] = useState<Record<string, boolean>>({})
 
   // Add this debug log
   console.log('Projects data:', projects)
@@ -45,16 +43,6 @@ export default function Projects() {
                       alt={project.title}
                       fill
                       className="object-cover"
-                      onError={(e) => {
-                        console.error(`Failed to load image for project:`, {
-                          id: project._id,
-                          url: project.imageUrl,
-                        })
-                        setImageError((prev) => ({
-                          ...prev,
-                          [project._id]: true,
-                        }))
-                      }}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   ) : (
@@ -70,8 +58,7 @@ export default function Projects() {
                       onClick={() => {
                         const url = `${window.location.origin}${window.location.pathname}#project-${project._id}`
                         navigator.clipboard.writeText(url)
-                        // Optional: Add some visual feedback
-                        alert('Link copied to clipboard!')
+                        showToast('Link copied to clipboard!', 3000)
                       }}
                       className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
                     >
