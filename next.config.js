@@ -9,4 +9,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/cmb',
+        destination: '/chilled-monkey-brains',
+        permanent: true,
+      },
+    ]
+  },
 }
+
+module.exports = nextConfig
