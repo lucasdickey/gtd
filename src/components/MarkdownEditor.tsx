@@ -1,8 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Link from '@tiptap/extension-link'
+import { EditorContent, useEditor } from '@tiptap/react'
+import { StarterKit } from '@tiptap/starter-kit'
+import { Link as TiptapLink } from '@tiptap/extension-link'
 import { Button } from '@/components/ui/button'
 import {
   Bold,
@@ -18,6 +18,8 @@ import {
 interface MarkdownEditorProps {
   content: string
   onChange: (markdown: string) => void
+  id?: string
+  name?: string
 }
 
 export default function MarkdownEditor({
@@ -26,39 +28,46 @@ export default function MarkdownEditor({
 }: MarkdownEditorProps) {
   const [isMounted, setIsMounted] = useState(false)
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [2, 3],
+  const editor = useEditor(
+    {
+      extensions: [
+        StarterKit.configure({
+          heading: {
+            levels: [2, 3],
+          },
+        }),
+        TiptapLink.configure({
+          openOnClick: false,
+          HTMLAttributes: {
+            class: 'text-blue-500 hover:text-blue-700 underline',
+          },
+        }),
+      ],
+      content,
+      editorProps: {
+        attributes: {
+          class:
+            'prose dark:prose-invert max-w-none min-h-[400px] p-4 focus:outline-none bg-white',
         },
-      }),
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          class: 'text-blue-500 hover:text-blue-700 underline',
-        },
-      }),
-    ],
-    content,
-    editorProps: {
-      attributes: {
-        class:
-          'prose dark:prose-invert max-w-none min-h-[400px] p-4 focus:outline-none',
       },
+      onUpdate: ({ editor }) => {
+        const html = editor.getHTML()
+        onChange(html)
+      },
+      enableCoreExtensions: true,
+      enableInputRules: true,
+      enablePasteRules: true,
+      immediatelyRender: false,
     },
-    onUpdate: ({ editor }) => {
-      const markdown = editor.getText()
-      onChange(markdown)
-    },
-  })
+    [content]
+  )
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
   if (!isMounted) {
-    return null
+    return <div className="min-h-[400px] border rounded-lg" />
   }
 
   if (!editor) {
@@ -73,7 +82,7 @@ export default function MarkdownEditor({
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="border rounded-lg overflow-hidden flex flex-col">
       <div className="border-b bg-gray-50 p-2 flex gap-2 flex-wrap">
         <Button
           variant="ghost"
@@ -156,7 +165,9 @@ export default function MarkdownEditor({
         </Button>
       </div>
 
-      <EditorContent editor={editor} />
+      <div className="min-h-[400px] flex-grow bg-white">
+        <EditorContent editor={editor} className="h-full" />
+      </div>
     </div>
   )
 }

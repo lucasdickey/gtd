@@ -67,9 +67,16 @@ export default function AdminBlogs() {
 
       <form onSubmit={handleSubmit} className="mb-8 space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
+          <label
+            htmlFor="blog-title"
+            className="block text-sm font-medium mb-1"
+          >
+            Title
+          </label>
           <input
             type="text"
+            id="blog-title"
+            name="blog-title"
             value={formData.title}
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
@@ -81,8 +88,15 @@ export default function AdminBlogs() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Content</label>
+            <label
+              htmlFor="blog-content"
+              className="block text-sm font-medium mb-1"
+            >
+              Content
+            </label>
             <MarkdownEditor
+              id="blog-content"
+              name="blog-content"
               content={formData.body}
               onChange={(markdown) =>
                 setFormData({ ...formData, body: markdown })
@@ -90,8 +104,16 @@ export default function AdminBlogs() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Preview</label>
-            <div className="prose dark:prose-invert max-w-none p-4 border rounded h-96 overflow-y-auto bg-gray-50">
+            <label
+              htmlFor="blog-preview"
+              className="block text-sm font-medium mb-1"
+            >
+              Preview
+            </label>
+            <div
+              id="blog-preview"
+              className="prose dark:prose-invert max-w-none p-4 border rounded h-96 overflow-y-auto bg-gray-50"
+            >
               <ReactMarkdown>{formData.body}</ReactMarkdown>
             </div>
           </div>

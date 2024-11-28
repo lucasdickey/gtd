@@ -165,6 +165,8 @@ export default function AdminProjects() {
           <label className="block text-sm font-medium mb-1">Title</label>
           <input
             type="text"
+            id="project-title"
+            name="project-title"
             value={formData.title}
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
