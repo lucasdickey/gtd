@@ -4,8 +4,6 @@ import { api } from '@/convex/_generated/api'
 import { Link2Icon } from '@radix-ui/react-icons'
 import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
-import ReactMarkdown from 'react-markdown'
-import { showToast } from '@/utils/toast'
 
 export const dynamic = 'force-dynamic'
 
@@ -155,7 +153,8 @@ export default function Projects() {
                       onClick={() => {
                         const url = `${window.location.origin}${window.location.pathname}#${project.slug}`
                         navigator.clipboard.writeText(url)
-                        showToast('Link copied to clipboard!', 3000)
+                        window.history.pushState({}, '', url)
+                        alert('Link copied to clipboard!')
                       }}
                       className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
                       aria-label="Copy link to project"
