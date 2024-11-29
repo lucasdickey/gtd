@@ -23,11 +23,26 @@ function isValidS3ImageUrl(url: string): boolean {
 }
 
 function isValidImageUrl(url: string): boolean {
-  try {
-    new URL(url)
+  if (!url) return false
+
+  // Allow S3 URLs
+  if (
+    url.startsWith('https://aok-projects-images.s3.us-east-2.amazonaws.com/')
+  ) {
     return true
+  }
+
+  // Allow relative paths
+  if (url.startsWith('/')) {
+    return true
+  }
+
+  // Allow any HTTPS URL
+  try {
+    const urlObj = new URL(url)
+    return urlObj.protocol === 'https:'
   } catch {
-    return url.startsWith('/')
+    return false
   }
 }
 
@@ -35,7 +50,7 @@ export const getAllProjects = query({
   handler: async (ctx) => {
     const projects = await ctx.db
       .query('projects')
-      .order('desc', (q) => q.field('publishedAt'))
+      .order('desc', 'publishedAt')
       .collect()
 
     return projects.map((project) => ({
@@ -69,9 +84,14 @@ export const createProject = mutation({
     projectUrlText: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Validate image URL
+    // Validate image URL with better error message
     if (!isValidImageUrl(args.imageUrl)) {
-      throw new Error('Invalid image URL format')
+      throw new Error(
+        `Invalid image URL format: ${args.imageUrl}. URL must be either:
+        - An S3 URL starting with https://aok-projects-images.s3.us-east-2.amazonaws.com/
+        - A relative path starting with /
+        - A valid HTTPS URL`
+      )
     }
 
     const projectId = await ctx.db.insert('projects', {
