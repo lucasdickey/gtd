@@ -38,6 +38,19 @@ export const metadata: Metadata = {
       },
     ],
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png' }],
+    other: [
+      { rel: 'manifest', url: '/site.webmanifest' },
+      { rel: 'android-chrome-192x192', url: '/android-chrome-192x192.png' },
+      { rel: 'android-chrome-512x512', url: '/android-chrome-512x512.png' },
+    ],
+  },
 }
 
 export default function RootLayout({
@@ -48,9 +61,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/site.webmanifest" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#ffffff" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="Apes on Keys" />
+        <meta name="apple-mobile-web-app-title" content="Apes on Keys" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${vt323.variable} antialiased relative`}
@@ -61,6 +77,10 @@ export default function RootLayout({
         <main className="pt-16">
           <ConvexClientProvider>{children}</ConvexClientProvider>
         </main>
+        <div
+          id="toast"
+          className="hidden fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 z-50"
+        />
       </body>
     </html>
   )

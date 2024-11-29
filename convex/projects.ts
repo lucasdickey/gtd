@@ -27,6 +27,7 @@ export const getAllProjects = query({
   handler: async (ctx) => {
     const projects = await ctx.db.query('projects').collect()
 
+    // Add validation and logging with more specific error messages
     const validatedProjects = projects.map((project) => {
       if (!project.imageUrl) {
         console.error(`Project ${project._id} has no imageUrl`)
@@ -70,6 +71,11 @@ export const createProject = mutation({
     projectUrlText: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Validate image URL
+    if (!isValidImageUrl(args.imageUrl)) {
+      throw new Error('Invalid image URL format')
+    }
+
     const projectId = await ctx.db.insert('projects', {
       ...args,
     })

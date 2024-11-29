@@ -4,6 +4,7 @@ import { api } from '@/convex/_generated/api'
 import { Link2Icon } from '@radix-ui/react-icons'
 import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
+import { showToast } from '@/utils/toast'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,16 +24,6 @@ export default function Projects() {
   )
 
   const [imageError, setImageError] = useState<Record<string, boolean>>({})
-
-  // Debug logging
-  useEffect(() => {
-    if (projects?.length) {
-      console.log(
-        'Project URLs:',
-        projects.map((p) => p.imageUrl)
-      )
-    }
-  }, [projects])
 
   const validateImageUrl = (url: string) => {
     try {
@@ -57,15 +48,7 @@ export default function Projects() {
     }
   }
 
-  const imageData = useQuery(api.projects.checkImageUrls)
-
-  useEffect(() => {
-    if (imageData) {
-      console.log('Image Data Check:', imageData)
-    }
-  }, [imageData])
-
-  // For the Image onError handler, since we're not using the event parameter:
+  // For the Image onError handler
   const handleImageError = (projectId: string) => {
     console.error('Image load error for project:', projectId)
     setImageError((prev) => ({
@@ -78,49 +61,26 @@ export default function Projects() {
   useEffect(() => {
     const handleScroll = () => {
       if (window.location.hash) {
-        const hash = window.location.hash.substring(1) // Remove the # symbol
-        console.log('Hash found:', hash)
-
-        // Wait for content to be available
-        const checkElement = setInterval(() => {
-          const element = document.getElementById(hash)
-          if (element) {
-            console.log('Element found:', element)
-            clearInterval(checkElement)
-
-            // Scroll into view
-            element.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start',
-            })
-          } else {
-            console.log('Element not found yet')
-          }
-        }, 100)
-
-        // Clear interval after 5 seconds to prevent infinite checking
-        setTimeout(() => clearInterval(checkElement), 5000)
+        const hash = window.location.hash.substring(1)
+        const element = document.getElementById(hash)
+        if (element) {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          })
+        }
       }
     }
 
     handleScroll()
     window.addEventListener('hashchange', handleScroll)
-
-    return () => {
-      window.removeEventListener('hashchange', handleScroll)
-    }
-  }, [sortedProjects]) // Use memoized projects array
-
-  // Add this debug log
-  console.log('Projects data:', projects)
+    return () => window.removeEventListener('hashchange', handleScroll)
+  }, [])
 
   return (
     <div className="container mx-auto px-8 py-8 max-w-6xl">
       <div className="grid grid-cols-12 gap-6">
-        {/* Left white space */}
         <div className="hidden md:block col-span-2" />
-
-        {/* Center column with projects */}
         <div className="col-span-12 md:col-span-8">
           <div className="grid grid-cols-1 gap-6">
             {sortedProjects.map((project) => (
@@ -132,7 +92,7 @@ export default function Projects() {
                 <div className="relative h-48">
                   {imageError[project._id] ? (
                     <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-                      <span className="text-gray-500">Image not available</span>
+                      <span className="text-gray-400">Image not available</span>
                     </div>
                   ) : (
                     <Image
@@ -154,7 +114,7 @@ export default function Projects() {
                         const url = `${window.location.origin}${window.location.pathname}#${project.slug}`
                         navigator.clipboard.writeText(url)
                         window.history.pushState({}, '', url)
-                        alert('Link copied to clipboard!')
+                        showToast('Link copied to clipboard!', 3000)
                       }}
                       className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
                       aria-label="Copy link to project"
@@ -193,8 +153,6 @@ export default function Projects() {
             ))}
           </div>
         </div>
-
-        {/* Right white space */}
         <div className="col-span-2" />
       </div>
     </div>
