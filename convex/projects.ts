@@ -1,6 +1,14 @@
 import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
 
+// Helper functions
+function createSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+}
+
 function isValidS3ImageUrl(url: string): boolean {
   if (!url) return false
   try {
@@ -25,24 +33,15 @@ function isValidImageUrl(url: string): boolean {
 
 export const getAllProjects = query({
   handler: async (ctx) => {
-    const projects = await ctx.db.query('projects').collect()
+    const projects = await ctx.db
+      .query('projects')
+      .order('desc', (q) => q.field('publishedAt'))
+      .collect()
 
-    // Add validation and logging with more specific error messages
-    const validatedProjects = projects.map((project) => {
-      if (!project.imageUrl) {
-        console.error(`Project ${project._id} has no imageUrl`)
-      } else if (!isValidS3ImageUrl(project.imageUrl)) {
-        console.error(
-          `Project ${project._id} has invalid S3 imageUrl: ${project.imageUrl}. Expected format: https://aok-projects-images.s3.us-east-2.amazonaws.com/...`
-        )
-      }
-      return {
-        ...project,
-        imageUrl: isValidS3ImageUrl(project.imageUrl) ? project.imageUrl : null,
-      }
-    })
-
-    return validatedProjects
+    return projects.map((project) => ({
+      ...project,
+      imageUrl: isValidS3ImageUrl(project.imageUrl) ? project.imageUrl : null,
+    }))
   },
 })
 
@@ -62,7 +61,6 @@ export const createProject = mutation({
     title: v.string(),
     description: v.string(),
     imageUrl: v.string(),
-    slug: v.string(),
     content: v.string(),
     images: v.array(v.string()),
     tools: v.array(v.string()),
@@ -78,6 +76,7 @@ export const createProject = mutation({
 
     const projectId = await ctx.db.insert('projects', {
       ...args,
+      slug: createSlug(args.title),
     })
     return projectId
   },
@@ -89,7 +88,6 @@ export const updateProject = mutation({
     title: v.string(),
     description: v.string(),
     imageUrl: v.string(),
-    slug: v.string(),
     content: v.string(),
     images: v.array(v.string()),
     tools: v.array(v.string()),
@@ -99,7 +97,10 @@ export const updateProject = mutation({
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args
-    await ctx.db.patch(id, data)
+    await ctx.db.patch(id, {
+      ...data,
+      slug: createSlug(data.title),
+    })
   },
 })
 
@@ -124,17 +125,6 @@ export const checkImageUrls = query({
   },
 })
 
-export const get = query({
-  handler: async (ctx) => {
-    const projects = await ctx.db.query('projects').collect()
-    return projects.map((project) => ({
-      ...project,
-      // Make sure imageUrl is being returned and is a full S3 URL
-      imageUrl: project.imageUrl, // Should be the full S3 URL
-    }))
-  },
-})
-
 export const fixBrokenImageUrls = mutation({
   handler: async (ctx) => {
     const projects = await ctx.db.query('projects').collect()
@@ -142,14 +132,10 @@ export const fixBrokenImageUrls = mutation({
     let fixed = 0
     for (const project of projects) {
       if (!isValidS3ImageUrl(project.imageUrl)) {
-        // You could either:
-        // 1. Set a default image
         await ctx.db.patch(project._id, {
           imageUrl:
             'https://aok-projects-images.s3.us-east-2.amazonaws.com/default-project-image.jpg',
         })
-        // 2. Or set to null
-        // await ctx.db.patch(project._id, { imageUrl: null });
         fixed++
       }
     }
