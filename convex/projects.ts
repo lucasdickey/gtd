@@ -46,16 +46,19 @@ function isValidImageUrl(url: string): boolean {
   }
 }
 
+// At the top with other constants
+const DEFAULT_PROJECT_IMAGE = '/projectOne.jpg' // Using an existing image from public folder
+
 export const getAllProjects = query({
   handler: async (ctx) => {
-    const projects = await ctx.db
-      .query('projects')
-      .order('desc', 'publishedAt')
-      .collect()
+    const projects = await ctx.db.query('projects').order('desc').collect()
 
     return projects.map((project) => ({
       ...project,
-      imageUrl: isValidS3ImageUrl(project.imageUrl) ? project.imageUrl : null,
+      // Use the default image if the project image is invalid
+      imageUrl: isValidImageUrl(project.imageUrl)
+        ? project.imageUrl
+        : DEFAULT_PROJECT_IMAGE,
     }))
   },
 })
@@ -151,10 +154,9 @@ export const fixBrokenImageUrls = mutation({
 
     let fixed = 0
     for (const project of projects) {
-      if (!isValidS3ImageUrl(project.imageUrl)) {
+      if (!isValidImageUrl(project.imageUrl)) {
         await ctx.db.patch(project._id, {
-          imageUrl:
-            'https://aok-projects-images.s3.us-east-2.amazonaws.com/default-project-image.jpg',
+          imageUrl: DEFAULT_PROJECT_IMAGE,
         })
         fixed++
       }
