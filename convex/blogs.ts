@@ -31,17 +31,15 @@ export const createBlog = mutation({
   args: {
     title: v.string(),
     body: v.string(),
+    slug: v.string(),
+    publishDate: v.number(),
   },
   handler: async (ctx, args) => {
-    const now = Date.now()
-    const slug = createSlug(args.title)
-
     const blogId = await ctx.db.insert('blogs', {
       title: args.title,
       body: args.body,
-      publishDate: now,
-      updateDate: now,
-      slug,
+      slug: args.slug,
+      publishDate: args.publishDate,
     })
     return blogId
   },
@@ -55,11 +53,8 @@ export const updateBlog = mutation({
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args
-    const now = Date.now()
-
     await ctx.db.patch(id, {
       ...data,
-      updateDate: now,
       slug: createSlug(data.title),
     })
   },
