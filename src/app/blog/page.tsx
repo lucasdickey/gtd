@@ -10,23 +10,7 @@ export default function BlogPage() {
   // Memoize the blogs array
   const blogs = useMemo(() => blogsQuery || [], [blogsQuery])
 
-  // Handle loading state
-  if (blogsQuery === undefined) {
-    return (
-      <div className="container mx-auto px-8 py-8 max-w-4xl">
-        <div className="animate-pulse space-y-8">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="bg-gray-200 dark:bg-gray-700 h-48 rounded-lg"
-            />
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  // Handle scroll to anchor on load
+  // Move useEffect before any conditional returns
   useEffect(() => {
     const handleScroll = () => {
       if (window.location.hash) {
@@ -61,7 +45,23 @@ export default function BlogPage() {
     return () => {
       window.removeEventListener('hashchange', handleScroll)
     }
-  }, [blogs]) // Now using memoized value
+  }, []) // Remove blogs dependency as it's not needed
+
+  // Handle loading state
+  if (blogsQuery === undefined) {
+    return (
+      <div className="container mx-auto px-8 py-8 max-w-4xl">
+        <div className="animate-pulse space-y-8">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="bg-gray-200 dark:bg-gray-700 h-48 rounded-lg"
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto px-8 py-8 max-w-4xl">
