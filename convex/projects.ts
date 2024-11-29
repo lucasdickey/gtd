@@ -1,12 +1,26 @@
 import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
 
-// Add a more specific validation helper
-const isValidS3ImageUrl = (url: string) => {
+function isValidS3ImageUrl(url: string): boolean {
   if (!url) return false
-  return url.startsWith(
-    'https://aok-projects-images.s3.us-east-2.amazonaws.com/'
-  )
+  try {
+    const urlObj = new URL(url)
+    return (
+      urlObj.hostname === 'aok-projects-images.s3.us-east-2.amazonaws.com' &&
+      url.startsWith('https://aok-projects-images.s3.us-east-2.amazonaws.com/')
+    )
+  } catch {
+    return false
+  }
+}
+
+function isValidImageUrl(url: string): boolean {
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return url.startsWith('/')
+  }
 }
 
 export const getAllProjects = query({
@@ -42,17 +56,6 @@ export const getProjectBySlug = query({
     return projects[0] || null
   },
 })
-
-// Add a validation helper
-const isValidImageUrl = (url: string) => {
-  try {
-    new URL(url)
-    return true
-  } catch {
-    // If it's not a valid URL, check if it's a valid public path
-    return url.startsWith('/')
-  }
-}
 
 export const createProject = mutation({
   args: {
@@ -112,10 +115,11 @@ export const deleteProject = mutation({
 export const checkImageUrls = query({
   handler: async (ctx) => {
     const projects = await ctx.db.query('projects').collect()
-    return projects.map((p) => ({
-      id: p._id,
-      imageUrl: p.imageUrl,
-      isValid: isValidImageUrl(p.imageUrl),
+    return projects.map((project) => ({
+      id: project._id,
+      imageUrl: project.imageUrl,
+      images: project.images,
+      isValid: isValidS3ImageUrl(project.imageUrl),
     }))
   },
 })

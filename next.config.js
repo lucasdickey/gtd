@@ -15,6 +15,13 @@ const nextConfig = {
     contentDispositionType: 'attachment',
     formats: ['image/avif', 'image/webp'],
   },
+  webpack: (config) => {
+    config.experiments = {
+      ...config.experiments,
+      topLevelAwait: true,
+    }
+    return config
+  },
   async redirects() {
     return [
       {
