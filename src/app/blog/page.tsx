@@ -10,6 +10,22 @@ export default function BlogPage() {
   // Memoize the blogs array
   const blogs = useMemo(() => blogsQuery || [], [blogsQuery])
 
+  // Handle loading state
+  if (blogsQuery === undefined) {
+    return (
+      <div className="container mx-auto px-8 py-8 max-w-4xl">
+        <div className="animate-pulse space-y-8">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="bg-gray-200 dark:bg-gray-700 h-48 rounded-lg"
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   // Handle scroll to anchor on load
   useEffect(() => {
     const handleScroll = () => {
@@ -50,42 +66,46 @@ export default function BlogPage() {
   return (
     <div className="container mx-auto px-8 py-8 max-w-4xl">
       <h1 className="text-3xl font-bold mb-8">Blog Posts</h1>
-      <div className="space-y-8">
-        {blogs.map((blog) => (
-          <article
-            key={blog._id}
-            id={blog.slug}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden scroll-mt-8"
-          >
-            <div className="p-6">
-              <div className="flex items-center gap-2 mb-2">
-                <h2 className="text-2xl font-bold">{blog.title}</h2>
-                <button
-                  onClick={() => {
-                    const url = `${window.location.origin}${window.location.pathname}#${blog.slug}`
-                    navigator.clipboard.writeText(url)
-                    window.history.pushState({}, '', url)
-                    alert('Link copied to clipboard!')
-                  }}
-                  className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-                  aria-label="Copy link to blog post"
-                >
-                  <Link2Icon className="w-4 h-4" />
-                </button>
+      {blogs.length === 0 ? (
+        <p className="text-gray-500 dark:text-gray-400">No blog posts yet.</p>
+      ) : (
+        <div className="space-y-8">
+          {blogs.map((blog) => (
+            <article
+              key={blog._id}
+              id={blog.slug}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden scroll-mt-8"
+            >
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <h2 className="text-2xl font-bold">{blog.title}</h2>
+                  <button
+                    onClick={() => {
+                      const url = `${window.location.origin}${window.location.pathname}#${blog.slug}`
+                      navigator.clipboard.writeText(url)
+                      window.history.pushState({}, '', url)
+                      alert('Link copied to clipboard!')
+                    }}
+                    className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                    aria-label="Copy link to blog post"
+                  >
+                    <Link2Icon className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  <time dateTime={new Date(blog.publishDate).toISOString()}>
+                    Published: {new Date(blog.publishDate).toLocaleDateString()}
+                  </time>
+                </div>
+                <div
+                  className="prose dark:prose-invert max-w-none"
+                  dangerouslySetInnerHTML={{ __html: blog.body }}
+                />
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                <time dateTime={new Date(blog.publishDate).toISOString()}>
-                  Published: {new Date(blog.publishDate).toLocaleDateString()}
-                </time>
-              </div>
-              <div
-                className="prose dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: blog.body }}
-              />
-            </div>
-          </article>
-        ))}
-      </div>
+            </article>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
