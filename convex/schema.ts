@@ -33,4 +33,13 @@ export default defineSchema({
     completed: v.boolean(),
     createdAt: v.number(),
   }),
+  blogs: defineTable({
+    title: v.string(),
+    body: v.string(),
+    publishDate: v.number(),
+    slug: v.string(),
+    updateDate: v.number(),
+  })
+    .index('by_publish_date', ['publishDate'])
+    .index('by_slug', ['slug']),
 })
