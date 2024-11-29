@@ -2,10 +2,13 @@
 import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Link2Icon } from '@radix-ui/react-icons'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 export default function BlogPage() {
-  const blogs = useQuery(api.blogs.getAllBlogs) || []
+  const blogsQuery = useQuery(api.blogs.getAllBlogs)
+
+  // Memoize the blogs array
+  const blogs = useMemo(() => blogsQuery || [], [blogsQuery])
 
   // Handle scroll to anchor on load
   useEffect(() => {
@@ -36,14 +39,13 @@ export default function BlogPage() {
       }
     }
 
-    // Call immediately and also listen for hash changes
     handleScroll()
     window.addEventListener('hashchange', handleScroll)
 
     return () => {
       window.removeEventListener('hashchange', handleScroll)
     }
-  }, [blogs]) // Add blogs as dependency to ensure content is loaded
+  }, [blogs]) // Now using memoized value
 
   return (
     <div className="container mx-auto px-8 py-8 max-w-4xl">

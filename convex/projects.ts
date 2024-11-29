@@ -68,3 +68,14 @@ export const deleteProject = mutation({
     await ctx.db.delete(args.id)
   },
 })
+
+export const checkImageUrls = query({
+  handler: async (ctx) => {
+    const projects = await ctx.db.query('projects').collect()
+    return projects.map((project) => ({
+      id: project._id,
+      imageUrl: project.imageUrl,
+      images: project.images,
+    }))
+  },
+})

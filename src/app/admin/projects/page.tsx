@@ -53,6 +53,15 @@ interface DbProject {
   projectUrlText?: string
 }
 
+// Add this function at the top of the file, before the component
+const generateSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-') // Replace any non-alphanumeric chars with hyphen
+    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+    .trim()
+}
+
 export const dynamic = 'force-dynamic'
 
 export default function AdminProjects() {
@@ -168,9 +177,15 @@ export default function AdminProjects() {
             id="project-title"
             name="project-title"
             value={formData.title}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
+            onChange={(e) => {
+              const newTitle = e.target.value
+              const newSlug = generateSlug(newTitle)
+              setFormData({
+                ...formData,
+                title: newTitle,
+                slug: newSlug,
+              })
+            }}
             className="w-full p-2 border rounded"
             required
           />
@@ -187,59 +202,31 @@ export default function AdminProjects() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Slug</label>
-          <input
-            type="text"
-            value={formData.slug}
-            onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-            className="w-full p-2 border rounded"
-            required
+          <label className="block text-sm font-medium mb-1">Content</label>
+          <MarkdownEditor
+            content={formData.content}
+            onChange={(markdown) =>
+              setFormData({ ...formData, content: markdown })
+            }
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Content</label>
-            <MarkdownEditor
-              content={formData.content}
-              onChange={(markdown) =>
-                setFormData({ ...formData, content: markdown })
-              }
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Preview</label>
-            <div className="prose dark:prose-invert max-w-none p-4 border rounded h-96 overflow-y-auto bg-gray-50">
-              <ReactMarkdown>{formData.content}</ReactMarkdown>
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Tools (One per line)
-            </label>
-            <textarea
-              value={formData.tools.join('\n')}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  tools: e.target.value
-                    .split('\n')
-                    .filter((tool) => tool.trim() !== ''),
-                })
-              }
-              className="w-full p-2 border rounded h-48 font-mono"
-              placeholder="NextJS for front-end framework&#10;Convex for back-end and database&#10;Vercel for deployments"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Preview</label>
-            <ul className="list-disc list-inside p-4 border rounded h-48 overflow-y-auto bg-gray-50">
-              {formData.tools.map((tool, index) => (
-                <li key={index}>{tool}</li>
-              ))}
-            </ul>
-          </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Tools (One per line)
+          </label>
+          <textarea
+            value={formData.tools.join('\n')}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                tools: e.target.value
+                  .split('\n')
+                  .filter((tool) => tool.trim() !== ''),
+              })
+            }
+            className="w-full p-2 border rounded h-48 font-mono"
+            placeholder="NextJS for front-end framework&#10;Convex for back-end and database&#10;Vercel for deployments"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Images</label>
@@ -250,7 +237,7 @@ export default function AdminProjects() {
                 setFormData({
                   ...formData,
                   images: [...formData.images, result.fileUrl],
-                  imageUrl: formData.imageUrl || result.fileUrl, // Use first uploaded image as imageUrl if not set
+                  imageUrl: formData.imageUrl || result.fileUrl,
                 })
               }}
               onError={(error) => {
@@ -261,7 +248,6 @@ export default function AdminProjects() {
               maxSizeMB={5}
             />
 
-            {/* Display uploaded images with remove option */}
             <div className="grid grid-cols-2 gap-4 mt-4">
               {formData.images.map((imageUrl, index) => (
                 <div key={index} className="relative group">

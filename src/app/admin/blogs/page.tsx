@@ -3,13 +3,15 @@ import { useState } from 'react'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
-import ReactMarkdown from 'react-markdown'
+import { Doc } from '@/convex/_generated/dataModel'
 import MarkdownEditor from '@/components/MarkdownEditor'
 
 interface BlogFormData {
   title: string
   body: string
 }
+
+type BlogPost = Doc<'blogs'>
 
 export default function AdminBlogs() {
   const blogs = useQuery(api.blogs.getAllBlogs) || []
@@ -47,7 +49,7 @@ export default function AdminBlogs() {
     }
   }
 
-  const handleEdit = (blog: any) => {
+  const handleEdit = (blog: BlogPost) => {
     setEditingId(blog._id)
     setFormData({
       title: blog.title,
@@ -69,7 +71,6 @@ export default function AdminBlogs() {
         onSubmit={handleSubmit}
         className="mb-8 space-y-4"
         onKeyDown={(e) => {
-          // Prevent form submission on space
           if (e.key === ' ' || e.code === 'Space') {
             e.stopPropagation()
           }
@@ -95,37 +96,21 @@ export default function AdminBlogs() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="blog-content"
-              className="block text-sm font-medium mb-1"
-            >
-              Content
-            </label>
-            <MarkdownEditor
-              id="blog-content"
-              name="blog-content"
-              content={formData.body}
-              onChange={(markdown) =>
-                setFormData({ ...formData, body: markdown })
-              }
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="blog-preview"
-              className="block text-sm font-medium mb-1"
-            >
-              Preview
-            </label>
-            <div
-              id="blog-preview"
-              className="prose dark:prose-invert max-w-none p-4 border rounded h-96 overflow-y-auto bg-gray-50"
-            >
-              <ReactMarkdown>{formData.body}</ReactMarkdown>
-            </div>
-          </div>
+        <div>
+          <label
+            htmlFor="blog-content"
+            className="block text-sm font-medium mb-1"
+          >
+            Content
+          </label>
+          <MarkdownEditor
+            id="blog-content"
+            name="blog-content"
+            content={formData.body}
+            onChange={(markdown) =>
+              setFormData({ ...formData, body: markdown })
+            }
+          />
         </div>
 
         <button
@@ -143,7 +128,7 @@ export default function AdminBlogs() {
       </form>
 
       <div className="space-y-4">
-        {blogs.map((blog: any) => (
+        {blogs.map((blog: BlogPost) => (
           <div
             key={blog._id}
             className="border p-4 rounded flex justify-between items-center"

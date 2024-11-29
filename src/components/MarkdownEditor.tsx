@@ -6,15 +6,15 @@ import { Link as TiptapLink } from '@tiptap/extension-link'
 import { Button } from '@/components/ui/button'
 import dynamic from 'next/dynamic'
 import {
-  Bold,
-  Italic,
   List,
   ListOrdered,
   Link as LinkIcon,
   Quote,
   Heading2,
   Heading3,
+  Image as ImageIcon,
 } from 'lucide-react'
+import Image from '@tiptap/extension-image'
 
 interface MarkdownEditorProps {
   content: string
@@ -34,12 +34,42 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
         StarterKit.configure({
           heading: {
             levels: [2, 3],
+            HTMLAttributes: {
+              class: 'text-2xl font-bold',
+              2: { class: 'text-2xl font-bold mb-4' },
+              3: { class: 'text-xl font-bold mb-3' },
+            },
+          },
+          bulletList: {
+            HTMLAttributes: {
+              class: 'list-disc list-inside mb-4',
+            },
+          },
+          orderedList: {
+            HTMLAttributes: {
+              class: 'list-decimal list-inside mb-4',
+            },
+          },
+          listItem: {
+            HTMLAttributes: {
+              class: 'mb-1',
+            },
+          },
+          blockquote: {
+            HTMLAttributes: {
+              class: 'border-l-4 border-gray-300 pl-4 italic my-4',
+            },
           },
         }),
         TiptapLink.configure({
           openOnClick: false,
           HTMLAttributes: {
             class: 'text-blue-500 hover:text-blue-700 underline',
+          },
+        }),
+        Image.configure({
+          HTMLAttributes: {
+            class: 'max-w-full h-auto rounded-lg',
           },
         }),
       ],
@@ -49,19 +79,6 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
           class:
             'prose dark:prose-invert max-w-none min-h-[400px] p-4 focus:outline-none bg-white',
         },
-        handleDOMEvents: {
-          keydown: (view, event) => {
-            isUserTyping.current = true
-            return false
-          },
-          keyup: () => {
-            // Reset after a short delay to allow for content update
-            setTimeout(() => {
-              isUserTyping.current = false
-            }, 50)
-            return false
-          },
-        },
       },
       onUpdate: ({ editor }) => {
         if (!isUserTyping.current) return
@@ -70,7 +87,7 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
         onChange(html)
       },
     },
-    [] // Remove content from dependencies
+    []
   )
 
   useEffect(() => {
@@ -89,8 +106,10 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
     (callback: () => boolean) => (e: React.MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
+      isUserTyping.current = true
       callback()
       editor?.commands.focus()
+      isUserTyping.current = false
     }
 
   if (!isMounted) {
@@ -109,36 +128,17 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
     }
   }
 
+  const addImage = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const url = window.prompt('Image URL')
+    if (url) {
+      editor?.chain().focus().setImage({ src: url }).run()
+    }
+  }
+
   return (
-    <div
-      className="border rounded-lg overflow-hidden flex flex-col"
-      tabIndex={-1}
-    >
+    <div className="border rounded-lg overflow-hidden flex flex-col">
       <div className="border-b bg-gray-50 p-2 flex gap-2 flex-wrap">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={handleToolbarClick(() =>
-            editor.chain().focus().toggleBold().run()
-          )}
-          className={editor.isActive('bold') ? 'bg-gray-200' : ''}
-        >
-          <Bold className="h-4 w-4" />
-        </Button>
-
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={handleToolbarClick(() =>
-            editor.chain().focus().toggleItalic().run()
-          )}
-          className={editor.isActive('italic') ? 'bg-gray-200' : ''}
-        >
-          <Italic className="h-4 w-4" />
-        </Button>
-
         <Button
           type="button"
           variant="ghost"
@@ -212,9 +212,19 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
         >
           <Heading3 className="h-4 w-4" />
         </Button>
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={addImage}
+          className={editor?.isActive('image') ? 'bg-gray-200' : ''}
+        >
+          <ImageIcon className="h-4 w-4" />
+        </Button>
       </div>
 
-      <div className="min-h-[400px] flex-grow bg-white">
+      <div className="min-h-[200px] h-[200px] flex-grow bg-white resize-y overflow-auto">
         <EditorContent editor={editor} className="h-full" />
       </div>
     </div>
