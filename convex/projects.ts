@@ -5,16 +5,43 @@ function isValidS3ImageUrl(url: string): boolean {
   if (!url) return false
   try {
     const urlObj = new URL(url)
-    return urlObj.hostname === 'aok-projects-images.s3.us-east-2.amazonaws.com'
+    return (
+      urlObj.hostname === 'aok-projects-images.s3.us-east-2.amazonaws.com' &&
+      url.startsWith('https://aok-projects-images.s3.us-east-2.amazonaws.com/')
+    )
   } catch {
     return false
+  }
+}
+
+function isValidImageUrl(url: string): boolean {
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return url.startsWith('/')
   }
 }
 
 export const getAllProjects = query({
   handler: async (ctx) => {
     const projects = await ctx.db.query('projects').collect()
-    return projects
+
+    const validatedProjects = projects.map((project) => {
+      if (!project.imageUrl) {
+        console.error(`Project ${project._id} has no imageUrl`)
+      } else if (!isValidS3ImageUrl(project.imageUrl)) {
+        console.error(
+          `Project ${project._id} has invalid S3 imageUrl: ${project.imageUrl}. Expected format: https://aok-projects-images.s3.us-east-2.amazonaws.com/...`
+        )
+      }
+      return {
+        ...project,
+        imageUrl: isValidS3ImageUrl(project.imageUrl) ? project.imageUrl : null,
+      }
+    })
+
+    return validatedProjects
   },
 })
 
@@ -86,6 +113,7 @@ export const checkImageUrls = query({
       id: project._id,
       imageUrl: project.imageUrl,
       images: project.images,
+      isValid: isValidS3ImageUrl(project.imageUrl),
     }))
   },
 })
