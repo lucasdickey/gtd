@@ -1,10 +1,9 @@
 'use client'
 import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
-import Image from 'next/image'
 import { Link2Icon } from '@radix-ui/react-icons'
-import ReactMarkdown from 'react-markdown'
 import { useState, useEffect, useMemo } from 'react'
+import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
 
