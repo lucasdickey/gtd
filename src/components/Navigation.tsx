@@ -47,7 +47,7 @@ export default function Navigation() {
                   alt="A-OK Face Logo"
                   width={75}
                   height={55}
-                  className="mr-2 -ml-5 mt-5 animate-slow-fade"
+                  className="mr-2 -ml-5 mt-5"
                 />
               </Link>
             </div>
