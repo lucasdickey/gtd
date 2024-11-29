@@ -1,10 +1,17 @@
-import { query, mutation } from './_generated/server'
+import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
+
+// Helper function to create slug from title
+function createSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+}
 
 export const getAllBlogs = query({
   handler: async (ctx) => {
     const blogs = await ctx.db.query('blogs').order('desc').collect()
-
     return blogs
   },
 })
@@ -25,12 +32,14 @@ export const createBlog = mutation({
     title: v.string(),
     body: v.string(),
     publishDate: v.number(),
-    slug: v.string(),
     updateDate: v.number(),
+    isPublished: v.optional(v.boolean()),
+    author: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const blogId = await ctx.db.insert('blogs', {
       ...args,
+      slug: createSlug(args.title),
     })
     return blogId
   },
@@ -42,12 +51,16 @@ export const updateBlog = mutation({
     title: v.string(),
     body: v.string(),
     publishDate: v.number(),
-    slug: v.string(),
     updateDate: v.number(),
+    isPublished: v.optional(v.boolean()),
+    author: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args
-    await ctx.db.patch(id, data)
+    await ctx.db.patch(id, {
+      ...data,
+      slug: createSlug(data.title),
+    })
   },
 })
 

@@ -5,10 +5,11 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useRef, useEffect, useState } from 'react'
 
-// Move navItems outside component since it's static
+// Update navItems to include Blog
 const navItems = [
   { href: '/', label: 'Home' },
   { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Musings' },
   { href: '/about', label: 'About' },
 ] as const
 
@@ -46,7 +47,7 @@ export default function Navigation() {
                   alt="A-OK Face Logo"
                   width={75}
                   height={55}
-                  className="mr-2 -ml-5 mt-5 animate-slow-fade"
+                  className="mr-2 -ml-5 mt-5"
                 />
               </Link>
             </div>
