@@ -3,6 +3,7 @@ import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Link2Icon } from '@radix-ui/react-icons'
 import { useEffect, useMemo } from 'react'
+import { showToast } from '@/utils/toast'
 
 export default function BlogPage() {
   const blogsQuery = useQuery(api.blogs.getAllBlogs)
@@ -84,7 +85,7 @@ export default function BlogPage() {
                       const url = `${window.location.origin}${window.location.pathname}#${blog.slug}`
                       navigator.clipboard.writeText(url)
                       window.history.pushState({}, '', url)
-                      alert('Link copied to clipboard!')
+                      showToast('Link copied to clipboard!')
                     }}
                     className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
                     aria-label="Copy link to blog post"
