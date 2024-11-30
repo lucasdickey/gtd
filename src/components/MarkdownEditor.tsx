@@ -81,26 +81,26 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
         },
       },
       onUpdate: ({ editor }) => {
-        if (!isUserTyping.current) return
         const html = editor.getHTML()
-        lastContentRef.current = html
-        onChange(html)
+        if (html !== lastContentRef.current) {
+          lastContentRef.current = html
+          onChange(html)
+        }
       },
     },
     []
   )
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
-  // Only sync content when it changes externally
-  useEffect(() => {
     if (editor && content !== lastContentRef.current && !isUserTyping.current) {
       lastContentRef.current = content
       editor.commands.setContent(content)
     }
   }, [content, editor])
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const handleToolbarClick =
     (callback: () => boolean) => (e: React.MouseEvent) => {

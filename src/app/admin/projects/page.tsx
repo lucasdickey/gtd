@@ -12,7 +12,6 @@ interface ProjectFormData {
   title: string
   description: string
   imageUrl: string
-  slug: string
   content: string
   images: string[]
   tools: string[]
@@ -52,15 +51,6 @@ interface DbProject {
   projectUrlText?: string
 }
 
-// Add this function at the top of the file, before the component
-const generateSlug = (title: string): string => {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-') // Replace any non-alphanumeric chars with hyphen
-    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
-    .trim()
-}
-
 export const dynamic = 'force-dynamic'
 
 export default function AdminProjects() {
@@ -82,7 +72,6 @@ export default function AdminProjects() {
     title: '',
     description: '',
     imageUrl: '',
-    slug: '',
     content: '',
     images: [],
     tools: [],
@@ -96,25 +85,45 @@ export default function AdminProjects() {
 
   // Handle form submission for both create and update operations
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault() // Prevent default form submission behavior
+    e.preventDefault()
 
     try {
+      // More specific validation
+      const missingFields = []
+      if (!formData.title?.trim()) missingFields.push('Title')
+      if (!formData.description?.trim()) missingFields.push('Description')
+      if (!formData.content?.trim() && !formData.content?.includes('<'))
+        missingFields.push('Content')
+
+      if (missingFields.length > 0) {
+        throw new Error(
+          `Please fill in the following required fields: ${missingFields.join(', ')}`
+        )
+      }
+
+      // Ensure imageUrl is set
+      if (!formData.imageUrl) {
+        formData.imageUrl = '/projectOne.jpg' // Default image
+      }
+
+      // Ensure tools is an array
+      const tools = Array.isArray(formData.tools) ? formData.tools : []
+
+      const projectData = {
+        ...formData,
+        publishedAt: formData.publishedAt.getTime(),
+        tools,
+        images: formData.images || [],
+      }
+
       if (editingId) {
-        // If we have an editingId, we're updating an existing project
         await updateProject({
           id: editingId,
-          ...formData,
-          publishedAt: formData.publishedAt.getTime(), // Convert Date to timestamp
-          tools: formData.tools || [], // Ensure tools is sent
+          ...projectData,
         })
-        setEditingId(null) // Clear editing state
+        setEditingId(null)
       } else {
-        // No editingId means we're creating a new project
-        await createProject({
-          ...formData,
-          publishedAt: formData.publishedAt.getTime(), // Convert Date to timestamp
-          tools: formData.tools || [], // Ensure tools is sent
-        })
+        await createProject(projectData)
       }
 
       // Reset form after submission
@@ -122,7 +131,6 @@ export default function AdminProjects() {
         title: '',
         description: '',
         imageUrl: '',
-        slug: '',
         content: '',
         images: [],
         tools: [],
@@ -132,6 +140,9 @@ export default function AdminProjects() {
       })
     } catch (error) {
       console.error('Error saving project:', error)
+      alert(
+        `Failed to save project: ${error instanceof Error ? error.message : 'Unknown error'}`
+      )
     }
   }
 
@@ -145,7 +156,6 @@ export default function AdminProjects() {
       title: project.title,
       description: project.description,
       imageUrl: project.imageUrl,
-      slug: project.slug,
       content: project.content,
       images: project.images,
       tools: project.tools || [],
@@ -177,12 +187,9 @@ export default function AdminProjects() {
             name="project-title"
             value={formData.title}
             onChange={(e) => {
-              const newTitle = e.target.value
-              const newSlug = generateSlug(newTitle)
               setFormData({
                 ...formData,
-                title: newTitle,
-                slug: newSlug,
+                title: e.target.value,
               })
             }}
             className="w-full p-2 border rounded"
@@ -204,9 +211,12 @@ export default function AdminProjects() {
           <label className="block text-sm font-medium mb-1">Content</label>
           <MarkdownEditor
             content={formData.content}
-            onChange={(markdown) =>
-              setFormData({ ...formData, content: markdown })
-            }
+            onChange={(markdown) => {
+              setFormData((prev) => ({
+                ...prev,
+                content: markdown || '',
+              }))
+            }}
           />
         </div>
         <div>
