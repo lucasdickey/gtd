@@ -60,18 +60,18 @@ export const remove = mutation({
 
 /**
  * Usage examples from the client:
- * 
+ *
  * // To fetch tasks:
  * const tasks = useQuery(api.tasks.list)
- * 
+ *
  * // To create a task:
  * const mutation = useMutation(api.tasks.create)
  * await mutation({ title: "New task" })
- * 
+ *
  * // To update a task:
  * const mutation = useMutation(api.tasks.update)
  * await mutation({ id: taskId, completed: true })
- * 
+ *
  * // To delete a task:
  * const mutation = useMutation(api.tasks.remove)
  * await mutation({ id: taskId })

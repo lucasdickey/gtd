@@ -54,10 +54,7 @@ export default function BlogPage() {
       <div className="container mx-auto px-8 py-8 max-w-4xl">
         <div className="animate-pulse space-y-8">
           {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="bg-gray-200 dark:bg-gray-700 h-48 rounded-lg"
-            />
+            <div key={i} className="bg-gray-200 h-48 rounded-lg" />
           ))}
         </div>
       </div>
@@ -68,14 +65,14 @@ export default function BlogPage() {
     <div className="container mx-auto px-8 py-8 max-w-4xl">
       <h1 className="text-3xl font-bold mb-8">Blog Posts</h1>
       {blogs.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">No blog posts yet.</p>
+        <p className="text-gray-500">No blog posts yet.</p>
       ) : (
         <div className="space-y-8">
           {blogs.map((blog) => (
             <article
               key={blog._id}
               id={blog.slug}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden scroll-mt-8"
+              className="bg-white rounded-lg shadow-md overflow-hidden scroll-mt-8"
             >
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-2">
@@ -93,13 +90,13 @@ export default function BlogPage() {
                     <Link2Icon className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                <div className="text-sm text-gray-500 mb-4">
                   <time dateTime={new Date(blog.publishDate).toISOString()}>
                     Published: {new Date(blog.publishDate).toLocaleDateString()}
                   </time>
                 </div>
                 <div
-                  className="prose dark:prose-invert max-w-none"
+                  className="prose max-w-none"
                   dangerouslySetInnerHTML={{ __html: blog.body }}
                 />
               </div>

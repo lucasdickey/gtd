@@ -60,14 +60,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="theme-color" content="#ffffff" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="application-name" content="Apes on Keys" />
-        <meta name="apple-mobile-web-app-title" content="Apes on Keys" />
-        <meta name="msapplication-TileColor" content="#ffffff" />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${vt323.variable} antialiased relative`}
       >

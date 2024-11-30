@@ -1,4 +1,5 @@
 ## Projects/Roadmap:
+
 1. SHIPPED: Deployed basic NextJS + Convex app to Vercel
 2. SHIPPED: JJ's podcast made with NotebookLM, ChatGPT with web search, Eleven Labs, and Udio on AI front
 3. SHIPPED: Image file uploader
