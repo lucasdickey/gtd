@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
 import { ConvexClientProvider } from './ConvexClientProvider'
-import Navigation from '@/components/Navigation'
+import { NavHeader } from '@/components/navigation/nav-header'
+import { MainNav } from '@/components/navigation/main-nav'
 import { VT323 } from 'next/font/google'
 
 const geistSans = localFont({
@@ -60,27 +61,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="theme-color" content="#ffffff" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="application-name" content="Apes on Keys" />
-        <meta name="apple-mobile-web-app-title" content="Apes on Keys" />
-        <meta name="msapplication-TileColor" content="#ffffff" />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${vt323.variable} antialiased relative`}
-      >
-        <div className="corner-triangle corner-triangle-top" />
-        <div className="corner-triangle corner-triangle-bottom" />
-        <Navigation />
-        <main className="pt-16">
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-        </main>
-        <div
-          id="toast"
-          className="hidden fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 z-50"
-        />
+      <body>
+        <div className="flex min-h-screen">
+          {/* Sidebar */}
+          <div className="fixed z-50 flex h-screen w-64 flex-col border-r bg-brand-gold">
+            <NavHeader />
+            <MainNav />
+          </div>
+
+          {/* Main Content */}
+          <main className="flex-1 pl-64">
+            <ConvexClientProvider>{children}</ConvexClientProvider>
+          </main>
+        </div>
       </body>
     </html>
   )

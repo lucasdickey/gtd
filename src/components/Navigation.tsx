@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useRef, useEffect, useState } from 'react'
+import { ComponentName } from 'shadcn-ui'
 
 // Update navItems to include Blog
 const navItems = [
@@ -52,35 +53,40 @@ export default function Navigation() {
               </Link>
             </div>
 
-            <div className="flex space-x-8 relative pb-1 overflow-x-auto">
-              {/* Enhanced animated underline */}
-              <div
-                className="absolute bottom-0 h-0.5 bg-background transition-all duration-300 ease-in-out"
-                style={{
-                  left: activeLeft,
-                  width: activeWidth,
-                  transform: 'translateY(1px)',
-                }}
-              />
-
-              {navItems.map((link, index) => (
-                <Link
-                  key={link.href}
-                  ref={(el) => (navRefs.current[index] = el)}
-                  href={link.href}
+            {/* Scrollable navigation links */}
+            <div className="flex-1 overflow-x-auto">
+              <div className="flex space-x-8 relative pb-1 pr-16">
+                {/* Enhanced animated underline */}
+                <div
+                  className="absolute bottom-0 h-0.5 bg-background transition-all duration-300 ease-in-out"
                   style={{
-                    color:
-                      pathname === link.href ? 'var(--foreground)' : undefined,
+                    left: activeLeft,
+                    width: activeWidth,
+                    transform: 'translateY(1px)',
                   }}
-                  className={`relative px-3 py-2 transition-colors duration-300 hover:text-action-accent ${
-                    pathname === link.href
-                      ? 'font-bold text-foreground'
-                      : 'text-brand-beige'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+                />
+
+                {navItems.map((link, index) => (
+                  <Link
+                    key={link.href}
+                    ref={(el) => (navRefs.current[index] = el)}
+                    href={link.href}
+                    style={{
+                      color:
+                        pathname === link.href
+                          ? 'var(--foreground)'
+                          : undefined,
+                    }}
+                    className={`relative px-3 py-2 transition-colors duration-300 hover:text-action-accent ${
+                      pathname === link.href
+                        ? 'font-bold text-foreground'
+                        : 'text-brand-beige'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
