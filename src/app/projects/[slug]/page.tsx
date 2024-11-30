@@ -1,8 +1,3 @@
-'use client'
-import { useQuery } from 'convex/react'
-import { api } from '@/convex/_generated/api'
-import Image from 'next/image'
-import { useState, useEffect } from 'react'
 import { Metadata } from 'next'
 import ProjectDetails from './ProjectDetails'
 
