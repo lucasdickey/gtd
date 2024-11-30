@@ -15,13 +15,6 @@ interface CollapsibleProps {
   onCollapse: (value: boolean) => void
 }
 
-interface SidebarItem {
-  id: string
-  label: string
-  href?: string
-  // Add other properties that your sidebar items have
-}
-
 export function Sidebar({ children }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(false)
 
@@ -35,10 +28,13 @@ export function Sidebar({ children }: SidebarProps) {
       <div className="flex h-full flex-col">
         {React.Children.map(children, (child) => {
           if (React.isValidElement(child)) {
-            return React.cloneElement(child as React.ReactElement<any>, {
-              isCollapsed,
-              onCollapse: setIsCollapsed,
-            })
+            return React.cloneElement(
+              child as React.ReactElement<CollapsibleProps>,
+              {
+                isCollapsed,
+                onCollapse: setIsCollapsed,
+              }
+            )
           }
           return child
         })}
@@ -143,8 +139,4 @@ export function SidebarMenuItem({
       {!isCollapsed && <span>{title}</span>}
     </Component>
   )
-}
-
-const handleItemClick = (item: SidebarItem) => {
-  // Handle item click logic here
 }

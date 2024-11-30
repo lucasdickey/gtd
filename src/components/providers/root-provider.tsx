@@ -9,7 +9,6 @@ import { ConvexClientProvider } from '@/app/ConvexClientProvider'
 
 interface RootProviderProps {
   children: React.ReactNode
-  className?: string
 }
 
 function MainContent({ children }: { children: React.ReactNode }) {
@@ -26,7 +25,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function RootProvider({ children, className }: RootProviderProps) {
+export function RootProvider({ children }: RootProviderProps) {
   return (
     <ConvexClientProvider>
       <SidebarProvider>

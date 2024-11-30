@@ -13,19 +13,19 @@ type ToasterToast = ToastProps & {
   action?: ToastActionElement
 }
 
-type ActionTypes = {
+type ActionType = {
   ADD_TOAST: 'ADD_TOAST'
   UPDATE_TOAST: 'UPDATE_TOAST'
   DISMISS_TOAST: 'DISMISS_TOAST'
   REMOVE_TOAST: 'REMOVE_TOAST'
 }
 
-const actionTypes: ActionTypes = {
+const ACTION_TYPES: ActionType = {
   ADD_TOAST: 'ADD_TOAST',
   UPDATE_TOAST: 'UPDATE_TOAST',
   DISMISS_TOAST: 'DISMISS_TOAST',
   REMOVE_TOAST: 'REMOVE_TOAST',
-}
+} as const
 
 let count = 0
 
@@ -34,23 +34,21 @@ function genId() {
   return count.toString()
 }
 
-type ActionType = typeof actionTypes
-
 type Action =
   | {
-      type: ActionType['ADD_TOAST']
+      type: typeof ACTION_TYPES.ADD_TOAST
       toast: ToasterToast
     }
   | {
-      type: ActionType['UPDATE_TOAST']
+      type: typeof ACTION_TYPES.UPDATE_TOAST
       toast: Partial<ToasterToast>
     }
   | {
-      type: ActionType['DISMISS_TOAST']
+      type: typeof ACTION_TYPES.DISMISS_TOAST
       toastId?: ToasterToast['id']
     }
   | {
-      type: ActionType['REMOVE_TOAST']
+      type: typeof ACTION_TYPES.REMOVE_TOAST
       toastId?: ToasterToast['id']
     }
 
@@ -68,7 +66,7 @@ const addToRemoveQueue = (toastId: string) => {
   const timeout = setTimeout(() => {
     toastTimeouts.delete(toastId)
     dispatch({
-      type: 'REMOVE_TOAST',
+      type: ACTION_TYPES.REMOVE_TOAST,
       toastId: toastId,
     })
   }, TOAST_REMOVE_DELAY)
@@ -149,13 +147,14 @@ function toast({ ...props }: Toast) {
 
   const update = (props: ToasterToast) =>
     dispatch({
-      type: 'UPDATE_TOAST',
+      type: ACTION_TYPES.UPDATE_TOAST,
       toast: { ...props, id },
     })
-  const dismiss = () => dispatch({ type: 'DISMISS_TOAST', toastId: id })
+  const dismiss = () =>
+    dispatch({ type: ACTION_TYPES.DISMISS_TOAST, toastId: id })
 
   dispatch({
-    type: 'ADD_TOAST',
+    type: ACTION_TYPES.ADD_TOAST,
     toast: {
       ...props,
       id,
@@ -189,7 +188,8 @@ function useToast() {
   return {
     ...state,
     toast,
-    dismiss: (toastId?: string) => dispatch({ type: 'DISMISS_TOAST', toastId }),
+    dismiss: (toastId?: string) =>
+      dispatch({ type: ACTION_TYPES.DISMISS_TOAST, toastId }),
   }
 }
 
