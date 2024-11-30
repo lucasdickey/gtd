@@ -32,9 +32,17 @@ function isValidImageUrl(url: string): boolean {
     return true
   }
 
-  // Allow relative paths
+  // Allow relative paths from public directory
   if (url.startsWith('/')) {
-    return true
+    // List of known valid public images
+    const validPublicImages = [
+      '/projectOne.jpg',
+      '/projectTwoJJPod.jpg',
+      '/a-ok-face.png',
+      '/a-ok-face.svg',
+      '/a-okay-monkey-1.png',
+    ]
+    return validPublicImages.includes(url)
   }
 
   // Allow any HTTPS URL
@@ -47,7 +55,7 @@ function isValidImageUrl(url: string): boolean {
 }
 
 // At the top with other constants
-const DEFAULT_PROJECT_IMAGE = '/projectOne.jpg' // Using an existing image from public folder
+const DEFAULT_PROJECT_IMAGE = '/projectOne.jpg' // Image from public folder
 
 export const getAllProjects = query({
   handler: async (ctx) => {
@@ -55,7 +63,6 @@ export const getAllProjects = query({
 
     return projects.map((project) => ({
       ...project,
-      // Use the default image if the project image is invalid
       imageUrl: isValidImageUrl(project.imageUrl)
         ? project.imageUrl
         : DEFAULT_PROJECT_IMAGE,
@@ -87,21 +94,59 @@ export const createProject = mutation({
     projectUrlText: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Validate image URL with better error message
-    if (!isValidImageUrl(args.imageUrl)) {
-      throw new Error(
-        `Invalid image URL format: ${args.imageUrl}. URL must be either:
-        - An S3 URL starting with https://aok-projects-images.s3.us-east-2.amazonaws.com/
-        - A relative path starting with /
-        - A valid HTTPS URL`
-      )
-    }
+    try {
+      // Log incoming arguments
+      console.log('Received project creation request with args:', {
+        ...args,
+        content: args.content.substring(0, 100) + '...', // Truncate content for logging
+      })
 
-    const projectId = await ctx.db.insert('projects', {
-      ...args,
-      slug: createSlug(args.title),
-    })
-    return projectId
+      // Validate image URL
+      if (!isValidImageUrl(args.imageUrl)) {
+        console.log('Image URL validation failed for:', args.imageUrl)
+        throw new Error(
+          `Invalid image URL format: ${args.imageUrl}. URL must be either:
+          - An S3 URL starting with https://aok-projects-images.s3.us-east-2.amazonaws.com/
+          - A relative path starting with /
+          - A valid HTTPS URL`
+        )
+      }
+
+      // Generate slug once
+      const slug = createSlug(args.title)
+      console.log('Generated slug:', slug)
+
+      // Prepare insert data using the generated slug
+      const insertData = {
+        ...args,
+        slug, // Use the already generated slug
+      }
+      console.log('Preparing to insert data:', {
+        ...insertData,
+        content: insertData.content.substring(0, 100) + '...', // Truncate content for logging
+      })
+
+      // Attempt database insertion
+      const projectId = await ctx.db.insert('projects', insertData)
+      console.log('Successfully created project with ID:', projectId)
+
+      return projectId
+    } catch (error) {
+      console.error('Failed to create project:', {
+        error:
+          error instanceof Error
+            ? {
+                message: error.message,
+                stack: error.stack,
+              }
+            : error,
+        args: {
+          ...args,
+          content: args.content.substring(0, 100) + '...', // Truncate content for logging
+        },
+      })
+      throw error
+    }
   },
 })
 
