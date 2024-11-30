@@ -28,10 +28,30 @@ export const metadata: Metadata = {
   },
   description:
     "I might as well be a monkey. But I'm a monkey with far more than a thousand keyboards.",
+  metadataBase: new URL('https://www.apesonkeys.com'),
   openGraph: {
+    type: 'website',
+    url: 'https://www.apesonkeys.com',
+    title: 'ꓘO-∀',
+    description:
+      "We might as well be monkeys. But we're monkeys with far more than a thousand keyboards.",
     images: [
       {
-        url: '/a-okay-monkey-1.png',
+        url: 'https://www.apesonkeys.com/a-okay-monkey-1.png',
+        width: 800,
+        height: 800,
+        alt: 'ꓘO-∀ Monkey',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ꓘO-∀',
+    description:
+      "We might as well be monkeys. But we're monkeys with far more than a thousand keyboards.",
+    images: [
+      {
+        url: 'https://www.apesonkeys.com/a-okay-monkey-1.png',
         width: 800,
         height: 800,
         alt: 'ꓘO-∀ Monkey',
