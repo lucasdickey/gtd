@@ -3,11 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, FolderKanban, PenTool, User } from 'lucide-react'
-import {
-  SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-} from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
 
 export function MainNav({ isCollapsed }: { isCollapsed?: boolean }) {
   const pathname = usePathname()
@@ -36,28 +32,34 @@ export function MainNav({ isCollapsed }: { isCollapsed?: boolean }) {
   ]
 
   return (
-    <SidebarContent>
-      <div className="px-2 py-2">
-        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+    <nav className="flex flex-col gap-2 p-4">
+      <div className="px-2">
+        <h2 className="mb-2 text-lg font-semibold tracking-tight">
           Navigation
         </h2>
-        <SidebarMenu>
+        <ul className="space-y-1">
           {items.map((item) => (
-            <Link key={item.href} href={item.href} className="no-underline">
-              <SidebarMenuItem
-                icon={item.icon}
-                title={item.title}
-                isActive={
-                  item.href === '/'
-                    ? pathname === '/'
-                    : (pathname?.startsWith(item.href) ?? false)
-                }
-                isCollapsed={isCollapsed}
-              />
-            </Link>
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className={cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent',
+                  (
+                    item.href === '/'
+                      ? pathname === '/'
+                      : pathname?.startsWith(item.href)
+                  )
+                    ? 'bg-accent'
+                    : 'transparent'
+                )}
+              >
+                {item.icon}
+                {!isCollapsed && <span>{item.title}</span>}
+              </Link>
+            </li>
           ))}
-        </SidebarMenu>
+        </ul>
       </div>
-    </SidebarContent>
+    </nav>
   )
 }

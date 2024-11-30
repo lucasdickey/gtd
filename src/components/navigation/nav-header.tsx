@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { SidebarHeader } from '@/components/ui/sidebar'
 
 interface NavHeaderProps {
   isCollapsed?: boolean
@@ -9,7 +8,7 @@ interface NavHeaderProps {
 
 export function NavHeader({ isCollapsed, onCollapse }: NavHeaderProps) {
   return (
-    <SidebarHeader isCollapsed={isCollapsed} onCollapse={onCollapse}>
+    <header className="flex h-[60px] items-center justify-between border-b px-6 py-3">
       <div className="flex items-center gap-2">
         <Link href="/" className="flex items-center">
           <Image
@@ -27,6 +26,14 @@ export function NavHeader({ isCollapsed, onCollapse }: NavHeaderProps) {
           </div>
         )}
       </div>
-    </SidebarHeader>
+      {onCollapse && (
+        <button
+          onClick={() => onCollapse(!isCollapsed)}
+          className="rounded-md p-2 hover:bg-accent"
+        >
+          {isCollapsed ? '→' : '←'}
+        </button>
+      )}
+    </header>
   )
 }
