@@ -15,6 +15,13 @@ interface CollapsibleProps {
   onCollapse: (value: boolean) => void
 }
 
+interface SidebarItem {
+  id: string
+  label: string
+  href?: string
+  // Add other properties that your sidebar items have
+}
+
 export function Sidebar({ children }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(false)
 
@@ -136,4 +143,8 @@ export function SidebarMenuItem({
       {!isCollapsed && <span>{title}</span>}
     </Component>
   )
+}
+
+const handleItemClick = (item: SidebarItem) => {
+  // Handle item click logic here
 }
