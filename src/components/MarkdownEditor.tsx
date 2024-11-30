@@ -23,6 +23,15 @@ interface MarkdownEditorProps {
   name?: string
 }
 
+// Define the sanitizeContent function before using it
+const sanitizeContent = (content: string): string => {
+  return content
+    .replace(/<p>\s*<\/p>/g, '')
+    .replace(/<p><br><\/p>/g, '<p></p>')
+    .replace(/\n\s*\n/g, '\n')
+    .trim()
+}
+
 const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
   const [isMounted, setIsMounted] = useState(false)
   const isUserTyping = useRef(false)
@@ -32,12 +41,19 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
     {
       extensions: [
         StarterKit.configure({
+          paragraph: {
+            HTMLAttributes: {
+              class: 'mb-4',
+            },
+          },
           heading: {
             levels: [2, 3],
             HTMLAttributes: {
-              class: 'text-2xl font-bold',
-              2: { class: 'text-2xl font-bold mb-4' },
-              3: { class: 'text-xl font-bold mb-3' },
+              class: 'font-bold',
+              level: {
+                2: 'text-2xl mb-4',
+                3: 'text-xl mb-3',
+              },
             },
           },
           bulletList: {
@@ -73,7 +89,7 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
           },
         }),
       ],
-      content,
+      content: sanitizeContent(content),
       editorProps: {
         attributes: {
           class:
@@ -87,6 +103,7 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
           onChange(html)
         }
       },
+      immediatelyRender: false,
     },
     []
   )
@@ -230,7 +247,6 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
     </div>
   )
 }
-
 export default dynamic(() => Promise.resolve(MarkdownEditor), {
   ssr: false,
 }) as typeof MarkdownEditor

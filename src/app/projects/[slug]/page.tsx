@@ -3,7 +3,6 @@ import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import ReactMarkdown from 'react-markdown'
 
 export default function ProjectPage({ params }: { params: { slug: string } }) {
   const project = useQuery(api.projects.getProjectBySlug, { slug: params.slug })
@@ -50,9 +49,31 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
       </div>
 
       {/* Markdown Content */}
-      <div className="prose dark:prose-invert max-w-none">
-        <ReactMarkdown>{project.content}</ReactMarkdown>
-      </div>
+      {renderContent(project.content)}
+    </div>
+  )
+}
+
+// Add this helper function
+const renderContent = (content: string) => {
+  // If content is HTML, parse it properly
+  if (content.includes('<p>') || content.includes('</p>')) {
+    return (
+      <div
+        className="prose dark:prose-invert max-w-none"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    )
+  }
+
+  // Fallback for plain text/markdown
+  return (
+    <div className="prose dark:prose-invert max-w-none">
+      {content.split('\n').map((paragraph, idx) => (
+        <p key={idx} className="mb-4">
+          {paragraph}
+        </p>
+      ))}
     </div>
   )
 }

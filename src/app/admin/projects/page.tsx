@@ -180,7 +180,7 @@ export default function AdminProjects() {
 
       <form onSubmit={handleSubmit} className="mb-8 space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
+          <label className="block text-sm font-bold mb-1">Title</label>
           <input
             type="text"
             id="project-title"
@@ -197,7 +197,7 @@ export default function AdminProjects() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Description</label>
+          <label className="block text-sm font-bold mb-1">Description</label>
           <textarea
             value={formData.description}
             onChange={(e) =>
@@ -208,7 +208,7 @@ export default function AdminProjects() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Content</label>
+          <label className="block text-sm font-bold mb-1">Content</label>
           <MarkdownEditor
             content={formData.content}
             onChange={(markdown) => {
@@ -220,25 +220,41 @@ export default function AdminProjects() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">
-            Tools (One per line)
-          </label>
+          <label className="block text-sm font-bold mb-1">Tools</label>
           <textarea
             value={formData.tools.join('\n')}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                tools: e.target.value
-                  .split('\n')
-                  .filter((tool) => tool.trim() !== ''),
+            onChange={(e) => {
+              console.log('Tools onChange event:', {
+                rawValue: e.target.value,
+                keyCode: e.nativeEvent.type,
+                currentTools: formData.tools,
               })
-            }
-            className="w-full p-2 border rounded h-48 font-mono"
+
+              // Split by newlines and preserve the current line being edited
+              const lines = e.target.value.split('\n')
+
+              setFormData((prev) => {
+                console.log('Previous form data tools:', prev.tools)
+                return {
+                  ...prev,
+                  tools: lines,
+                }
+              })
+            }}
+            onKeyDown={(e) => {
+              console.log('Tools onKeyDown:', {
+                key: e.key,
+                keyCode: e.keyCode,
+                ctrlKey: e.ctrlKey,
+                metaKey: e.metaKey,
+              })
+            }}
+            className="w-full p-2 border rounded h-48 font-mono whitespace-pre-wrap"
             placeholder="NextJS for front-end framework&#10;Convex for back-end and database&#10;Vercel for deployments"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Images</label>
+          <label className="block text-sm font-bold mb-1">Images</label>
           <div className="space-y-4">
             <FileUploader
               projectId={editingId || 'general'}
@@ -286,7 +302,7 @@ export default function AdminProjects() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-bold mb-1">
               Published Date
             </label>
             <input
@@ -303,9 +319,7 @@ export default function AdminProjects() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Project URL
-            </label>
+            <label className="block text-sm font-bold mb-1">Project URL</label>
             <input
               type="url"
               value={formData.projectUrl || ''}
@@ -318,7 +332,7 @@ export default function AdminProjects() {
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-bold mb-1">
             Project URL Text
           </label>
           <input
