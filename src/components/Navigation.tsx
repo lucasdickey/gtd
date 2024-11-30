@@ -52,7 +52,7 @@ export default function Navigation() {
               </Link>
             </div>
 
-            <div className="flex space-x-8 relative pb-1">
+            <div className="flex space-x-8 relative pb-1 overflow-x-auto">
               {/* Enhanced animated underline */}
               <div
                 className="absolute bottom-0 h-0.5 bg-background transition-all duration-300 ease-in-out"
