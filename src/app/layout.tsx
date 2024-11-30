@@ -38,6 +38,17 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: 'summary_large_image',
+    images: [
+      {
+        url: '/a-okay-monkey-1.png',
+        width: 800,
+        height: 800,
+        alt: 'ꓘO-∀ Monkey',
+      },
+    ],
+  },
   icons: {
     icon: [
       { url: '/favicon.ico' },
