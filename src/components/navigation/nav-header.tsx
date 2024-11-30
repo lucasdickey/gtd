@@ -1,18 +1,32 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { SidebarHeader } from '@/components/ui/sidebar'
 
-export function NavHeader() {
+interface NavHeaderProps {
+  isCollapsed?: boolean
+  onCollapse?: (value: boolean) => void
+}
+
+export function NavHeader({ isCollapsed, onCollapse }: NavHeaderProps) {
   return (
-    <div className="flex h-16 items-center px-4 bg-brand-gold">
-      <Link href="/" className="flex items-center space-x-2">
-        <Image
-          src="/a-ok-face.png"
-          alt="A-OK Face Logo"
-          width={75}
-          height={55}
-          className="mr-2 -ml-5 mt-5"
-        />
-      </Link>
-    </div>
+    <SidebarHeader isCollapsed={isCollapsed} onCollapse={onCollapse}>
+      <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/a-ok-face.png"
+            alt="A-OK Face Logo"
+            width={40}
+            height={40}
+            className="rounded-md transition-all duration-300"
+          />
+        </Link>
+        {!isCollapsed && (
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold">A-OK</span>
+            <span className="text-xs text-muted-foreground">apesonkeys</span>
+          </div>
+        )}
+      </div>
+    </SidebarHeader>
   )
 }
