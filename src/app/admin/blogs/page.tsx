@@ -4,6 +4,7 @@ import { useMutation, useQuery } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
 import { Id } from '../../../../convex/_generated/dataModel'
 import { useState } from 'react'
+import MarkdownEditor from '@/components/MarkdownEditor'
 
 type BlogFormData = {
   title: string
@@ -103,11 +104,14 @@ export default function AdminBlogsPage() {
 
         <div>
           <label className="block mb-2">Content</label>
-          <textarea
-            value={formData.body}
-            onChange={(e) => setFormData({ ...formData, body: e.target.value })}
-            className="w-full p-2 border rounded h-32"
-            required
+          <MarkdownEditor
+            content={formData.body}
+            onChange={(html) => {
+              setFormData((prev) => ({
+                ...prev,
+                body: html || '',
+              }))
+            }}
           />
         </div>
 

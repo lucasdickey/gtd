@@ -72,3 +72,15 @@ export const deleteBlog = mutation({
     await ctx.db.delete(args.id)
   },
 })
+
+export const getPublishedBlogs = query({
+  handler: async (ctx) => {
+    const blogs = await ctx.db
+      .query('blogs')
+      .filter((q) => q.eq(q.field('isPublished'), true))
+      .order('desc')
+      .collect()
+
+    return blogs
+  },
+})
