@@ -4,7 +4,7 @@ import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
 import { showToast } from '@/utils/toast'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 type Blog = {
@@ -40,6 +40,17 @@ export default function BlogList() {
   const searchParams = useSearchParams()
   const blogs = useQuery(api.blogs.getPublishedBlogs)
 
+  // Sort blogs by date using useMemo
+  const sortedBlogs = useMemo(
+    () =>
+      [...(blogs || [])].sort((a, b) => {
+        const dateA = a.publishedAt || 0
+        const dateB = b.publishedAt || 0
+        return dateB - dateA
+      }),
+    [blogs]
+  )
+
   // Handle scroll to anchor on load
   useEffect(() => {
     const hash = window.location.hash
@@ -71,7 +82,7 @@ export default function BlogList() {
                 <BlogSkeleton />
               </>
             ) : (
-              blogs.map((blog: Blog) => (
+              sortedBlogs.map((blog: Blog) => (
                 <article
                   key={blog._id}
                   id={blog.slug}
@@ -102,8 +113,10 @@ export default function BlogList() {
                       </button>
                     </div>
                     <p className="text-sm text-gray-500 dark:text-gray-500 mb-2">
-                      By {blog.author} •{' '}
-                      {new Date(blog.publishedAt).toLocaleDateString()}
+                      By {blog.author || 'Anonymous'} •{' '}
+                      {blog.publishedAt
+                        ? new Date(blog.publishedAt).toLocaleDateString()
+                        : 'Date unknown'}
                     </p>
                     <div
                       className="prose dark:prose-invert max-w-none"

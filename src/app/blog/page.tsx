@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import BlogList from './BlogList'
 import { getRouteTitle } from '../metadata.config'
+import { Suspense } from 'react'
 
 export const metadata: Metadata = {
   title: getRouteTitle('/blog'),
@@ -30,5 +31,9 @@ export const metadata: Metadata = {
 }
 
 export default function BlogPage() {
-  return <BlogList />
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BlogList />
+    </Suspense>
+  )
 }

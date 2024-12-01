@@ -9,8 +9,7 @@ import MarkdownEditor from '@/components/MarkdownEditor'
 type BlogFormData = {
   title: string
   body: string
-  isPublished?: boolean
-  author?: string
+  author: string
 }
 
 type Blog = {
@@ -18,17 +17,14 @@ type Blog = {
   _creationTime: number
   title: string
   body: string
-  publishDate: number
-  updateDate: number
+  publishedAt: number
   slug: string
-  isPublished?: boolean
-  author?: string
+  author: string
 }
 
 const defaultFormData: BlogFormData = {
   title: '',
   body: '',
-  isPublished: false,
   author: '',
 }
 
@@ -48,16 +44,10 @@ export default function AdminBlogsPage() {
         await updateBlog({
           id: editingId,
           ...formData,
-          publishDate: Date.now(),
-          updateDate: Date.now(),
         })
         setEditingId(null)
       } else {
-        await createBlog({
-          ...formData,
-          publishDate: Date.now(),
-          updateDate: Date.now(),
-        })
+        await createBlog(formData)
       }
 
       setFormData(defaultFormData)
@@ -70,7 +60,6 @@ export default function AdminBlogsPage() {
     setFormData({
       title: blog.title,
       body: blog.body,
-      isPublished: blog.isPublished,
       author: blog.author,
     })
     setEditingId(blog._id)
@@ -119,26 +108,13 @@ export default function AdminBlogsPage() {
           <label className="block mb-2">Author</label>
           <input
             type="text"
-            value={formData.author || ''}
+            value={formData.author}
             onChange={(e) =>
               setFormData({ ...formData, author: e.target.value })
             }
             className="w-full p-2 border rounded"
+            required
           />
-        </div>
-
-        <div>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={formData.isPublished || false}
-              onChange={(e) =>
-                setFormData({ ...formData, isPublished: e.target.checked })
-              }
-              className="rounded"
-            />
-            Published
-          </label>
         </div>
 
         <button
@@ -159,9 +135,10 @@ export default function AdminBlogsPage() {
               <h2 className="text-xl font-semibold">{blog.title}</h2>
               <p className="text-gray-600">{blog.body.substring(0, 100)}...</p>
               <div className="text-sm text-gray-500 mt-2">
-                {blog.isPublished ? 'Published' : 'Draft'} •{' '}
-                {blog.author && `By ${blog.author} •`}{' '}
-                {new Date(blog.publishDate).toLocaleDateString()}
+                By {blog.author || 'Anonymous'} •{' '}
+                {blog.publishedAt
+                  ? new Date(blog.publishedAt).toLocaleDateString()
+                  : 'Date unknown'}
               </div>
             </div>
             <div className="space-x-2">

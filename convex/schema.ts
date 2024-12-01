@@ -36,9 +36,12 @@ export default defineSchema({
   blogs: defineTable({
     title: v.string(),
     body: v.string(),
-    author: v.string(),
+    author: v.optional(v.string()),
     slug: v.string(),
-    publishedAt: v.number(),
+    publishedAt: v.optional(v.number()),
+    publishDate: v.optional(v.number()),
+    updateDate: v.optional(v.number()),
+    isPublished: v.optional(v.boolean()),
   })
     .index('by_published_at', ['publishedAt'])
     .index('by_slug', ['slug']),

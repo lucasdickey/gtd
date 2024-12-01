@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as blogs from "../blogs.js";
 import type * as files from "../files.js";
+import type * as migrations from "../migrations.js";
 import type * as notes from "../notes.js";
 import type * as projects from "../projects.js";
 import type * as tasks from "../tasks.js";
@@ -30,6 +31,7 @@ import type * as tasks from "../tasks.js";
 declare const fullApi: ApiFromModules<{
   blogs: typeof blogs;
   files: typeof files;
+  migrations: typeof migrations;
   notes: typeof notes;
   projects: typeof projects;
   tasks: typeof tasks;

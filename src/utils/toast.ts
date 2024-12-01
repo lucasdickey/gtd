@@ -1,13 +1,17 @@
-import { toast as sonnerToast } from 'sonner'
+export function showToast(message: string, duration = 3000) {
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    const toast = document.getElementById('toast')
+    if (toast) {
+      toast.textContent = message
+      toast.classList.remove('hidden')
+      toast.classList.add('show')
 
-export const toast = {
-  success: (message: string) => {
-    sonnerToast.success(message)
-  },
-  error: (message: string) => {
-    sonnerToast.error(message)
-  },
-  info: (message: string) => {
-    sonnerToast.info(message)
-  },
+      setTimeout(() => {
+        toast.classList.remove('show')
+        toast.classList.add('hidden')
+      }, duration)
+    }
+  }
 }
+
+export const toast = showToast

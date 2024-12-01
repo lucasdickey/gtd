@@ -1,27 +1,11 @@
-import localFont from 'next/font/local'
 import './globals.css'
+import { Inter } from 'next/font/google'
 import { ConvexClientProvider } from './ConvexClientProvider'
-import Navigation from '@/components/Navigation'
-import { VT323 } from 'next/font/google'
-import { metadata } from './layout.metadata'
+import { defaultMetadata } from './metadata.config'
 
-export { metadata }
+const inter = Inter({ subsets: ['latin'] })
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-})
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
-})
-const vt323 = VT323({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-vt323',
-})
+export const metadata = defaultMetadata
 
 export default function RootLayout({
   children,
@@ -30,19 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${vt323.variable} antialiased relative`}
-      >
-        <div className="corner-triangle corner-triangle-top" />
-        <div className="corner-triangle corner-triangle-bottom" />
-        <Navigation />
-        <main className="pt-16">
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-        </main>
-        <div
-          id="toast"
-          className="hidden fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 z-50"
-        />
+      <body className={inter.className}>
+        <ConvexClientProvider>
+          <div id="toast" className="toast hidden" />
+          {children}
+        </ConvexClientProvider>
       </body>
     </html>
   )

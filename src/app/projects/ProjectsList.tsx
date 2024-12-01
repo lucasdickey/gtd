@@ -5,7 +5,7 @@ import { api } from '@/convex/_generated/api'
 import { Link2Icon } from '@radix-ui/react-icons'
 import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
-import { toast } from '@/utils/toast'
+import { showToast } from '@/utils/toast'
 
 export default function ProjectsList() {
   // Memoize the projects array
@@ -109,7 +109,7 @@ export default function ProjectsList() {
                         const url = `${window.location.origin}${window.location.pathname}#${project.slug}`
                         navigator.clipboard.writeText(url)
                         window.history.pushState({}, '', url)
-                        toast('Link copied to clipboard!', 3000)
+                        showToast('Link copied to clipboard!', 3000)
                       }}
                       className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
                       aria-label="Copy link to project"
