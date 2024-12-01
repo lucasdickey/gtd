@@ -23,65 +23,41 @@ const vt323 = VT323({
 
 export const metadata: Metadata = {
   title: {
-    template: 'ꓘO-∀: %s',
-    default: 'ꓘO-∀',
+    template: '%s | An Ape On Keys',
+    default: 'An Ape On Keys',
   },
   description:
-    "I might as well be a monkey. But I'm a monkey with far more than a thousand keyboards.",
+    'Explore our latest projects and developments in AI, web development, and creative coding.',
   metadataBase: new URL('https://www.apesonkeys.com'),
   openGraph: {
     type: 'website',
     url: 'https://www.apesonkeys.com',
-    title: 'ꓘO-∀',
+    title: 'An Ape On Keys',
     description:
-      "We might as well be monkeys. But we're monkeys with far more than a thousand keyboards.",
+      'Explore our latest projects and developments in AI, web development, and creative coding.',
     images: [
       {
         url: 'https://www.apesonkeys.com/a-okay-monkey-1.png',
-        width: 800,
-        height: 800,
-        alt: 'ꓘO-∀ Monkey',
+        width: 1200,
+        height: 630,
+        alt: 'An Ape On Keys',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ꓘO-∀',
+    title: 'An Ape On Keys',
     description:
-      "We might as well be monkeys. But we're monkeys with far more than a thousand keyboards.",
-    images: [
-      {
-        url: 'https://www.apesonkeys.com/a-okay-monkey-1.png',
-        width: 800,
-        height: 800,
-        alt: 'ꓘO-∀ Monkey',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    images: [
-      {
-        url: '/a-okay-monkey-1.png',
-        width: 800,
-        height: 800,
-        alt: 'ꓘO-∀ Monkey',
-      },
-    ],
+      'Explore our latest projects and developments in AI, web development, and creative coding.',
+    creator: '@apesonkeys',
+    images: ['https://www.apesonkeys.com/a-okay-monkey-1.png'],
   },
   icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: [{ url: '/apple-touch-icon.png' }],
-    other: [
-      { rel: 'manifest', url: '/site.webmanifest' },
-      { rel: 'android-chrome-192x192', url: '/android-chrome-192x192.png' },
-      { rel: 'android-chrome-512x512', url: '/android-chrome-512x512.png' },
-    ],
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
   },
+  manifest: '/site.webmanifest',
 }
 
 export default function RootLayout({
