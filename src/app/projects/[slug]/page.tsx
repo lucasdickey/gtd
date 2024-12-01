@@ -7,13 +7,13 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
-    title: `Project: ${params.slug} | An Ape On Keys`,
+    title: params.slug,
     description:
       'Explore our latest projects and developments in AI, web development, and creative coding.',
     openGraph: {
       type: 'article',
       url: `https://www.apesonkeys.com/projects/${params.slug}`,
-      title: `Project: ${params.slug} | An Ape On Keys`,
+      title: `ꓘO-∀ | ${params.slug}`,
       description:
         'Explore our latest projects and developments in AI, web development, and creative coding.',
       images: [
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `Project: ${params.slug} | An Ape On Keys`,
+      title: `ꓘO-∀ | ${params.slug}`,
       description:
         'Explore our latest projects and developments in AI, web development, and creative coding.',
       images: ['https://www.apesonkeys.com/a-okay-monkey-1.png'],

@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'About',
+  title: 'ꓘO-∀ | About',
 }
 
 export default function About() {

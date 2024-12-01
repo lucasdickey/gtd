@@ -1,14 +1,15 @@
 import { Metadata } from 'next'
 import ProjectsList from './ProjectsList'
+import { getRouteTitle } from '../metadata.config'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Projects | An Ape On Keys',
+  title: getRouteTitle('/projects'),
   description:
-    'Explore our latest projects and developments in AI, web development, and creative coding. From practical applications to experimental concepts.',
+    'Explore our latest projects and developments in AI, web development, and creative coding.',
   openGraph: {
-    title: 'Projects | An Ape On Keys',
+    title: 'ꓘO-∀ | Projects',
     description:
       'Explore our latest projects and developments in AI, web development, and creative coding. From practical applications to experimental concepts.',
     images: [
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Projects | An Ape On Keys',
+    title: 'ꓘO-∀ | Projects',
     description:
       'Explore our latest projects and developments in AI, web development, and creative coding. From practical applications to experimental concepts.',
     images: ['https://www.apesonkeys.com/a-okay-monkey-1.png'],
