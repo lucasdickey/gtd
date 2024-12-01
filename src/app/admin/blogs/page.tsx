@@ -5,6 +5,8 @@ import { api } from '../../../../convex/_generated/api'
 import { Id } from '../../../../convex/_generated/dataModel'
 import { useState } from 'react'
 import MarkdownEditor from '@/components/MarkdownEditor'
+import Link from 'next/link'
+import { LinkIcon } from 'lucide-react'
 
 type BlogFormData = {
   title: string
@@ -41,6 +43,7 @@ export default function AdminBlogsPage() {
   const updateBlog = useMutation(api.blogs.updateBlog)
   const deleteBlog = useMutation(api.blogs.deleteBlog)
   const blogs = useQuery(api.blogs.getAllBlogs)
+  console.log('All blogs:', blogs)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -151,38 +154,62 @@ export default function AdminBlogsPage() {
       </form>
 
       <div className="space-y-4">
-        {blogs?.map((blog: Blog) => (
-          <div
-            key={blog._id}
-            className="border p-4 rounded flex justify-between items-start"
-          >
-            <div>
-              <h2 className="text-xl font-semibold">{blog.title}</h2>
-              <p className="text-gray-600">{blog.body.substring(0, 100)}...</p>
-              <div className="text-sm text-gray-500 mt-2">
-                {blog.isPublished ? 'Published' : 'Draft'} •{' '}
-                {blog.author && `By ${blog.author} •`}{' '}
-                {new Date(
-                  blog.publishedAt || blog.publishDate || 0
-                ).toLocaleDateString()}
+        {blogs?.map((blog: Blog) => {
+          console.log('Rendering blog:', blog)
+          return (
+            <div
+              key={blog._id}
+              className="border p-4 rounded flex justify-between items-start"
+            >
+              <div>
+                <div className="flex items-center gap-2 bg-gray-100 p-2">
+                  <Link
+                    href={`/blog/${blog.slug}`}
+                    className="text-xl font-semibold hover:underline"
+                  >
+                    {blog.title}
+                  </Link>
+                  <button
+                    onClick={() => {
+                      const url = `${window.location.origin}/blog#${blog.slug}`
+                      navigator.clipboard.writeText(url)
+                    }}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <LinkIcon className="h-4 w-4" />
+                  </button>
+                  <span className="text-gray-400 hover:text-gray-600 cursor-pointer">
+                    #
+                  </span>
+                </div>
+                <p className="text-gray-600">
+                  {blog.body.substring(0, 100)}...
+                </p>
+                <div className="text-sm text-gray-500 mt-2">
+                  {blog.isPublished ? 'Published' : 'Draft'} •{' '}
+                  {blog.author && `By ${blog.author} •`}{' '}
+                  {new Date(
+                    blog.publishedAt || blog.publishDate || 0
+                  ).toLocaleDateString()}
+                </div>
+              </div>
+              <div className="space-x-2">
+                <button
+                  onClick={() => handleEdit(blog)}
+                  className="text-blue-500 hover:text-blue-600"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(blog._id)}
+                  className="text-red-500 hover:text-red-600"
+                >
+                  Delete
+                </button>
               </div>
             </div>
-            <div className="space-x-2">
-              <button
-                onClick={() => handleEdit(blog)}
-                className="text-blue-500 hover:text-blue-600"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(blog._id)}
-                className="text-red-500 hover:text-red-600"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

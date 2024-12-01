@@ -30,5 +30,14 @@ export const metadata: Metadata = {
 }
 
 export default function BlogPage() {
-  return <BlogList />
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">
+        A small collection of thoughts
+      </h1>
+      <div className="space-y-12">
+        <BlogList />
+      </div>
+    </div>
+  )
 }

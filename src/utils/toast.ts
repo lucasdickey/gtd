@@ -1,18 +1,8 @@
-type ToastOptions = {
-  duration?: number
-  type?: 'success' | 'error' | 'info'
-}
-
-export function showToast(
-  message: string,
-  duration: number = 3000,
-  options: ToastOptions = {}
-) {
+export function showToast(message: string, duration: number = 3000) {
   // Try to use existing toast element first
   const toast = document.getElementById('toast')
 
   if (toast) {
-    // Use existing toast element
     toast.textContent = message
     toast.classList.remove('hidden')
     toast.classList.add('opacity-100')
@@ -28,7 +18,7 @@ export function showToast(
     return
   }
 
-  // Fallback to dynamic toast creation if no existing element
+  // Create toast container if needed
   let toastContainer = document.getElementById('toast-container')
   if (!toastContainer) {
     toastContainer = document.createElement('div')
@@ -40,34 +30,20 @@ export function showToast(
     document.body.appendChild(toastContainer)
   }
 
-  // Create new toast element
   const newToast = document.createElement('div')
-  newToast.className = `bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 ${options.type || ''}`
+  newToast.className = `bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300`
   newToast.textContent = message
 
-  // Add initial styles
-  newToast.style.opacity = '0'
-  newToast.style.transition = 'opacity 0.3s ease'
-
-  // Add to container
   toastContainer.appendChild(newToast)
+  requestAnimationFrame(() => (newToast.style.opacity = '1'))
 
-  // Trigger animation
-  requestAnimationFrame(() => {
-    newToast.style.opacity = '1'
-  })
-
-  // Remove after duration
   setTimeout(() => {
     newToast.style.opacity = '0'
     setTimeout(() => {
-      if (toastContainer.contains(newToast)) {
-        toastContainer.removeChild(newToast)
+      toastContainer?.removeChild(newToast)
+      if (toastContainer?.childNodes.length === 0) {
+        toastContainer.remove()
       }
-      // Remove container if empty
-      if (toastContainer.childNodes.length === 0) {
-        document.body.removeChild(toastContainer)
-      }
-    }, 300) // Wait for fade out animation
+    }, 300)
   }, duration)
 }
