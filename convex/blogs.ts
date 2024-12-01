@@ -9,9 +9,12 @@ function createSlug(title: string): string {
     .replace(/(^-|-$)/g, '')
 }
 
-export const getAllBlogs = query({
+export const getPublishedBlogs = query({
   handler: async (ctx) => {
-    const blogs = await ctx.db.query('blogs').order('desc').collect()
+    const blogs = await ctx.db
+      .query('blogs')
+      .order('publishedAt', 'desc')
+      .collect()
     return blogs
   },
 })
@@ -31,15 +34,13 @@ export const createBlog = mutation({
   args: {
     title: v.string(),
     body: v.string(),
-    publishDate: v.number(),
-    updateDate: v.number(),
-    isPublished: v.optional(v.boolean()),
-    author: v.optional(v.string()),
+    author: v.string(),
   },
   handler: async (ctx, args) => {
     const blogId = await ctx.db.insert('blogs', {
       ...args,
       slug: createSlug(args.title),
+      publishedAt: Date.now(),
     })
     return blogId
   },
@@ -50,10 +51,7 @@ export const updateBlog = mutation({
     id: v.id('blogs'),
     title: v.string(),
     body: v.string(),
-    publishDate: v.number(),
-    updateDate: v.number(),
-    isPublished: v.optional(v.boolean()),
-    author: v.optional(v.string()),
+    author: v.string(),
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args
@@ -65,22 +63,8 @@ export const updateBlog = mutation({
 })
 
 export const deleteBlog = mutation({
-  args: {
-    id: v.id('blogs'),
-  },
+  args: { id: v.id('blogs') },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id)
-  },
-})
-
-export const getPublishedBlogs = query({
-  handler: async (ctx) => {
-    const blogs = await ctx.db
-      .query('blogs')
-      .filter((q) => q.eq(q.field('isPublished'), true))
-      .order('desc')
-      .collect()
-
-    return blogs
   },
 })

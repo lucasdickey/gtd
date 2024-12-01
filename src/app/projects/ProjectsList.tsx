@@ -5,7 +5,7 @@ import { api } from '@/convex/_generated/api'
 import { Link2Icon } from '@radix-ui/react-icons'
 import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
-import { showToast } from '@/utils/toast'
+import { toast } from '@/utils/toast'
 
 export default function ProjectsList() {
   // Memoize the projects array
@@ -77,12 +77,12 @@ export default function ProjectsList() {
       <div className="grid grid-cols-12 gap-6">
         <div className="hidden md:block col-span-2" />
         <div className="col-span-12 md:col-span-8">
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-12">
             {sortedProjects.map((project) => (
               <div
                 key={project._id}
                 id={project.slug}
-                className="bg-white dark:bg-white rounded-lg shadow-md overflow-hidden scroll-mt-8"
+                className="bg-white dark:bg-white rounded-lg shadow-lg overflow-hidden scroll-mt-8 border border-gray-200 dark:border-gray-700"
               >
                 <div className="relative h-48">
                   {imageError[project._id] ? (
@@ -109,7 +109,7 @@ export default function ProjectsList() {
                         const url = `${window.location.origin}${window.location.pathname}#${project.slug}`
                         navigator.clipboard.writeText(url)
                         window.history.pushState({}, '', url)
-                        showToast('Link copied to clipboard!', 3000)
+                        toast('Link copied to clipboard!', 3000)
                       }}
                       className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
                       aria-label="Copy link to project"
