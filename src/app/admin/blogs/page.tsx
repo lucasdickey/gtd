@@ -16,13 +16,14 @@ type BlogFormData = {
 type Blog = {
   _id: Id<'blogs'>
   _creationTime: number
-  title: string
-  body: string
-  publishDate: number
-  updateDate: number
-  slug: string
-  isPublished?: boolean
+  publishedAt?: number // Allow undefined
+  publishDate?: number
+  updateDate?: number
   author?: string
+  isPublished?: boolean
+  body: string
+  title: string
+  slug: string
 }
 
 const defaultFormData: BlogFormData = {
@@ -48,14 +49,14 @@ export default function AdminBlogsPage() {
         await updateBlog({
           id: editingId,
           ...formData,
-          publishDate: Date.now(),
+          publishedAt: Date.now(),
           updateDate: Date.now(),
         })
         setEditingId(null)
       } else {
         await createBlog({
           ...formData,
-          publishDate: Date.now(),
+          publishedAt: Date.now(),
           updateDate: Date.now(),
         })
       }
@@ -161,7 +162,9 @@ export default function AdminBlogsPage() {
               <div className="text-sm text-gray-500 mt-2">
                 {blog.isPublished ? 'Published' : 'Draft'} •{' '}
                 {blog.author && `By ${blog.author} •`}{' '}
-                {new Date(blog.publishDate).toLocaleDateString()}
+                {new Date(
+                  blog.publishedAt || blog.publishDate || 0
+                ).toLocaleDateString()}
               </div>
             </div>
             <div className="space-x-2">
