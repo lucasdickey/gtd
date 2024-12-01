@@ -4,34 +4,29 @@ import ProjectsList from './ProjectsList'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Projects',
-  description: 'Check out my latest projects and experiments',
+  title: 'Projects | An Ape On Keys',
+  description:
+    'Explore our latest projects and developments in AI, web development, and creative coding. From practical applications to experimental concepts.',
   openGraph: {
-    type: 'website',
-    url: 'https://www.apesonkeys.com/projects',
-    title: 'ꓘO-∀ Projects',
-    description: 'Check out my latest projects and experiments',
+    title: 'Projects | An Ape On Keys',
+    description:
+      'Explore our latest projects and developments in AI, web development, and creative coding. From practical applications to experimental concepts.',
     images: [
       {
         url: 'https://www.apesonkeys.com/a-okay-monkey-1.png',
-        width: 800,
-        height: 800,
-        alt: 'ꓘO-∀ Monkey',
+        width: 1200,
+        height: 630,
+        alt: 'An Ape On Keys Projects',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ꓘO-∀ Projects',
-    description: 'Check out my latest projects and experiments',
-    images: [
-      {
-        url: 'https://www.apesonkeys.com/a-okay-monkey-1.png',
-        width: 800,
-        height: 800,
-        alt: 'ꓘO-∀ Monkey',
-      },
-    ],
+    title: 'Projects | An Ape On Keys',
+    description:
+      'Explore our latest projects and developments in AI, web development, and creative coding. From practical applications to experimental concepts.',
+    images: ['https://www.apesonkeys.com/a-okay-monkey-1.png'],
+    creator: '@apesonkeys',
   },
 }
 

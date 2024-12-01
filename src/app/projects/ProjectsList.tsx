@@ -8,14 +8,13 @@ import Image from 'next/image'
 import { showToast } from '@/utils/toast'
 
 export default function ProjectsList() {
+  // Memoize the projects array
   const projectsQuery = useQuery(api.projects.getAllProjects)
   const projects = useMemo(() => projectsQuery || [], [projectsQuery])
+
+  // Sort projects by date using useMemo
   const sortedProjects = useMemo(
-    () =>
-      [...projects].sort(
-        (a, b) =>
-          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-      ),
+    () => [...projects].sort((a, b) => b.publishedAt - a.publishedAt),
     [projects]
   )
 
@@ -23,6 +22,7 @@ export default function ProjectsList() {
 
   const validateImageUrl = (url: string) => {
     try {
+      // Check if the URL is already properly formatted
       if (
         url.startsWith(
           'https://aok-projects-images.s3.us-east-2.amazonaws.com/'
@@ -30,24 +30,29 @@ export default function ProjectsList() {
       ) {
         return url
       }
+      // If it's a relative path, construct the full URL
       if (url.startsWith('/')) {
         return `https://aok-projects-images.s3.us-east-2.amazonaws.com${url}`
       }
+      // Otherwise, try to construct a valid URL
       new URL(url)
       return url
     } catch {
       console.error('Invalid URL:', url)
-      return '/fallback-project-image.jpg'
+      return '/a-okay-monkey-1.png'
     }
   }
 
+  // Handle image loading errors
   const handleImageError = (projectId: string) => {
+    console.error('Image load error for project:', projectId)
     setImageError((prev) => ({
       ...prev,
       [projectId]: true,
     }))
   }
 
+  // Add scroll handling effect
   useEffect(() => {
     const handleScroll = () => {
       if (window.location.hash) {
@@ -63,8 +68,8 @@ export default function ProjectsList() {
     }
 
     handleScroll()
-    window.addEventListener('hashchange', handleScroll)
-    return () => window.removeEventListener('hashchange', handleScroll)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
