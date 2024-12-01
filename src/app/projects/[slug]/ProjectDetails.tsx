@@ -1,10 +1,15 @@
 'use client'
+import React from 'react'
 import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
-export default function ProjectDetails({ slug }: { slug: string }) {
+interface ProjectDetailsProps {
+  slug: string
+}
+
+export default function ProjectDetails({ slug }: ProjectDetailsProps) {
   const project = useQuery(api.projects.getProjectBySlug, { slug })
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 

@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Link2Icon } from '@radix-ui/react-icons'
@@ -13,11 +14,7 @@ export default function ProjectsList() {
 
   // Sort projects by date using useMemo
   const sortedProjects = useMemo(
-    () =>
-      [...projects].sort(
-        (a, b) =>
-          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-      ),
+    () => [...projects].sort((a, b) => b.publishedAt - a.publishedAt),
     [projects]
   )
 
@@ -42,11 +39,11 @@ export default function ProjectsList() {
       return url
     } catch {
       console.error('Invalid URL:', url)
-      return '/fallback-project-image.jpg'
+      return '/a-okay-monkey-1.png'
     }
   }
 
-  // For the Image onError handler
+  // Handle image loading errors
   const handleImageError = (projectId: string) => {
     console.error('Image load error for project:', projectId)
     setImageError((prev) => ({
@@ -71,8 +68,8 @@ export default function ProjectsList() {
     }
 
     handleScroll()
-    window.addEventListener('hashchange', handleScroll)
-    return () => window.removeEventListener('hashchange', handleScroll)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (

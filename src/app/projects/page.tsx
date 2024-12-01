@@ -1,29 +1,33 @@
 import { Metadata } from 'next'
 import ProjectsList from './ProjectsList'
+import { getRouteTitle } from '../metadata.config'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Projects',
-  description: 'Check out my latest projects and experiments',
+  title: getRouteTitle('/projects'),
+  description:
+    'Explore our latest projects and developments in AI, web development, and creative coding.',
   openGraph: {
+    title: 'ꓘO-∀ | Projects',
+    description:
+      'Explore our latest projects and developments in AI, web development, and creative coding. From practical applications to experimental concepts.',
     images: [
       {
-        url: '/a-okay-monkey-1.png',
-        width: 800,
-        height: 800,
-        alt: 'ꓘO-∀ Monkey',
+        url: 'https://www.apesonkeys.com/a-okay-monkey-1.png',
+        width: 1200,
+        height: 630,
+        alt: 'An Ape On Keys Projects',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    images: [
-      {
-        url: '/a-okay-monkey-1.png',
-        width: 800,
-        height: 800,
-        alt: 'ꓘO-∀ Monkey',
-      },
-    ],
+    title: 'ꓘO-∀ | Projects',
+    description:
+      'Explore our latest projects and developments in AI, web development, and creative coding. From practical applications to experimental concepts.',
+    images: ['https://www.apesonkeys.com/a-okay-monkey-1.png'],
+    creator: '@apesonkeys',
   },
 }
 

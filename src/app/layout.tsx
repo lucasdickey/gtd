@@ -1,9 +1,11 @@
-import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
 import { ConvexClientProvider } from './ConvexClientProvider'
 import Navigation from '@/components/Navigation'
 import { VT323 } from 'next/font/google'
+import { metadata } from './layout.metadata'
+
+export { metadata }
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -20,49 +22,6 @@ const vt323 = VT323({
   subsets: ['latin'],
   variable: '--font-vt323',
 })
-
-export const metadata: Metadata = {
-  title: {
-    template: 'ꓘO-∀: %s',
-    default: 'ꓘO-∀',
-  },
-  description:
-    "I might as well be a monkey. But I'm a monkey with far more than a thousand keyboards.",
-  openGraph: {
-    images: [
-      {
-        url: '/a-okay-monkey-1.png',
-        width: 800,
-        height: 800,
-        alt: 'ꓘO-∀ Monkey',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    images: [
-      {
-        url: '/a-okay-monkey-1.png',
-        width: 800,
-        height: 800,
-        alt: 'ꓘO-∀ Monkey',
-      },
-    ],
-  },
-  icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: [{ url: '/apple-touch-icon.png' }],
-    other: [
-      { rel: 'manifest', url: '/site.webmanifest' },
-      { rel: 'android-chrome-192x192', url: '/android-chrome-192x192.png' },
-      { rel: 'android-chrome-512x512', url: '/android-chrome-512x512.png' },
-    ],
-  },
-}
 
 export default function RootLayout({
   children,
