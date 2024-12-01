@@ -7,6 +7,7 @@ import { useState } from 'react'
 import MarkdownEditor from '@/components/MarkdownEditor'
 import Link from 'next/link'
 import { LinkIcon } from 'lucide-react'
+import { showToast } from '@/utils/toast'
 
 type BlogFormData = {
   title: string
@@ -162,7 +163,7 @@ export default function AdminBlogsPage() {
               className="border p-4 rounded flex justify-between items-start"
             >
               <div>
-                <div className="flex items-center gap-2 bg-gray-100 p-2">
+                <div className="flex items-center gap-2">
                   <Link
                     href={`/blog/${blog.slug}`}
                     className="text-xl font-semibold hover:underline"
@@ -173,14 +174,13 @@ export default function AdminBlogsPage() {
                     onClick={() => {
                       const url = `${window.location.origin}/blog#${blog.slug}`
                       navigator.clipboard.writeText(url)
+                      showToast('Link copied to clipboard!')
                     }}
                     className="text-gray-500 hover:text-gray-700"
+                    aria-label="Copy link to blog"
                   >
                     <LinkIcon className="h-4 w-4" />
                   </button>
-                  <span className="text-gray-400 hover:text-gray-600 cursor-pointer">
-                    #
-                  </span>
                 </div>
                 <p className="text-gray-600">
                   {blog.body.substring(0, 100)}...
