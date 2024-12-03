@@ -35,17 +35,14 @@ export default defineSchema({
   }),
   blogs: defineTable({
     title: v.string(),
-    content: v.string(),
-    published: v.boolean(),
-    authorId: v.string(),
+    body: v.string(),
     slug: v.string(),
-    publishedAt: v.optional(v.number()),
-    publishDate: v.optional(v.number()),
-    updateDate: v.optional(v.number()),
     author: v.optional(v.string()),
+    publishedAt: v.optional(v.float64()),
+    publishDate: v.optional(v.float64()),
+    updateDate: v.optional(v.float64()),
     isPublished: v.optional(v.boolean()),
   })
-    .index('by_author', ['authorId'])
     .index('by_publish_date', ['publishDate'])
     .index('by_published_at', ['publishedAt']),
 })

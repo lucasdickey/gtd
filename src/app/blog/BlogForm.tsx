@@ -15,9 +15,8 @@ export const BlogForm = () => {
 
       await createBlog({
         title: formData.get('title') as string,
-        content: formData.get('content') as string,
-        published: formData.get('published') === 'true',
-        authorId: 'anonymous',
+        body: formData.get('content') as string,
+        isPublished: formData.get('published') === 'true',
       })
 
       alert('Blog created successfully!')

@@ -62,6 +62,7 @@ export default function AdminBlogsPage() {
           ...formData,
           publishedAt: Date.now(),
           updateDate: Date.now(),
+          isPublished: false,
         })
       }
 

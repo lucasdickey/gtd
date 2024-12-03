@@ -31,9 +31,11 @@ export const getBlogBySlug = query({
 export const createBlog = mutation({
   args: {
     title: v.string(),
-    content: v.string(),
-    published: v.boolean(),
-    authorId: v.string(),
+    body: v.string(),
+    isPublished: v.boolean(),
+    author: v.optional(v.string()),
+    publishedAt: v.optional(v.float64()),
+    updateDate: v.optional(v.float64()),
   },
   handler: async (ctx, args) => {
     try {
@@ -41,20 +43,19 @@ export const createBlog = mutation({
         throw new Error('Title must be between 1 and 100 characters')
       }
 
-      if (args.content.length < 1) {
+      if (args.body.length < 1) {
         throw new Error('Content cannot be empty')
       }
 
       const blogId = await ctx.db.insert('blogs', {
         title: args.title,
-        content: args.content,
-        published: args.published,
-        authorId: args.authorId,
+        body: args.body,
         slug: createSlug(args.title),
-        publishedAt: args.published ? Date.now() : undefined,
-        publishDate: args.published ? Date.now() : undefined,
+        publishedAt: args.isPublished ? Date.now() : undefined,
+        publishDate: args.isPublished ? Date.now() : undefined,
         updateDate: Date.now(),
-        isPublished: args.published,
+        isPublished: args.isPublished,
+        author: args.author,
       })
 
       return blogId
