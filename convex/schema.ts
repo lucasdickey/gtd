@@ -35,7 +35,9 @@ export default defineSchema({
   }),
   blogs: defineTable({
     title: v.string(),
-    body: v.string(),
+    content: v.string(),
+    published: v.boolean(),
+    authorId: v.string(),
     slug: v.string(),
     publishedAt: v.optional(v.number()),
     publishDate: v.optional(v.number()),
@@ -43,6 +45,7 @@ export default defineSchema({
     author: v.optional(v.string()),
     isPublished: v.optional(v.boolean()),
   })
+    .index('by_author', ['authorId'])
     .index('by_publish_date', ['publishDate'])
     .index('by_published_at', ['publishedAt']),
 })

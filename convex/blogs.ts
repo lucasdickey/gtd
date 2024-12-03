@@ -1,5 +1,6 @@
 import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
+import { Id } from './_generated/dataModel'
 
 // Helper function to create slug from title
 function createSlug(title: string): string {
@@ -30,19 +31,37 @@ export const getBlogBySlug = query({
 export const createBlog = mutation({
   args: {
     title: v.string(),
-    body: v.string(),
-    publishedAt: v.optional(v.number()),
-    publishDate: v.optional(v.number()),
-    updateDate: v.optional(v.number()),
-    isPublished: v.optional(v.boolean()),
-    author: v.optional(v.string()),
+    content: v.string(),
+    published: v.boolean(),
+    authorId: v.string(),
   },
   handler: async (ctx, args) => {
-    const blogId = await ctx.db.insert('blogs', {
-      ...args,
-      slug: createSlug(args.title),
-    })
-    return blogId
+    try {
+      if (args.title.length < 1 || args.title.length > 100) {
+        throw new Error('Title must be between 1 and 100 characters')
+      }
+
+      if (args.content.length < 1) {
+        throw new Error('Content cannot be empty')
+      }
+
+      const blogId = await ctx.db.insert('blogs', {
+        title: args.title,
+        content: args.content,
+        published: args.published,
+        authorId: args.authorId,
+        slug: createSlug(args.title),
+        publishedAt: args.published ? Date.now() : undefined,
+        publishDate: args.published ? Date.now() : undefined,
+        updateDate: Date.now(),
+        isPublished: args.published,
+      })
+
+      return blogId
+    } catch (error: any) {
+      console.error('Blog creation error:', error)
+      throw new Error(`Failed to create blog: ${error.message}`)
+    }
   },
 })
 
