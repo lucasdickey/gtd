@@ -6,10 +6,9 @@ export type Blog = {
   title: string
   body: string
   slug: string
-  // Support both old and new fields during transition
+  author?: string
   publishedAt?: number
   publishDate?: number
   updateDate?: number
-  author?: string
   isPublished?: boolean
 }

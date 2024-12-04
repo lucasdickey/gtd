@@ -32,37 +32,26 @@ export const createBlog = mutation({
   args: {
     title: v.string(),
     body: v.string(),
-    isPublished: v.boolean(),
+    slug: v.string(),
     author: v.optional(v.string()),
-    publishedAt: v.optional(v.float64()),
-    updateDate: v.optional(v.float64()),
+    publishedAt: v.optional(v.number()),
+    updateDate: v.optional(v.number()),
+    publishDate: v.optional(v.number()),
+    isPublished: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    try {
-      if (args.title.length < 1 || args.title.length > 100) {
-        throw new Error('Title must be between 1 and 100 characters')
-      }
+    const blogId = await ctx.db.insert('blogs', {
+      title: args.title,
+      body: args.body,
+      slug: args.slug,
+      author: args.author,
+      publishedAt: args.publishedAt,
+      updateDate: args.updateDate,
+      publishDate: args.publishDate,
+      isPublished: args.isPublished ?? false,
+    })
 
-      if (args.body.length < 1) {
-        throw new Error('Content cannot be empty')
-      }
-
-      const blogId = await ctx.db.insert('blogs', {
-        title: args.title,
-        body: args.body,
-        slug: createSlug(args.title),
-        publishedAt: args.isPublished ? Date.now() : undefined,
-        publishDate: args.isPublished ? Date.now() : undefined,
-        updateDate: Date.now(),
-        isPublished: args.isPublished,
-        author: args.author,
-      })
-
-      return blogId
-    } catch (error: any) {
-      console.error('Blog creation error:', error)
-      throw new Error(`Failed to create blog: ${error.message}`)
-    }
+    return blogId
   },
 })
 
@@ -71,17 +60,18 @@ export const updateBlog = mutation({
     id: v.id('blogs'),
     title: v.string(),
     body: v.string(),
-    publishedAt: v.optional(v.number()),
-    publishDate: v.optional(v.number()),
-    updateDate: v.optional(v.number()),
-    isPublished: v.optional(v.boolean()),
+    slug: v.string(),
     author: v.optional(v.string()),
+    publishedAt: v.optional(v.number()),
+    updateDate: v.optional(v.number()),
+    publishDate: v.optional(v.number()),
+    isPublished: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const { id, ...data } = args
+    const { id, ...updates } = args
     await ctx.db.patch(id, {
-      ...data,
-      slug: createSlug(data.title),
+      ...updates,
+      isPublished: updates.isPublished ?? false,
     })
   },
 })

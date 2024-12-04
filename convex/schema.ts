@@ -38,9 +38,9 @@ export default defineSchema({
     body: v.string(),
     slug: v.string(),
     author: v.optional(v.string()),
-    publishedAt: v.optional(v.float64()),
-    publishDate: v.optional(v.float64()),
-    updateDate: v.optional(v.float64()),
+    publishedAt: v.optional(v.number()),
+    publishDate: v.optional(v.number()),
+    updateDate: v.optional(v.number()),
     isPublished: v.optional(v.boolean()),
   })
     .index('by_publish_date', ['publishDate'])
