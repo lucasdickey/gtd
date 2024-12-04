@@ -37,10 +37,10 @@ export default defineSchema({
     title: v.string(),
     body: v.string(),
     slug: v.string(),
+    author: v.optional(v.string()),
     publishedAt: v.optional(v.number()),
     publishDate: v.optional(v.number()),
     updateDate: v.optional(v.number()),
-    author: v.optional(v.string()),
     isPublished: v.optional(v.boolean()),
   })
     .index('by_publish_date', ['publishDate'])

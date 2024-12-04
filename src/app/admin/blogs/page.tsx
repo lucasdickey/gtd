@@ -48,26 +48,40 @@ export default function AdminBlogsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
     try {
+      const timestamp = Date.now()
+      const slugified = formData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+
+      const blogData = {
+        title: formData.title,
+        body: formData.body,
+        slug: slugified,
+        author: formData.author,
+        isPublished: Boolean(formData.isPublished),
+        publishedAt: timestamp,
+        updateDate: timestamp,
+        publishDate: formData.isPublished ? timestamp : undefined,
+      }
+
       if (editingId) {
         await updateBlog({
           id: editingId,
-          ...formData,
-          publishedAt: Date.now(),
-          updateDate: Date.now(),
+          ...blogData,
         })
         setEditingId(null)
       } else {
-        await createBlog({
-          ...formData,
-          publishedAt: Date.now(),
-          updateDate: Date.now(),
-        })
+        await createBlog(blogData)
       }
 
       setFormData(defaultFormData)
+      showToast('Blog saved successfully')
     } catch (error) {
       console.error('Error saving blog:', error)
+      showToast('Error saving blog post')
     }
   }
 

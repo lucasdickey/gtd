@@ -1,5 +1,6 @@
 import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
+import { Id } from './_generated/dataModel'
 
 // Helper function to create slug from title
 function createSlug(title: string): string {
@@ -31,17 +32,25 @@ export const createBlog = mutation({
   args: {
     title: v.string(),
     body: v.string(),
-    publishedAt: v.optional(v.number()),
-    publishDate: v.optional(v.number()),
-    updateDate: v.optional(v.number()),
-    isPublished: v.optional(v.boolean()),
+    slug: v.string(),
     author: v.optional(v.string()),
+    publishedAt: v.optional(v.number()),
+    updateDate: v.optional(v.number()),
+    publishDate: v.optional(v.number()),
+    isPublished: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const blogId = await ctx.db.insert('blogs', {
-      ...args,
-      slug: createSlug(args.title),
+      title: args.title,
+      body: args.body,
+      slug: args.slug,
+      author: args.author,
+      publishedAt: args.publishedAt,
+      updateDate: args.updateDate,
+      publishDate: args.publishDate,
+      isPublished: args.isPublished ?? false,
     })
+
     return blogId
   },
 })
@@ -51,17 +60,18 @@ export const updateBlog = mutation({
     id: v.id('blogs'),
     title: v.string(),
     body: v.string(),
-    publishedAt: v.optional(v.number()),
-    publishDate: v.optional(v.number()),
-    updateDate: v.optional(v.number()),
-    isPublished: v.optional(v.boolean()),
+    slug: v.string(),
     author: v.optional(v.string()),
+    publishedAt: v.optional(v.number()),
+    updateDate: v.optional(v.number()),
+    publishDate: v.optional(v.number()),
+    isPublished: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const { id, ...data } = args
+    const { id, ...updates } = args
     await ctx.db.patch(id, {
-      ...data,
-      slug: createSlug(data.title),
+      ...updates,
+      isPublished: updates.isPublished ?? false,
     })
   },
 })
