@@ -1,33 +1,30 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+// Add the paths that need authentication
+const protectedPaths = [
+  '/admin/blogs',
+  '/admin/projects',
+  '/chilled-monkey-brains',
+]
+
 export function middleware(request: NextRequest) {
-  // Check if the request is for an admin route
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    // You could add more sophisticated auth checks here
-    const basicAuth = request.headers.get('authorization')
+  const path = request.nextUrl.pathname
 
-    if (basicAuth) {
-      const authValue = basicAuth.split(' ')[1]
-      const [user, pwd] = atob(authValue).split(':')
+  // Check if the path needs authentication
+  if (protectedPaths.some((prefix) => path.startsWith(prefix))) {
+    // Check for session token
+    const sessionToken = request.cookies.get('adminSessionToken')
 
-      // Replace with your desired username/password
-      if (user === 'admin' && pwd === 'Bananas0rKeys$') {
-        return NextResponse.next()
-      }
+    if (!sessionToken) {
+      // Redirect to login if no session token
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
-
-    return new NextResponse('Authentication required', {
-      status: 401,
-      headers: {
-        'WWW-Authenticate': 'Basic realm="Secure Area"',
-      },
-    })
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: '/admin/:path*',
+  matcher: ['/admin/:path*', '/chilled-monkey-brains'],
 }

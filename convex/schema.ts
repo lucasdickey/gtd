@@ -45,4 +45,11 @@ export default defineSchema({
   })
     .index('by_publish_date', ['publishDate'])
     .index('by_published_at', ['publishedAt']),
+  adminUsers: defineTable({
+    email: v.string(),
+    passwordHash: v.string(),
+    lastLoginAt: v.optional(v.number()),
+    sessionToken: v.optional(v.string()),
+    sessionExpiresAt: v.optional(v.number()),
+  }).index('by_email', ['email']),
 })

@@ -1,8 +1,11 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { useMutation } from 'convex/react'
+import { useMutation, useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
+import Cookies from 'js-cookie'
 
 // Define the shape of our form data
 interface NoteFormData {
@@ -13,13 +16,36 @@ interface NoteFormData {
 }
 
 export default function ChilledMonkeyBrains() {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<NoteFormData>()
+
+  // Auth check
+  const sessionToken = Cookies.get('adminSessionToken')
+  const isValidSession = useQuery(
+    api.auth.validateSession,
+    sessionToken ? { sessionToken } : 'skip'
+  )
+
   const createNote = useMutation(api.notes.createNote)
+
+  useEffect(() => {
+    if (isValidSession === false) {
+      router.push('/admin/login')
+    }
+  }, [isValidSession, router])
+
+  if (isValidSession === undefined) {
+    return <div>Loading...</div>
+  }
+
+  if (isValidSession === false) {
+    return null
+  }
 
   const onSubmit = async (data: NoteFormData) => {
     console.log('Form submitted with data:', data)
