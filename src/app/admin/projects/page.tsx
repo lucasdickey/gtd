@@ -1,11 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
 import { FileUploader } from '@/components/FileUploader'
 import Image from 'next/image'
 import MarkdownEditor from '@/components/MarkdownEditor'
+import Cookies from 'js-cookie'
 
 // Define the shape of our form data
 interface ProjectFormData {
@@ -54,20 +56,7 @@ interface DbProject {
 export const dynamic = 'force-dynamic'
 
 export default function AdminProjects() {
-  // Fetch and map projects from Convex database
-  const dbProjects = useQuery(api.projects.getAllProjects) || []
-  const projects: Project[] = (dbProjects as DbProject[]).map((dbProject) => ({
-    ...dbProject,
-    publishedAt: new Date(dbProject.publishedAt), // Convert number to Date
-    tools: dbProject.tools || [], // Ensure tools exists
-  }))
-
-  // Set up mutations (database operations) using Convex hooks
-  const createProject = useMutation(api.projects.createProject) // For adding new projects
-  const updateProject = useMutation(api.projects.updateProject) // For editing existing projects
-  const deleteProject = useMutation(api.projects.deleteProject) // For removing projects
-
-  // State for managing form inputs
+  const router = useRouter()
   const [formData, setFormData] = useState<ProjectFormData>({
     title: '',
     description: '',
@@ -79,9 +68,41 @@ export default function AdminProjects() {
     projectUrl: '',
     projectUrlText: '',
   })
-
-  // State to track which project is being edited (null means we're creating a new project)
   const [editingId, setEditingId] = useState<Id<'projects'> | null>(null)
+
+  // Auth check
+  const sessionToken = Cookies.get('adminSessionToken')
+  const isValidSession = useQuery(
+    api.auth.validateSession,
+    sessionToken ? { sessionToken } : 'skip'
+  )
+
+  // Database operations
+  const createProject = useMutation(api.projects.createProject)
+  const updateProject = useMutation(api.projects.updateProject)
+  const deleteProject = useMutation(api.projects.deleteProject)
+  const dbProjects = useQuery(api.projects.getAllProjects)
+
+  useEffect(() => {
+    if (isValidSession === false) {
+      router.push('/admin/login')
+    }
+  }, [isValidSession, router])
+
+  if (isValidSession === undefined) {
+    return <div>Loading...</div>
+  }
+
+  if (isValidSession === false) {
+    return null
+  }
+
+  // Fetch and map projects from Convex database
+  const projects: Project[] = (dbProjects as DbProject[]).map((dbProject) => ({
+    ...dbProject,
+    publishedAt: new Date(dbProject.publishedAt), // Convert number to Date
+    tools: dbProject.tools || [], // Ensure tools exists
+  }))
 
   // Handle form submission for both create and update operations
   const handleSubmit = async (e: React.FormEvent) => {

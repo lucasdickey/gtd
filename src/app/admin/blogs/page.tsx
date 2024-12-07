@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
 import { Id } from '../../../../convex/_generated/dataModel'
@@ -8,6 +10,7 @@ import MarkdownEditor from '@/components/MarkdownEditor'
 import Link from 'next/link'
 import { LinkIcon } from 'lucide-react'
 import { showToast } from '@/utils/toast'
+import Cookies from 'js-cookie'
 
 type BlogFormData = {
   title: string
@@ -19,7 +22,7 @@ type BlogFormData = {
 type Blog = {
   _id: Id<'blogs'>
   _creationTime: number
-  publishedAt?: number // Allow undefined
+  publishedAt?: number
   publishDate?: number
   updateDate?: number
   author?: string
@@ -37,14 +40,34 @@ const defaultFormData: BlogFormData = {
 }
 
 export default function AdminBlogsPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState<BlogFormData>(defaultFormData)
   const [editingId, setEditingId] = useState<Id<'blogs'> | null>(null)
+
+  const sessionToken = Cookies.get('adminSessionToken')
+  const isValidSession = useQuery(
+    api.auth.validateSession,
+    sessionToken ? { sessionToken } : 'skip'
+  )
 
   const createBlog = useMutation(api.blogs.createBlog)
   const updateBlog = useMutation(api.blogs.updateBlog)
   const deleteBlog = useMutation(api.blogs.deleteBlog)
   const blogs = useQuery(api.blogs.getAllBlogs)
-  console.log('All blogs:', blogs)
+
+  useEffect(() => {
+    if (isValidSession === false) {
+      router.push('/admin/login')
+    }
+  }, [isValidSession, router])
+
+  if (isValidSession === undefined) {
+    return <div>Loading...</div>
+  }
+
+  if (isValidSession === false) {
+    return null
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
