@@ -196,210 +196,217 @@ export default function AdminProjects() {
 
   // Render the admin interface
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Manage Projects</h1>
-
-      <form onSubmit={handleSubmit} className="mb-8 space-y-4">
-        <div>
-          <label className="block text-sm font-bold mb-1">Title</label>
-          <input
-            type="text"
-            id="project-title"
-            name="project-title"
-            value={formData.title}
-            onChange={(e) => {
-              setFormData({
-                ...formData,
-                title: e.target.value,
-              })
-            }}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-bold mb-1">Description</label>
-          <textarea
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-bold mb-1">Content</label>
-          <MarkdownEditor
-            content={formData.content}
-            onChange={(markdown) => {
-              setFormData((prev) => ({
-                ...prev,
-                content: markdown || '',
-              }))
-            }}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-bold mb-1">Tools</label>
-          <textarea
-            value={formData.tools.join('\n')}
-            onChange={(e) => {
-              console.log('Tools onChange event:', {
-                rawValue: e.target.value,
-                keyCode: e.nativeEvent.type,
-                currentTools: formData.tools,
-              })
-
-              // Split by newlines and preserve the current line being edited
-              const lines = e.target.value.split('\n')
-
-              setFormData((prev) => {
-                console.log('Previous form data tools:', prev.tools)
-                return {
-                  ...prev,
-                  tools: lines,
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h1 className="text-3xl font-bold mb-8">Manage Projects</h1>
+          <form onSubmit={handleSubmit} className="mb-8 space-y-4">
+            <div>
+              <label className="block text-sm font-bold mb-1">Title</label>
+              <input
+                type="text"
+                id="project-title"
+                name="project-title"
+                value={formData.title}
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    title: e.target.value,
+                  })
+                }}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-1">
+                Description
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
                 }
-              })
-            }}
-            onKeyDown={(e) => {
-              console.log('Tools onKeyDown:', {
-                key: e.key,
-                keyCode: e.keyCode,
-                ctrlKey: e.ctrlKey,
-                metaKey: e.metaKey,
-              })
-            }}
-            className="w-full p-2 border rounded h-48 font-mono whitespace-pre-wrap"
-            placeholder="NextJS for front-end framework&#10;Convex for back-end and database&#10;Vercel for deployments"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-bold mb-1">Images</label>
-          <div className="space-y-4">
-            <FileUploader
-              projectId={editingId || 'general'}
-              onUploadComplete={(result) => {
-                setFormData({
-                  ...formData,
-                  images: [...formData.images, result.fileUrl],
-                  imageUrl: formData.imageUrl || result.fileUrl,
-                })
-              }}
-              onError={(error) => {
-                console.error('Upload error:', error)
-                alert('Failed to upload image: ' + error.message)
-              }}
-              allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
-              maxSizeMB={5}
-            />
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-1">Content</label>
+              <MarkdownEditor
+                content={formData.content}
+                onChange={(markdown) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    content: markdown || '',
+                  }))
+                }}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-1">Tools</label>
+              <textarea
+                value={formData.tools.join('\n')}
+                onChange={(e) => {
+                  console.log('Tools onChange event:', {
+                    rawValue: e.target.value,
+                    keyCode: e.nativeEvent.type,
+                    currentTools: formData.tools,
+                  })
 
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              {formData.images.map((imageUrl, index) => (
-                <div key={index} className="relative group">
-                  <Image
-                    src={imageUrl}
-                    alt={`Project image ${index + 1}`}
-                    width={200}
-                    height={200}
-                    className="object-cover rounded-lg"
-                  />
+                  // Split by newlines and preserve the current line being edited
+                  const lines = e.target.value.split('\n')
+
+                  setFormData((prev) => {
+                    console.log('Previous form data tools:', prev.tools)
+                    return {
+                      ...prev,
+                      tools: lines,
+                    }
+                  })
+                }}
+                onKeyDown={(e) => {
+                  console.log('Tools onKeyDown:', {
+                    key: e.key,
+                    keyCode: e.keyCode,
+                    ctrlKey: e.ctrlKey,
+                    metaKey: e.metaKey,
+                  })
+                }}
+                className="w-full p-2 border rounded h-48 font-mono whitespace-pre-wrap"
+                placeholder="NextJS for front-end framework&#10;Convex for back-end and database&#10;Vercel for deployments"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-1">Images</label>
+              <div className="space-y-4">
+                <FileUploader
+                  projectId={editingId || 'general'}
+                  onUploadComplete={(result) => {
+                    setFormData({
+                      ...formData,
+                      images: [...formData.images, result.fileUrl],
+                      imageUrl: formData.imageUrl || result.fileUrl,
+                    })
+                  }}
+                  onError={(error) => {
+                    console.error('Upload error:', error)
+                    alert('Failed to upload image: ' + error.message)
+                  }}
+                  allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
+                  maxSizeMB={5}
+                />
+
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  {formData.images.map((imageUrl, index) => (
+                    <div key={index} className="relative group">
+                      <Image
+                        src={imageUrl}
+                        alt={`Project image ${index + 1}`}
+                        width={200}
+                        height={200}
+                        className="object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newImages = formData.images.filter(
+                            (_, i) => i !== index
+                          )
+                          setFormData({ ...formData, images: newImages })
+                        }}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold mb-1">
+                  Published Date
+                </label>
+                <input
+                  type="datetime-local"
+                  value={formData.publishedAt.toISOString().slice(0, 16)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      publishedAt: new Date(e.target.value),
+                    })
+                  }
+                  className="w-full p-2 border rounded"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-1">
+                  Project URL
+                </label>
+                <input
+                  type="url"
+                  value={formData.projectUrl || ''}
+                  onChange={(e) =>
+                    setFormData({ ...formData, projectUrl: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                  placeholder="https://example.com"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-1">
+                Project URL Text
+              </label>
+              <input
+                type="text"
+                value={formData.projectUrlText || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, projectUrlText: e.target.value })
+                }
+                className="w-full p-2 border rounded"
+                placeholder="View Project Demo"
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              {editingId ? 'Update Project' : 'Add Project'}
+            </button>
+          </form>
+
+          <div className="space-y-4">
+            {projects.map((project) => (
+              <div
+                key={project._id}
+                className="border p-4 rounded flex justify-between items-center"
+              >
+                <div>
+                  <h3 className="font-bold">{project.title}</h3>
+                  <p className="text-sm text-gray-600">{project.description}</p>
+                </div>
+                <div className="space-x-2">
                   <button
-                    type="button"
-                    onClick={() => {
-                      const newImages = formData.images.filter(
-                        (_, i) => i !== index
-                      )
-                      setFormData({ ...formData, images: newImages })
-                    }}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => handleEdit(project)}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                   >
-                    ✕
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(project._id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >
+                    Delete
                   </button>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-bold mb-1">
-              Published Date
-            </label>
-            <input
-              type="datetime-local"
-              value={formData.publishedAt.toISOString().slice(0, 16)}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  publishedAt: new Date(e.target.value),
-                })
-              }
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-bold mb-1">Project URL</label>
-            <input
-              type="url"
-              value={formData.projectUrl || ''}
-              onChange={(e) =>
-                setFormData({ ...formData, projectUrl: e.target.value })
-              }
-              className="w-full p-2 border rounded"
-              placeholder="https://example.com"
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-bold mb-1">
-            Project URL Text
-          </label>
-          <input
-            type="text"
-            value={formData.projectUrlText || ''}
-            onChange={(e) =>
-              setFormData({ ...formData, projectUrlText: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            placeholder="View Project Demo"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          {editingId ? 'Update Project' : 'Add Project'}
-        </button>
-      </form>
-
-      <div className="space-y-4">
-        {projects.map((project) => (
-          <div
-            key={project._id}
-            className="border p-4 rounded flex justify-between items-center"
-          >
-            <div>
-              <h3 className="font-bold">{project.title}</h3>
-              <p className="text-sm text-gray-600">{project.description}</p>
-            </div>
-            <div className="space-x-2">
-              <button
-                onClick={() => handleEdit(project)}
-                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(project._id)}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   )

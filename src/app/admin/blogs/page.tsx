@@ -127,126 +127,137 @@ export default function AdminBlogsPage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Manage Blogs</h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h1 className="text-3xl font-bold mb-8">Manage Blogs</h1>
 
-      <form onSubmit={handleSubmit} className="mb-8 space-y-4">
-        <div>
-          <label className="block mb-2">Title</label>
-          <input
-            type="text"
-            value={formData.title}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block mb-2">Content</label>
-          <MarkdownEditor
-            content={formData.body}
-            onChange={(html) => {
-              setFormData((prev) => ({
-                ...prev,
-                body: html || '',
-              }))
-            }}
-          />
-        </div>
-
-        <div>
-          <label className="block mb-2">Author</label>
-          <input
-            type="text"
-            value={formData.author || ''}
-            onChange={(e) =>
-              setFormData({ ...formData, author: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-          />
-        </div>
-
-        <div>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={formData.isPublished || false}
-              onChange={(e) =>
-                setFormData({ ...formData, isPublished: e.target.checked })
-              }
-              className="rounded"
-            />
-            Published
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          {editingId ? 'Update Blog' : 'Create Blog'}
-        </button>
-      </form>
-
-      <div className="space-y-4">
-        {blogs?.map((blog: Blog) => {
-          console.log('Rendering blog:', blog)
-          return (
-            <div
-              key={blog._id}
-              className="border p-4 rounded flex justify-between items-start"
-            >
+          <form onSubmit={handleSubmit} className="mb-8 space-y-6">
+            <div className="space-y-4">
               <div>
-                <div className="flex items-center gap-2">
-                  <Link
-                    href={`/blog/${blog.slug}`}
-                    className="text-xl font-semibold hover:underline"
-                  >
-                    {blog.title}
-                  </Link>
-                  <button
-                    onClick={() => {
-                      const url = `${window.location.origin}/blog#${blog.slug}`
-                      navigator.clipboard.writeText(url)
-                      showToast('Link copied to clipboard!')
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Content
+                </label>
+                <div className="border border-gray-300 rounded-md">
+                  <MarkdownEditor
+                    content={formData.body}
+                    onChange={(html) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        body: html || '',
+                      }))
                     }}
-                    className="text-gray-500 hover:text-gray-700"
-                    aria-label="Copy link to blog"
-                  >
-                    <LinkIcon className="h-4 w-4" />
-                  </button>
-                </div>
-                <p className="text-gray-600">
-                  {blog.body.substring(0, 100)}...
-                </p>
-                <div className="text-sm text-gray-500 mt-2">
-                  {blog.isPublished ? 'Published' : 'Draft'} •{' '}
-                  {blog.author && `By ${blog.author} •`}{' '}
-                  {new Date(
-                    blog.publishedAt || blog.publishDate || 0
-                  ).toLocaleDateString()}
+                  />
                 </div>
               </div>
-              <div className="space-x-2">
-                <button
-                  onClick={() => handleEdit(blog)}
-                  className="text-blue-500 hover:text-blue-600"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(blog._id)}
-                  className="text-red-500 hover:text-red-600"
-                >
-                  Delete
-                </button>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Author
+                </label>
+                <input
+                  type="text"
+                  value={formData.author || ''}
+                  onChange={(e) =>
+                    setFormData({ ...formData, author: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.isPublished || false}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isPublished: e.target.checked })
+                  }
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label className="ml-2 text-sm font-medium text-gray-700">
+                  Published
+                </label>
               </div>
             </div>
-          )
-        })}
+
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              {editingId ? 'Update Blog' : 'Create Blog'}
+            </button>
+          </form>
+
+          <div className="space-y-6">
+            {blogs?.map((blog: Blog) => (
+              <div
+                key={blog._id}
+                className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+              >
+                <div className="flex justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/blog/${blog.slug}`}
+                        className="text-xl font-semibold hover:text-blue-600 transition-colors"
+                      >
+                        {blog.title}
+                      </Link>
+                      <button
+                        onClick={() => {
+                          const url = `${window.location.origin}/blog/${blog.slug}`
+                          navigator.clipboard.writeText(url)
+                          showToast('Link copied to clipboard!')
+                        }}
+                        className="text-gray-500 hover:text-gray-700 transition-colors"
+                        aria-label="Copy link to blog"
+                      >
+                        <LinkIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <p className="text-gray-600 line-clamp-2">{blog.body}</p>
+                    <div className="text-sm text-gray-500">
+                      {blog.isPublished ? 'Published' : 'Draft'} •{' '}
+                      {blog.author && `By ${blog.author} •`}
+                      {new Date(
+                        blog.publishedAt || blog.publishDate || 0
+                      ).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => handleEdit(blog)}
+                      className="text-blue-600 hover:text-blue-700 transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(blog._id)}
+                      className="text-red-600 hover:text-red-700 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )

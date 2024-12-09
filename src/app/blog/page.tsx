@@ -31,12 +31,17 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">
-        A small collection of thoughts
-      </h1>
-      <div className="space-y-12">
-        <BlogList />
+    <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="relative">
+          <div className="absolute inset-0 -skew-y-2 bg-tan-200/50 transform -z-10" />
+          <h1 className="text-4xl font-bold mb-12 pt-4">
+            A small collection of thoughts
+          </h1>
+        </div>
+        <div className="space-y-12 mt-8">
+          <BlogList />
+        </div>
       </div>
     </div>
   )

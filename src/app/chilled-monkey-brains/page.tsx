@@ -7,7 +7,6 @@ import { useMutation, useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import Cookies from 'js-cookie'
 
-// Define the shape of our form data
 interface NoteFormData {
   title: string
   note: string
@@ -48,7 +47,6 @@ export default function ChilledMonkeyBrains() {
   }
 
   const onSubmit = async (data: NoteFormData) => {
-    console.log('Form submitted with data:', data)
     try {
       const { title, note, externalRefUrl, projectCardUrl } = data
       await createNote({
@@ -57,7 +55,6 @@ export default function ChilledMonkeyBrains() {
         externalRefUrl: externalRefUrl || '',
         projectCardUrl: projectCardUrl || '',
       })
-      console.log('Note saved successfully')
       reset()
     } catch (error) {
       console.error('Error saving note:', error)
@@ -65,55 +62,87 @@ export default function ChilledMonkeyBrains() {
   }
 
   return (
-    <div className="container mx-auto flex flex-col items-center justify-center h-screen px-4 md:px-8 py-4">
-      <h1 className="text-3xl font-bold mb-4">Chilled Monkey Brains</h1>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="mb-4 space-y-4 w-full max-w-lg"
-      >
-        <div className="flex flex-col items-center">
-          <div className="brains-input-wrapper">
-            <textarea
-              {...register('note', { required: true })}
-              className={`w-full max-w-lg h-40 border rounded p-2 ${errors.note ? 'border-red-500' : ''}`}
-              placeholder="Enter your note here"
-            />
-            {errors.note && <p className="text-red-500">Note is required.</p>}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="relative mb-12">
+            <div className="absolute inset-0 -skew-y-2 bg-tan-200/50 transform -z-10" />
+            <h1 className="text-4xl font-bold pt-4">Chilled Monkey Brains</h1>
           </div>
 
-          <div className="brains-input-wrapper">
-            <input
-              {...register('title', { required: true })}
-              className={`w-full max-w-lg border rounded p-2 ${errors.title ? 'border-red-500' : ''} py-2`}
-              placeholder="Enter title here"
-            />
-            {errors.title && <p className="text-red-500">Title is required.</p>}
-          </div>
+          <div className="max-w-2xl mx-auto mt-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Note
+                  </label>
+                  <textarea
+                    {...register('note', { required: true })}
+                    className={`w-full px-4 py-2 border border-gray-300 rounded-md ${
+                      errors.note ? 'border-red-500' : ''
+                    }`}
+                    rows={6}
+                    placeholder="Enter your note here"
+                  />
+                  {errors.note && (
+                    <p className="mt-1 text-sm text-red-600">
+                      Note is required.
+                    </p>
+                  )}
+                </div>
 
-          <div className="brains-input-wrapper">
-            <input
-              {...register('externalRefUrl')}
-              className="w-full max-w-lg border rounded p-2 py-2"
-              placeholder="Enter external reference URL (optional)"
-            />
-          </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Title
+                  </label>
+                  <input
+                    {...register('title', { required: true })}
+                    className={`w-full px-4 py-2 border border-gray-300 rounded-md ${
+                      errors.title ? 'border-red-500' : ''
+                    }`}
+                    placeholder="Enter title here"
+                  />
+                  {errors.title && (
+                    <p className="mt-1 text-sm text-red-600">
+                      Title is required.
+                    </p>
+                  )}
+                </div>
 
-          <div className="brains-input-wrapper">
-            <input
-              {...register('projectCardUrl')}
-              className="w-full max-w-lg border rounded p-2 py-2"
-              placeholder="Enter project card URL (optional)"
-            />
-          </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    External Reference URL
+                  </label>
+                  <input
+                    {...register('externalRefUrl')}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                    placeholder="Enter external reference URL (optional)"
+                  />
+                </div>
 
-          <button
-            type="submit"
-            className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Save Note
-          </button>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Project Card URL
+                  </label>
+                  <input
+                    {...register('projectCardUrl')}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                    placeholder="Enter project card URL (optional)"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Save Note
+              </button>
+            </form>
+          </div>
         </div>
-      </form>
+      </div>
     </div>
   )
 }
