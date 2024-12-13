@@ -4,14 +4,27 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useRef, useEffect, useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ExternalLink } from 'lucide-react'
 
-const navItems = [
+type NavItem = {
+  href: string
+  label: string
+  isExternal?: boolean
+  target?: string
+}
+
+const navItems: NavItem[] = [
   { href: '/', label: 'Home' },
   { href: '/projects', label: 'Projects' },
   { href: '/blog', label: 'Musings' },
   { href: '/about', label: 'About' },
-] as const
+  {
+    href: 'https://a-ok.shop/',
+    label: 'Shop',
+    isExternal: true,
+    target: '_blank',
+  },
+]
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -71,26 +84,40 @@ export default function Navigation() {
                   }}
                 />
 
-                {navItems.map((link, index) => (
-                  <Link
-                    key={link.href}
-                    ref={(el) => (navRefs.current[index] = el)}
-                    href={link.href}
-                    style={{
-                      color:
+                {navItems.map((link, index) =>
+                  link.isExternal ? (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      ref={(el) => (navRefs.current[index] = el)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative px-3 py-2 transition-colors duration-300 hover:text-action-accent text-brand-beige flex items-center gap-1"
+                    >
+                      {link.label}
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.href}
+                      ref={(el) => (navRefs.current[index] = el)}
+                      href={link.href}
+                      style={{
+                        color:
+                          pathname === link.href
+                            ? 'var(--foreground)'
+                            : undefined,
+                      }}
+                      className={`relative px-3 py-2 transition-colors duration-300 hover:text-action-accent ${
                         pathname === link.href
-                          ? 'var(--foreground)'
-                          : undefined,
-                    }}
-                    className={`relative px-3 py-2 transition-colors duration-300 hover:text-action-accent ${
-                      pathname === link.href
-                        ? 'font-bold text-foreground'
-                        : 'text-brand-beige'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                          ? 'font-bold text-foreground'
+                          : 'text-brand-beige'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                )}
               </div>
             </div>
 
@@ -122,31 +149,45 @@ export default function Navigation() {
           <div className="md:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
               {navItems.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="flex flex-col items-center"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span
-                    className={`relative px-3 py-2 text-base font-medium transition-colors duration-300 hover:text-action-accent ${
-                      pathname === link.href
-                        ? 'font-bold text-foreground'
-                        : 'text-brand-beige'
-                    }`}
-                  >
-                    {link.label}
-                    {pathname === link.href && (
-                      <div
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-background transition-all duration-300 ease-in-out mx-auto"
-                        style={{
-                          transform: 'translateY(1px)',
-                          width: '100%',
-                        }}
-                      />
-                    )}
-                  </span>
-                </Link>
+                <div key={link.href} className="flex flex-col items-center">
+                  {link.isExternal ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative px-3 py-2 text-base font-medium transition-colors duration-300 hover:text-action-accent text-brand-beige flex items-center gap-1"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {link.label}
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="flex flex-col items-center"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span
+                        className={`relative px-3 py-2 text-base font-medium transition-colors duration-300 hover:text-action-accent ${
+                          pathname === link.href
+                            ? 'font-bold text-foreground'
+                            : 'text-brand-beige'
+                        }`}
+                      >
+                        {link.label}
+                        {pathname === link.href && (
+                          <div
+                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-background transition-all duration-300 ease-in-out mx-auto"
+                            style={{
+                              transform: 'translateY(1px)',
+                              width: '100%',
+                            }}
+                          />
+                        )}
+                      </span>
+                    </Link>
+                  )}
+                </div>
               ))}
             </div>
           </div>
