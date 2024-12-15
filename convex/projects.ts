@@ -41,6 +41,7 @@ function isValidImageUrl(url: string): boolean {
       '/a-ok-face.png',
       '/a-ok-face.svg',
       '/a-okay-monkey-1.png',
+      '/og-ape-with-dunks-1.png',
     ]
     return validPublicImages.includes(url)
   }

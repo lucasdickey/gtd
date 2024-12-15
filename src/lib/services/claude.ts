@@ -117,7 +117,10 @@ export class ClaudeService {
                     }
                   : null
               })
-              .filter(Boolean)
+              .filter(
+                (entity): entity is { name: string; type: string } =>
+                  entity !== null
+              )
           : []
 
         console.log('Manual Extracted Topics:', topics)

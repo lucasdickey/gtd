@@ -55,10 +55,10 @@ export function HomePage() {
             }`}
           >
             <Image
-              src="/a-okay-monkey-1.png"
+              src="/og-ape-with-dunks-1.png"
               alt="A-OK Monkey"
               width={400}
-              height={400}
+              height={300}
               className="rounded-lg"
             />
           </div>

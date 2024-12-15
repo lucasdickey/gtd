@@ -1,4 +1,4 @@
-import { ClaudeService } from '../lib/services/claude.js'
+import { ClaudeService } from '../lib/services/claude'
 
 async function testClaudeExtraction() {
   const claudeService = ClaudeService.getInstance()

@@ -1,7 +1,7 @@
 import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
 import { Id } from './_generated/dataModel'
-import { ClaudeService } from '../src/lib/services/claude.js'
+import { ClaudeService } from '../src/lib/services/claude'
 
 // Helper function to create slug from title
 function createSlug(title: string): string {
@@ -67,17 +67,32 @@ export const createBlog = mutation({
         entities,
       })
 
-      // Create blog with optional extracted topics and entities
+      // Validate and normalize topics
+      const normalizedTopics = (topics || [])
+        .slice(0, 10) // Limit to 10 topics
+        .map((topic) => topic.trim())
+        .filter((topic) => topic.length > 0)
+
+      // Validate and normalize entities
+      const normalizedEntities = (entities || [])
+        .slice(0, 5) // Limit to 5 entities
+        .map((entity) => ({
+          name: entity.name.trim(),
+          type: entity.type.trim().toUpperCase(),
+        }))
+        .filter((entity) => entity.name.length > 0)
+
+      // Create blog with normalized topics and entities
       const blogId = await ctx.db.insert('blogs', {
         ...args,
-        topics,
-        entities,
+        topics: normalizedTopics,
+        entities: normalizedEntities,
       })
 
-      console.log('Blog Created Successfully:', {
+      console.log('Blog Created with Extracted Metadata:', {
         blogId,
-        title: args.title,
-        slug: args.slug,
+        topicsCount: normalizedTopics.length,
+        entitiesCount: normalizedEntities.length,
       })
 
       return blogId
