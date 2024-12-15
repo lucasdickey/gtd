@@ -30,6 +30,8 @@ type Blog = {
   body: string
   title: string
   slug: string
+  topics?: string[]
+  entities?: { name: string; type: string }[]
 }
 
 const defaultFormData: BlogFormData = {
@@ -238,6 +240,30 @@ export default function AdminBlogsPage() {
                         blog.publishedAt || blog.publishDate || 0
                       ).toLocaleDateString()}
                     </div>
+                    {blog.topics && blog.topics.length > 0 && (
+                      <div className="text-sm text-gray-500 mt-2">
+                        <span className="font-semibold">Topics:</span>{' '}
+                        <span className="bg-blue-50 px-2 py-1 rounded">
+                          {blog.topics.join(', ')}
+                        </span>
+                      </div>
+                    )}
+                    {blog.entities && blog.entities.length > 0 && (
+                      <div className="text-sm text-gray-500 mt-1">
+                        <span className="font-semibold">Entities:</span>{' '}
+                        <div className="flex flex-wrap gap-1">
+                          {blog.entities.map((entity, index) => (
+                            <span
+                              key={index}
+                              className="bg-green-50 px-2 py-1 rounded text-xs"
+                              title={`Type: ${entity.type}`}
+                            >
+                              {entity.name}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="flex space-x-4">
                     <button

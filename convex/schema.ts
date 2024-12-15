@@ -42,6 +42,15 @@ export default defineSchema({
     publishDate: v.optional(v.number()),
     updateDate: v.optional(v.number()),
     isPublished: v.optional(v.boolean()),
+    topics: v.optional(v.array(v.string())),
+    entities: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          type: v.string(),
+        })
+      )
+    ),
   })
     .index('by_publish_date', ['publishDate'])
     .index('by_published_at', ['publishedAt']),

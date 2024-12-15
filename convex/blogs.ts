@@ -1,6 +1,7 @@
 import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
 import { Id } from './_generated/dataModel'
+import { ClaudeService } from '../src/lib/services/claude.js'
 
 // Helper function to create slug from title
 function createSlug(title: string): string {
@@ -35,23 +36,58 @@ export const createBlog = mutation({
     slug: v.string(),
     author: v.optional(v.string()),
     publishedAt: v.optional(v.number()),
-    updateDate: v.optional(v.number()),
     publishDate: v.optional(v.number()),
+    updateDate: v.optional(v.number()),
     isPublished: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const blogId = await ctx.db.insert('blogs', {
-      title: args.title,
-      body: args.body,
-      slug: args.slug,
-      author: args.author,
-      publishedAt: args.publishedAt,
-      updateDate: args.updateDate,
-      publishDate: args.publishDate,
-      isPublished: args.isPublished ?? false,
-    })
+    try {
+      console.log('Blog Creation Started:', {
+        title: args.title,
+        slug: args.slug,
+        contentLength: args.body.length,
+        author: args.author,
+        isPublished: args.isPublished,
+      })
 
-    return blogId
+      const claudeService = ClaudeService.getInstance()
+
+      // Extract topics and entities
+      const { topics, entities } = await claudeService.extractTopicsAndEntities(
+        {
+          title: args.title,
+          content: args.body,
+        }
+      )
+
+      console.log('Extracted Data for Blog:', {
+        topicsCount: topics.length,
+        entitiesCount: entities.length,
+        topics,
+        entities,
+      })
+
+      // Create blog with optional extracted topics and entities
+      const blogId = await ctx.db.insert('blogs', {
+        ...args,
+        topics,
+        entities,
+      })
+
+      console.log('Blog Created Successfully:', {
+        blogId,
+        title: args.title,
+        slug: args.slug,
+      })
+
+      return blogId
+    } catch (error) {
+      console.error('Error creating blog:', {
+        title: args.title,
+        error: error instanceof Error ? error.message : String(error),
+      })
+      throw error
+    }
   },
 })
 
