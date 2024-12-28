@@ -23,6 +23,8 @@ const vt323 = VT323({
   variable: '--font-vt323',
 })
 
+// const systemFont = FontSans.style.fontFamily
+
 export default function RootLayout({
   children,
 }: {
