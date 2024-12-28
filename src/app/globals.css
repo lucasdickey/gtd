@@ -9,6 +9,8 @@
   --brand-beige: #e6d5c3;
   --brand-brown: #4a3c31;
   --brand-gold: #cfa76e;
+  --brand-red: red;
+  --brand-black: #000000;
 
   /* Action Colors */
   --action-primary: #e67e22;
@@ -40,7 +42,7 @@ body {
   position: fixed;
   width: 12vw;
   height: 12vw;
-  background-color: var(--brand-gold);
+  background-color: var(--brand-red);
   z-index: -1;
 }
 
