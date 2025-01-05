@@ -16,16 +16,17 @@ export const createAssociation = internalMutation({
   },
   handler: async (ctx, args) => {
     // Check if association already exists
-    const existingAssocs = await ctx.db
-      .query('tagAssociations')
-      .filter((q) =>
-        q.and(
-          q.eq(q.field('tagId'), args.tagId),
-          q.eq(q.field('entityId'), args.entityId),
-          q.eq(q.field('entityType'), args.entityType)
+    const existingAssocs =
+      (await ctx.db
+        .query('tagAssociations')
+        .filter((q) =>
+          q.and(
+            q.eq(q.field('tagId'), args.tagId),
+            q.eq(q.field('entityId'), args.entityId),
+            q.eq(q.field('entityType'), args.entityType)
+          )
         )
-      )
-      .collect()
+        .collect()) || []
 
     if (existingAssocs.length > 0) {
       const existingAssoc = existingAssocs[0]
