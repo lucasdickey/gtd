@@ -170,3 +170,27 @@ export const getLatestClaudeRun = query({
     return run[0]
   },
 })
+
+export const getBlogIdBySlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, args) => {
+    const blog = await ctx.db
+      .query('blogs')
+      .filter((q) => q.eq(q.field('slug'), args.slug))
+      .first()
+    return blog?._id
+  },
+})
+
+export const getClaudeRunsForBlog = query({
+  args: { blogId: v.id('blogs') },
+  handler: async (ctx, args) => {
+    const runs = await ctx.db
+      .query('tagsClaudeRuns')
+      .withIndex('by_blog')
+      .filter((q) => q.eq(q.field('blogId'), args.blogId))
+      .order('desc')
+      .collect()
+    return runs
+  },
+})

@@ -1,19 +1,19 @@
-import { internalAction } from './_generated/server'
-import { internal } from './_generated/api'
-import { Id } from './_generated/dataModel'
+import { internalAction } from '../_generated/server'
+import { internal } from '../_generated/api'
+import { Id } from '../_generated/dataModel'
 import { v } from 'convex/values'
 import Anthropic from '@anthropic-ai/sdk'
 import {
   BLOG_TAG_ANALYSIS_PROMPT,
   validateTagAnalysisResponse,
   type BlogTagAnalysisResponse,
-} from '../src/lib/prompts/claude/blog-analysis'
+} from '../../src/lib/prompts/claude/blog-analysis'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 })
 
-export const generateBlogTags = internalAction({
+export default internalAction({
   args: {
     blogId: v.id('blogs'),
     title: v.string(),
