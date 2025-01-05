@@ -19,6 +19,8 @@ import type * as claude from "../claude.js";
 import type * as files from "../files.js";
 import type * as notes from "../notes.js";
 import type * as projects from "../projects.js";
+import type * as tagAssociations from "../tagAssociations.js";
+import type * as tags from "../tags.js";
 import type * as tasks from "../tasks.js";
 
 /**
@@ -36,6 +38,8 @@ declare const fullApi: ApiFromModules<{
   files: typeof files;
   notes: typeof notes;
   projects: typeof projects;
+  tagAssociations: typeof tagAssociations;
+  tags: typeof tags;
   tasks: typeof tasks;
 }>;
 export declare const api: FilterApi<

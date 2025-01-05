@@ -71,18 +71,23 @@ export const updateBlog = mutation({
   handler: async (ctx, args) => {
     const { id, ...updates } = args
 
-    // If the blog is being published, test Claude connection first
+    // If the blog is being published, generate tags
     if (updates.isPublished && !(await ctx.db.get(id))?.isPublished) {
       try {
-        await ctx.scheduler.runAfter(0, internal.claude.testClaudeConnection, {
-          useCase: 'blog-analysis',
-        })
-        console.log('Claude connection test passed for blog publication')
-      } catch (error) {
-        console.error('Claude connection test failed:', error)
-        throw new Error(
-          'Failed to establish Claude connection for blog publication'
+        const tagResult = await ctx.scheduler.runAfter(
+          0,
+          internal.claude.generateBlogTags,
+          {
+            blogId: id,
+            title: updates.title,
+            body: updates.body,
+          }
         )
+
+        console.log('Tag generation completed:', tagResult)
+      } catch (error) {
+        console.error('Tag generation failed:', error)
+        // Continue with publication even if tag generation fails
       }
     }
 
