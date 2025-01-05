@@ -18,9 +18,13 @@ export const createAssociation = internalMutation({
     // Check if association already exists
     const existingAssocs = await ctx.db
       .query('tagAssociations')
-      .filter((q) => q.eq(q.field('tagId'), args.tagId))
-      .filter((q) => q.eq(q.field('entityId'), args.entityId))
-      .filter((q) => q.eq(q.field('entityType'), args.entityType))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field('tagId'), args.tagId),
+          q.eq(q.field('entityId'), args.entityId),
+          q.eq(q.field('entityType'), args.entityType)
+        )
+      )
       .collect()
 
     if (existingAssocs.length > 0) {
@@ -53,9 +57,12 @@ export const getTagsForEntity = internalQuery({
     // Get all tag associations for this entity
     const associations = await ctx.db
       .query('tagAssociations')
-      .withIndex('by_entity')
-      .filter((q) => q.eq(q.field('entityId'), args.entityId))
-      .filter((q) => q.eq(q.field('entityType'), args.entityType))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field('entityId'), args.entityId),
+          q.eq(q.field('entityType'), args.entityType)
+        )
+      )
       .collect()
 
     if (associations.length === 0) {
@@ -97,6 +104,11 @@ export const getTagsForBlog = query({
       )
       .collect()
 
+    // If no associations, return empty array
+    if (associations.length === 0) {
+      return []
+    }
+
     // Get all tag IDs
     const tagIds = associations.map((assoc) => assoc.tagId)
 
@@ -105,10 +117,15 @@ export const getTagsForBlog = query({
 
     // Combine tags with their confidence scores
     return associations
-      .map((assoc) => ({
-        ...tags.find((tag) => tag?._id === assoc.tagId),
-        confidence: assoc.confidence,
-      }))
+      .map((assoc) => {
+        const tag = tags.find((t) => t?._id === assoc.tagId)
+        return tag
+          ? {
+              ...tag,
+              confidence: assoc.confidence,
+            }
+          : null
+      })
       .filter(Boolean) // Remove any null tags
   },
 })

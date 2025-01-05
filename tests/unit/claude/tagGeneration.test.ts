@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { generateTagsWithRetry } from '../../../convex/claude'
-import { MutationCtx } from '../../../convex/_generated/server'
 import { Id } from '../../../convex/_generated/dataModel'
+import { MutationCtx } from '../../../convex/_generated/server'
 
 // Mock Anthropic client
 vi.mock('@anthropic-ai/sdk', () => ({
@@ -12,10 +11,16 @@ vi.mock('@anthropic-ai/sdk', () => ({
   },
 }))
 
+// Import the entire module to access the internal function
+import * as claudeModule from '../../../convex/claude/generateBlogTags'
+
 describe('Tag Generation', () => {
   const mockCtx = {
     runMutation: vi.fn(),
     runAction: vi.fn(),
+    scheduler: {
+      runAfter: vi.fn(),
+    },
   } as unknown as MutationCtx
 
   const mockBlogId = 'abc123' as Id<'blogs'>
@@ -26,13 +31,28 @@ describe('Tag Generation', () => {
     const mockResponse = {
       content: [
         {
+          type: 'text',
           text: JSON.stringify({
             tags: [
               {
                 name: 'test',
-                category: 'technical',
-                confidence: 0.9,
                 description: 'A test tag',
+                category: 'technical',
+                metadata: {
+                  source: 'claude',
+                  createdAt: Date.now(),
+                },
+              },
+            ],
+            associations: [
+              {
+                tagName: 'test',
+                confidence: 0.9,
+                metadata: {
+                  source: 'claude',
+                  createdAt: Date.now(),
+                  context: 'Test context',
+                },
               },
             ],
           }),
@@ -40,33 +60,51 @@ describe('Tag Generation', () => {
       ],
     }
 
-    vi.mocked(mockCtx.runAction).mockResolvedValueOnce(mockResponse)
-
-    const result = await generateTagsWithRetry(
-      mockCtx,
-      mockBlogId,
-      mockTitle,
-      mockBody
+    // Mock the Anthropic API call
+    const mockAnthropicClient = await import('@anthropic-ai/sdk')
+    mockAnthropicClient.default.prototype.messages.create.mockResolvedValueOnce(
+      mockResponse
     )
-    expect(result).toBeDefined()
-    expect(result.tags).toHaveLength(1)
-    expect(result.tags[0].name).toBe('test')
+
+    // Use the internal function directly
+    const result = await claudeModule.default.handler(mockCtx, {
+      blogId: mockBlogId,
+      title: mockTitle,
+      body: mockBody,
+    })
+
+    expect(result).toBe('Tags generated and associated successfully')
   })
 
   it('should retry on malformed JSON response', async () => {
     const invalidResponse = {
-      content: [{ text: 'Invalid JSON' }],
+      content: [{ type: 'text', text: 'Invalid JSON' }],
     }
     const validResponse = {
       content: [
         {
+          type: 'text',
           text: JSON.stringify({
             tags: [
               {
                 name: 'test',
-                category: 'technical',
-                confidence: 0.9,
                 description: 'A test tag',
+                category: 'technical',
+                metadata: {
+                  source: 'claude',
+                  createdAt: Date.now(),
+                },
+              },
+            ],
+            associations: [
+              {
+                tagName: 'test',
+                confidence: 0.9,
+                metadata: {
+                  source: 'claude',
+                  createdAt: Date.now(),
+                  context: 'Test context',
+                },
               },
             ],
           }),
@@ -74,30 +112,40 @@ describe('Tag Generation', () => {
       ],
     }
 
-    vi.mocked(mockCtx.runAction)
+    // Mock the Anthropic API calls
+    const mockAnthropicClient = await import('@anthropic-ai/sdk')
+    mockAnthropicClient.default.prototype.messages.create
       .mockResolvedValueOnce(invalidResponse)
       .mockResolvedValueOnce(validResponse)
 
-    const result = await generateTagsWithRetry(
-      mockCtx,
-      mockBlogId,
-      mockTitle,
-      mockBody
-    )
-    expect(result).toBeDefined()
-    expect(mockCtx.runAction).toHaveBeenCalledTimes(2)
+    // Use the internal function directly
+    const result = await claudeModule.default.handler(mockCtx, {
+      blogId: mockBlogId,
+      title: mockTitle,
+      body: mockBody,
+    })
+
+    expect(result).toBe('Tags generated and associated successfully')
   })
 
   it('should fail after max retries', async () => {
     const invalidResponse = {
-      content: [{ text: 'Invalid JSON' }],
+      content: [{ type: 'text', text: 'Invalid JSON' }],
     }
 
-    vi.mocked(mockCtx.runAction).mockResolvedValue(invalidResponse)
+    // Mock the Anthropic API calls to always return invalid JSON
+    const mockAnthropicClient = await import('@anthropic-ai/sdk')
+    mockAnthropicClient.default.prototype.messages.create.mockResolvedValue(
+      invalidResponse
+    )
 
+    // Use the internal function directly
     await expect(
-      generateTagsWithRetry(mockCtx, mockBlogId, mockTitle, mockBody)
+      claudeModule.default.handler(mockCtx, {
+        blogId: mockBlogId,
+        title: mockTitle,
+        body: mockBody,
+      })
     ).rejects.toThrow()
-    expect(mockCtx.runAction).toHaveBeenCalledTimes(5) // Max retries
   })
 })

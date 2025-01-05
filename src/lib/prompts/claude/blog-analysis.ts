@@ -1,4 +1,4 @@
-import { Tag, TagCategory } from '../../../types/tags'
+import { TagCategory } from '../../../types/tags'
 
 export const BLOG_TAG_ANALYSIS_PROMPT = `You are a precise tag generator for blog content. Your task is to analyze the provided blog post and generate tags that match our predefined schema.
 
@@ -69,13 +69,15 @@ export interface BlogTagAnalysisResponse {
 
 // Helper to validate Claude's response matches our schema
 export function validateTagAnalysisResponse(
-  response: any
+  response: unknown
 ): response is BlogTagAnalysisResponse {
   try {
     // Basic structure check
     if (
-      !response.tags ||
-      !response.associations ||
+      !response ||
+      typeof response !== 'object' ||
+      !('tags' in response) ||
+      !('associations' in response) ||
       !Array.isArray(response.tags) ||
       !Array.isArray(response.associations)
     ) {
@@ -86,14 +88,20 @@ export function validateTagAnalysisResponse(
     const validCategories = ['technical', 'topic', 'language', 'general']
     for (const tag of response.tags) {
       if (
-        !tag.name ||
+        !tag ||
+        typeof tag !== 'object' ||
+        !('name' in tag) ||
         typeof tag.name !== 'string' ||
-        !tag.description ||
+        !('description' in tag) ||
         typeof tag.description !== 'string' ||
+        !('category' in tag) ||
         !validCategories.includes(tag.category) ||
-        !tag.metadata?.source ||
+        !('metadata' in tag) ||
+        !tag.metadata ||
+        typeof tag.metadata !== 'object' ||
+        !('source' in tag.metadata) ||
         tag.metadata.source !== 'claude' ||
-        !tag.metadata?.createdAt ||
+        !('createdAt' in tag.metadata) ||
         typeof tag.metadata.createdAt !== 'number'
       ) {
         return false
@@ -103,16 +111,22 @@ export function validateTagAnalysisResponse(
     // Validate each association
     for (const assoc of response.associations) {
       if (
-        !assoc.tagName ||
+        !assoc ||
+        typeof assoc !== 'object' ||
+        !('tagName' in assoc) ||
         typeof assoc.tagName !== 'string' ||
+        !('confidence' in assoc) ||
         typeof assoc.confidence !== 'number' ||
         assoc.confidence < 0 ||
         assoc.confidence > 1 ||
-        !assoc.metadata?.source ||
+        !('metadata' in assoc) ||
+        !assoc.metadata ||
+        typeof assoc.metadata !== 'object' ||
+        !('source' in assoc.metadata) ||
         assoc.metadata.source !== 'claude' ||
-        !assoc.metadata?.createdAt ||
+        !('createdAt' in assoc.metadata) ||
         typeof assoc.metadata.createdAt !== 'number' ||
-        !assoc.metadata?.context ||
+        !('context' in assoc.metadata) ||
         typeof assoc.metadata.context !== 'string'
       ) {
         return false
