@@ -90,4 +90,16 @@ export default defineSchema({
     sessionToken: v.optional(v.string()),
     sessionExpiresAt: v.optional(v.number()),
   }).index('by_email', ['email']),
+  tagsClaudeRuns: defineTable({
+    blogId: v.id('blogs'),
+    status: v.string(), // 'success' | 'error'
+    prompt: v.string(),
+    rawResponse: v.string(),
+    error: v.optional(v.string()),
+    metadata: v.object({
+      retryCount: v.number(),
+      duration: v.number(), // in milliseconds
+      timestamp: v.number(),
+    }),
+  }).index('by_blog', ['blogId']),
 })

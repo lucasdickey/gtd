@@ -21,6 +21,7 @@ import type * as notes from "../notes.js";
 import type * as projects from "../projects.js";
 import type * as tagAssociations from "../tagAssociations.js";
 import type * as tags from "../tags.js";
+import type * as tagsClaudeRuns from "../tagsClaudeRuns.js";
 import type * as tasks from "../tasks.js";
 
 /**
@@ -40,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   projects: typeof projects;
   tagAssociations: typeof tagAssociations;
   tags: typeof tags;
+  tagsClaudeRuns: typeof tagsClaudeRuns;
   tasks: typeof tasks;
 }>;
 export declare const api: FilterApi<

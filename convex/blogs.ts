@@ -52,6 +52,31 @@ export const createBlog = mutation({
       isPublished: args.isPublished ?? false,
     })
 
+    // If the blog is being published on creation, generate tags
+    if (args.isPublished) {
+      console.log('[Blog Create] Triggering tag generation for:', {
+        blogId,
+        title: args.title,
+      })
+
+      try {
+        const tagResult = await ctx.scheduler.runAfter(
+          0,
+          internal.claude.generateBlogTags,
+          {
+            blogId,
+            title: args.title,
+            body: args.body,
+          }
+        )
+
+        console.log('[Blog Create] Tag generation completed:', tagResult)
+      } catch (error) {
+        console.error('[Blog Create] Tag generation failed:', error)
+        // Continue with creation even if tag generation fails
+      }
+    }
+
     return blogId
   },
 })
@@ -70,9 +95,22 @@ export const updateBlog = mutation({
   },
   handler: async (ctx, args) => {
     const { id, ...updates } = args
+    const existingBlog = await ctx.db.get(id)
+
+    console.log('[Blog Update] Checking publication status:', {
+      isBeingPublished: updates.isPublished,
+      wasPublished: existingBlog?.isPublished,
+      blogId: id,
+      title: updates.title,
+    })
 
     // If the blog is being published, generate tags
-    if (updates.isPublished && !(await ctx.db.get(id))?.isPublished) {
+    if (updates.isPublished && !existingBlog?.isPublished) {
+      console.log('[Blog Update] Triggering tag generation for:', {
+        blogId: id,
+        title: updates.title,
+      })
+
       try {
         const tagResult = await ctx.scheduler.runAfter(
           0,
@@ -84,9 +122,9 @@ export const updateBlog = mutation({
           }
         )
 
-        console.log('Tag generation completed:', tagResult)
+        console.log('[Blog Update] Tag generation completed:', tagResult)
       } catch (error) {
-        console.error('Tag generation failed:', error)
+        console.error('[Blog Update] Tag generation failed:', error)
         // Continue with publication even if tag generation fails
       }
     }
@@ -116,5 +154,19 @@ export const getPublishedBlogs = query({
       .collect()
 
     return blogs
+  },
+})
+
+export const getLatestClaudeRun = query({
+  args: { blogId: v.id('blogs') },
+  handler: async (ctx, args) => {
+    const run = await ctx.db
+      .query('tagsClaudeRuns')
+      .withIndex('by_blog')
+      .filter((q) => q.eq(q.field('blogId'), args.blogId))
+      .order('desc')
+      .take(1)
+
+    return run[0]
   },
 })
