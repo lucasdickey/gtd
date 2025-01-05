@@ -1,6 +1,7 @@
-import { mutation, query } from './_generated/server'
+import { mutation, query, action } from './_generated/server'
 import { v } from 'convex/values'
 import { Id } from './_generated/dataModel'
+import { internal } from './_generated/api'
 
 // Helper function to create slug from title
 function createSlug(title: string): string {
@@ -69,6 +70,22 @@ export const updateBlog = mutation({
   },
   handler: async (ctx, args) => {
     const { id, ...updates } = args
+
+    // If the blog is being published, test Claude connection first
+    if (updates.isPublished && !(await ctx.db.get(id))?.isPublished) {
+      try {
+        await ctx.scheduler.runAfter(0, internal.claude.testClaudeConnection, {
+          useCase: 'blog-analysis',
+        })
+        console.log('Claude connection test passed for blog publication')
+      } catch (error) {
+        console.error('Claude connection test failed:', error)
+        throw new Error(
+          'Failed to establish Claude connection for blog publication'
+        )
+      }
+    }
+
     await ctx.db.patch(id, {
       ...updates,
       isPublished: updates.isPublished ?? false,
