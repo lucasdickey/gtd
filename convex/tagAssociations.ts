@@ -94,6 +94,7 @@ export const getTagsForEntity = internalQuery({
 export const getTagsForBlog = query({
   args: { blogId: v.id('blogs') },
   handler: async (ctx, args) => {
+    console.log('[getTagsForBlog] Fetching tags for blog:', args.blogId)
     // Get tag associations for this blog
     const associations = await ctx.db
       .query('tagAssociations')
@@ -105,19 +106,24 @@ export const getTagsForBlog = query({
       )
       .collect()
 
+    console.log('[getTagsForBlog] Found associations:', associations)
+
     // If no associations, return empty array
     if (associations.length === 0) {
+      console.log('[getTagsForBlog] No associations found')
       return []
     }
 
     // Get all tag IDs
     const tagIds = associations.map((assoc) => assoc.tagId)
+    console.log('[getTagsForBlog] Tag IDs:', tagIds)
 
     // Get all tags
     const tags = await Promise.all(tagIds.map((tagId) => ctx.db.get(tagId)))
+    console.log('[getTagsForBlog] Retrieved tags:', tags)
 
     // Combine tags with their confidence scores
-    return associations
+    const result = associations
       .map((assoc) => {
         const tag = tags.find((t) => t?._id === assoc.tagId)
         return tag
@@ -128,5 +134,8 @@ export const getTagsForBlog = query({
           : null
       })
       .filter(Boolean) // Remove any null tags
+
+    console.log('[getTagsForBlog] Final result:', result)
+    return result
   },
 })

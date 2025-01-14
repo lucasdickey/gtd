@@ -3,16 +3,32 @@ import { TagCategory } from '../../../types/tags'
 export const BLOG_TAG_ANALYSIS_PROMPT = `You are a precise tag generator for blog content. Your task is to analyze the provided blog post and generate tags that match our predefined schema.
 
 For each tag you identify:
-- name: Should be lowercase, hyphen-separated if multiple words
+- name: Should be human-readable with proper capitalization (e.g., "AI Ethics", "Responsible AI", "Future of Work")
 - description: A clear, concise explanation of the tag
 - category: Must be one of: 'technical', 'topic', 'language', or 'general'
 - confidence: A score between 0 and 1 indicating your confidence in this tag's relevance
 
 Guidelines:
-1. Technical tags: Programming languages, frameworks, tools, or technical concepts
-2. Topic tags: Main themes or subject areas
-3. Language tags: Content style (e.g., tutorial, analysis, opinion)
-4. General tags: Broader categories or miscellaneous classifications
+1. Topic tags (PRIORITIZE THESE): 
+   - Main themes, concepts, and subject areas discussed
+   - Abstract ideas and theoretical frameworks
+   - Industry trends and movements
+   Examples: 'AI Ethics', 'Technological Acceleration', 'Future of Work', 'Innovation Theory'
+
+2. Technical tags (only if specifically discussed):
+   - Technologies, frameworks, or technical concepts
+   - Only include if they are central to the article's message
+   Examples: 'Machine Learning', 'Neural Networks', 'Large Language Models'
+
+3. Language tags:
+   - Content style and approach
+   Examples: 'Analysis', 'Opinion', 'Thought Leadership', 'Case Study'
+
+4. General tags:
+   - Broader categories or domains
+   Examples: 'Artificial Intelligence', 'Technology Trends', 'Digital Transformation'
+
+Focus on capturing the core concepts and themes rather than implementation details. For thought pieces and analyses, emphasize topic and general tags over technical ones.
 
 IMPORTANT: Return ONLY a valid JSON object with no additional text or explanation. The JSON must exactly match this structure:
 {

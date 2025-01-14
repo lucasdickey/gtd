@@ -20,6 +20,10 @@ export default internalAction({
     body: v.string(),
   },
   handler: async (ctx, args) => {
+    console.log('[Tag Generation] Starting for blog:', {
+      blogId: args.blogId,
+      title: args.title,
+    })
     return await generateTagsWithRetry(ctx, args)
   },
 })
@@ -33,10 +37,18 @@ async function generateTagsWithRetry(
   const startTime = Date.now()
 
   try {
+    console.log('[Tag Generation] Preparing prompt for Claude')
     const prompt = BLOG_TAG_ANALYSIS_PROMPT.replace(
-      '{BLOG_CONTENT}',
-      `Title: ${args.title}\n\nContent: ${args.body}`
-    )
+      /\{\{title\}\}/g,
+      args.title
+    ).replace(/\{\{content\}\}/g, args.body)
+
+    // Log the prepared prompt for debugging
+    console.log('[Tag Generation] Prepared prompt:', {
+      title: args.title,
+      bodyLength: args.body.length,
+      promptLength: prompt.length,
+    })
 
     // Log the attempt
     await ctx.runMutation(internal.tagsClaudeRuns.insertClaudeRun, {
@@ -49,6 +61,7 @@ async function generateTagsWithRetry(
       timestamp: startTime,
     })
 
+    console.log('[Tag Generation] Calling Claude API')
     const response = await anthropic.messages.create({
       model: 'claude-3-opus-20240229',
       max_tokens: 1024,
@@ -60,9 +73,19 @@ async function generateTagsWithRetry(
       response.content[0].type === 'text' ? response.content[0].text : ''
     const duration = Date.now() - startTime
 
+    console.log('[Tag Generation] Received response from Claude:', {
+      responseLength: rawResponse.length,
+    })
+
     try {
       const parsedResponse = JSON.parse(rawResponse) as BlogTagAnalysisResponse
+      console.log('[Tag Generation] Parsed response:', {
+        numTags: parsedResponse.tags.length,
+        numAssociations: parsedResponse.associations.length,
+      })
+
       const validationResult = validateTagAnalysisResponse(parsedResponse)
+      console.log('[Tag Generation] Validation result:', validationResult)
 
       if (validationResult) {
         // Log success
@@ -80,6 +103,7 @@ async function generateTagsWithRetry(
         const tagIdMap = new Map<string, Id<'tags'>>()
 
         // First create all tags
+        console.log('[Tag Generation] Creating tags:', parsedResponse.tags)
         for (const tag of parsedResponse.tags) {
           const tagId = await ctx.runMutation(
             internal.tags.createTagIfNotExists,
@@ -91,9 +115,14 @@ async function generateTagsWithRetry(
             }
           )
           tagIdMap.set(tag.name, tagId)
+          console.log('[Tag Generation] Created tag:', {
+            name: tag.name,
+            id: tagId,
+          })
         }
 
         // Then create associations using the confidence from associations array
+        console.log('[Tag Generation] Creating associations')
         for (const assoc of parsedResponse.associations) {
           const tagId = tagIdMap.get(assoc.tagName)
           if (!tagId) {
@@ -108,6 +137,10 @@ async function generateTagsWithRetry(
             confidence: assoc.confidence,
             metadata: assoc.metadata,
           })
+          console.log('[Tag Generation] Created association:', {
+            tagName: assoc.tagName,
+            confidence: assoc.confidence,
+          })
         }
 
         return 'Tags generated and associated successfully'
@@ -115,6 +148,7 @@ async function generateTagsWithRetry(
         throw new Error('Response failed validation')
       }
     } catch (error) {
+      console.error('[Tag Generation] Error processing response:', error)
       // Log validation/parsing error
       await ctx.runMutation(internal.tagsClaudeRuns.insertClaudeRun, {
         blogId: args.blogId,
@@ -130,15 +164,16 @@ async function generateTagsWithRetry(
       throw error
     }
   } catch (error) {
+    console.error('[Tag Generation] Error in main try block:', error)
     const duration = Date.now() - startTime
 
     // Log the error
     await ctx.runMutation(internal.tagsClaudeRuns.insertClaudeRun, {
       blogId: args.blogId,
       status: 'error',
-      prompt: BLOG_TAG_ANALYSIS_PROMPT.replace(
-        '{BLOG_CONTENT}',
-        `Title: ${args.title}\n\nContent: ${args.body}`
+      prompt: BLOG_TAG_ANALYSIS_PROMPT.replace('{{title}}', args.title).replace(
+        '{{content}}',
+        args.body
       ),
       rawResponse: '',
       error: error instanceof Error ? error.message : String(error),
@@ -148,6 +183,7 @@ async function generateTagsWithRetry(
     })
 
     if (retryCount < maxRetries) {
+      console.log('[Tag Generation] Retrying, attempt:', retryCount + 1)
       // Wait before retrying (exponential backoff)
       await new Promise((resolve) =>
         setTimeout(resolve, Math.pow(2, retryCount) * 1000)
