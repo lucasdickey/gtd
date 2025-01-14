@@ -63,7 +63,7 @@ describe('Tag Generation', () => {
     // Mock the Anthropic API call
     const mockAnthropicClient = await import('@anthropic-ai/sdk')
     mockAnthropicClient.default.prototype.messages = {
-      create: jest.fn().mockResolvedValueOnce(mockResponse),
+      create: vi.fn().mockResolvedValueOnce(mockResponse),
     }
 
     // Use the internal function directly
