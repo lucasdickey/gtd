@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
   createAssociation,
   getTagsForBlog,
@@ -6,24 +6,44 @@ import {
 import {
   DatabaseReader,
   DatabaseWriter,
+  MutationCtx,
+  QueryCtx,
 } from '../../../convex/_generated/server'
 import { Id } from '../../../convex/_generated/dataModel'
 
 describe('Tag Associations', () => {
   const mockDb = {
-    query: vi.fn(() => ({
-      filter: vi.fn(() => ({
-        collect: vi.fn(),
-      })),
-    })),
-    insert: vi.fn(),
-    patch: vi.fn(),
-    get: vi.fn(),
+    query: vi.fn().mockReturnValue({
+      filter: vi.fn().mockReturnValue({
+        collect: vi.fn().mockResolvedValue([]),
+      }),
+    }),
+    insert: vi
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve('assoc123' as Id<'tagAssociations'>)
+      ),
+    patch: vi.fn().mockImplementation(() => Promise.resolve()),
+    get: vi.fn().mockImplementation(() => Promise.resolve(null)),
   } as unknown as DatabaseWriter
 
   const mockCtx = {
     db: mockDb,
-  }
+    auth: {},
+    storage: {},
+    scheduler: {
+      runAfter: vi.fn(),
+    },
+    runQuery: vi.fn(),
+    runMutation: vi.fn(),
+  } as unknown as MutationCtx
+
+  const mockQueryCtx = {
+    db: mockDb as DatabaseReader,
+    auth: {},
+    storage: {},
+    runQuery: vi.fn(),
+  } as unknown as QueryCtx
 
   const mockTagId = 'tag123' as Id<'tags'>
   const mockBlogId = 'blog123' as Id<'blogs'>
@@ -34,9 +54,14 @@ describe('Tag Associations', () => {
 
   describe('createAssociation', () => {
     it('should create a new association if none exists', async () => {
-      vi.mocked(mockDb.query().filter().collect).mockResolvedValueOnce([])
-      vi.mocked(mockDb.insert).mockResolvedValueOnce(
-        'assoc123' as Id<'tagAssociations'>
+      const mockCollect = vi.fn().mockResolvedValueOnce([])
+      mockDb.query = vi.fn().mockReturnValue({
+        filter: vi.fn().mockReturnValue({
+          collect: mockCollect,
+        }),
+      })
+      mockDb.insert.mockImplementationOnce(() =>
+        Promise.resolve('assoc123' as Id<'tagAssociations'>)
       )
 
       const result = await createAssociation(mockCtx, {
@@ -70,9 +95,12 @@ describe('Tag Associations', () => {
         },
       }
 
-      vi.mocked(mockDb.query().filter().collect).mockResolvedValueOnce([
-        existingAssoc,
-      ])
+      const mockCollect = vi.fn().mockResolvedValueOnce([existingAssoc])
+      mockDb.query = vi.fn().mockReturnValue({
+        filter: vi.fn().mockReturnValue({
+          collect: mockCollect,
+        }),
+      })
 
       const newMetadata = {
         source: 'claude' as const,
@@ -99,12 +127,14 @@ describe('Tag Associations', () => {
 
   describe('getTagsForBlog', () => {
     it('should return empty array when no tags exist', async () => {
-      vi.mocked(mockDb.query().filter().collect).mockResolvedValueOnce([])
+      const mockCollect = vi.fn().mockResolvedValueOnce([])
+      mockDb.query = vi.fn().mockReturnValue({
+        filter: vi.fn().mockReturnValue({
+          collect: mockCollect,
+        }),
+      })
 
-      const result = await getTagsForBlog(
-        { db: mockDb as DatabaseReader },
-        { blogId: mockBlogId }
-      )
+      const result = await getTagsForBlog(mockQueryCtx, { blogId: mockBlogId })
       expect(result).toEqual([])
     })
 
@@ -123,15 +153,15 @@ describe('Tag Associations', () => {
         category: 'technical',
       }
 
-      vi.mocked(mockDb.query().filter().collect).mockResolvedValueOnce(
-        mockAssociations
-      )
-      vi.mocked(mockDb.get).mockResolvedValueOnce(mockTag)
+      const mockCollect = vi.fn().mockResolvedValueOnce(mockAssociations)
+      mockDb.query = vi.fn().mockReturnValue({
+        filter: vi.fn().mockReturnValue({
+          collect: mockCollect,
+        }),
+      })
+      mockDb.get.mockImplementationOnce(() => Promise.resolve(mockTag))
 
-      const result = await getTagsForBlog(
-        { db: mockDb as DatabaseReader },
-        { blogId: mockBlogId }
-      )
+      const result = await getTagsForBlog(mockQueryCtx, { blogId: mockBlogId })
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
         ...mockTag,
