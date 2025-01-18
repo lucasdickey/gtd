@@ -25,6 +25,7 @@ import type * as tagAssociations from "../tagAssociations.js";
 import type * as tags from "../tags.js";
 import type * as tagsClaudeRuns from "../tagsClaudeRuns.js";
 import type * as tasks from "../tasks.js";
+import type * as testing from "../testing.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -47,6 +48,7 @@ declare const fullApi: ApiFromModules<{
   tags: typeof tags;
   tagsClaudeRuns: typeof tagsClaudeRuns;
   tasks: typeof tasks;
+  testing: typeof testing;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

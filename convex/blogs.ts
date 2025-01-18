@@ -194,3 +194,20 @@ export const getClaudeRunsForBlog = query({
     return runs
   },
 })
+
+export const removeEntitiesField = mutation({
+  handler: async (ctx) => {
+    const blogs = await ctx.db.query('blogs').collect()
+    let count = 0
+
+    for (const blog of blogs) {
+      const { entities, ...rest } = blog as any
+      if (entities !== undefined) {
+        await ctx.db.replace(blog._id, rest)
+        count++
+      }
+    }
+
+    return `Removed entities field from ${count} blog posts`
+  },
+})
