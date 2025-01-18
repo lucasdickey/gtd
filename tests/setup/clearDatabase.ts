@@ -6,19 +6,19 @@ export async function clearDatabase() {
 
   try {
     // Clear admin users
-    await client.mutation(api.testing.clearAdminUsers)
+    await client.mutation(api.testing.clearAdminUsers, { isTest: true })
     console.log('Cleared admin users')
 
     // Clear blogs
-    await client.mutation(api.testing.clearBlogs)
+    await client.mutation(api.testing.clearBlogs, { isTest: true })
     console.log('Cleared blogs')
 
     // Clear tags
-    await client.mutation(api.testing.clearTags)
+    await client.mutation(api.testing.clearTags, { isTest: true })
     console.log('Cleared tags')
 
     // Clear tag associations
-    await client.mutation(api.testing.clearTagAssociations)
+    await client.mutation(api.testing.clearTagAssociations, { isTest: true })
     console.log('Cleared tag associations')
   } catch (error) {
     console.error('Error clearing database:', error)

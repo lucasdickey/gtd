@@ -1,18 +1,14 @@
 import { defineConfig, devices } from '@playwright/test'
-import dotenv from 'dotenv'
-import path from 'path'
-
-// Load test environment variables
-dotenv.config({ path: '.env.test' })
+import 'dotenv/config'
 
 export default defineConfig({
   testDir: './tests/e2e',
+  timeout: 90000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
-  timeout: 90000,
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',

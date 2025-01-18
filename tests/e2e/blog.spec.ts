@@ -1,24 +1,10 @@
 import { test, expect } from '@playwright/test'
-import { ConvexHttpClient } from 'convex/browser'
-import { api } from '../../convex/_generated/api'
 
 test('Blog Tag Generation: should generate tags when publishing a blog post', async ({
   page,
 }) => {
   // Enable console logging
   page.on('console', (msg) => console.log(msg.text()))
-
-  // Create admin user if it doesn't exist
-  const client = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL || '')
-  try {
-    await client.mutation(api.auth.setupInitialAdmin, {
-      email: process.env.ADMIN_EMAIL || 'test@example.com',
-      password: process.env.ADMIN_PASSWORD || 'test123',
-    })
-    console.log('Created admin user')
-  } catch (error) {
-    console.log('Admin user already exists')
-  }
 
   // Navigate to login page
   await page.goto('http://localhost:3000/admin/login')
@@ -29,14 +15,10 @@ test('Blog Tag Generation: should generate tags when publishing a blog post', as
   console.log('Login form is visible')
 
   // Fill in login details
-  await page.fill(
-    'input[type="email"]',
-    process.env.ADMIN_EMAIL || 'test@example.com'
-  )
-  await page.fill(
-    'input[type="password"]',
-    process.env.ADMIN_PASSWORD || 'test123'
-  )
+  const email = process.env.ADMIN_EMAIL || 'test@example.com'
+  const password = process.env.ADMIN_PASSWORD || 'test123'
+  await page.fill('input[type="email"]', email)
+  await page.fill('input[type="password"]', password)
   console.log('Filled in login details')
 
   // Submit form
@@ -51,12 +33,11 @@ test('Blog Tag Generation: should generate tags when publishing a blog post', as
       throw new Error('Login failed: Invalid email or password')
     }
   } catch (error: any) {
-    if (error?.message !== 'Login failed: Invalid email or password') {
-      // No error message found, continue to check for admin page
-      console.log('No error message found, checking for admin page')
-    } else {
+    if (error?.message === 'Login failed: Invalid email or password') {
       throw error
     }
+    // No error message found, continue to check for admin page
+    console.log('No error message found, checking for admin page')
   }
 
   // Wait for admin page content to be visible

@@ -1,12 +1,10 @@
 import { mutation } from './_generated/server'
-
-// Only allow these mutations in test environments
-const isTestEnv = process.env.NODE_ENV === 'test'
+import { v } from 'convex/values'
 
 export const clearAdminUsers = mutation({
-  args: {},
-  handler: async (ctx) => {
-    if (!isTestEnv) {
+  args: { isTest: v.boolean() },
+  handler: async (ctx, args) => {
+    if (!args.isTest) {
       throw new Error('Testing mutations are only allowed in test environments')
     }
 
@@ -18,9 +16,9 @@ export const clearAdminUsers = mutation({
 })
 
 export const clearBlogs = mutation({
-  args: {},
-  handler: async (ctx) => {
-    if (!isTestEnv) {
+  args: { isTest: v.boolean() },
+  handler: async (ctx, args) => {
+    if (!args.isTest) {
       throw new Error('Testing mutations are only allowed in test environments')
     }
 
@@ -32,9 +30,9 @@ export const clearBlogs = mutation({
 })
 
 export const clearTags = mutation({
-  args: {},
-  handler: async (ctx) => {
-    if (!isTestEnv) {
+  args: { isTest: v.boolean() },
+  handler: async (ctx, args) => {
+    if (!args.isTest) {
       throw new Error('Testing mutations are only allowed in test environments')
     }
 
@@ -46,9 +44,9 @@ export const clearTags = mutation({
 })
 
 export const clearTagAssociations = mutation({
-  args: {},
-  handler: async (ctx) => {
-    if (!isTestEnv) {
+  args: { isTest: v.boolean() },
+  handler: async (ctx, args) => {
+    if (!args.isTest) {
       throw new Error('Testing mutations are only allowed in test environments')
     }
 
