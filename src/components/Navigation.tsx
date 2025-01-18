@@ -19,6 +19,12 @@ const navItems: NavItem[] = [
   { href: '/blog', label: 'Musings' },
   { href: '/about', label: 'About' },
   {
+    href: 'https://a-ok.transistor.fm/',
+    label: 'Podcast',
+    isExternal: true,
+    target: '_blank',
+  },
+  {
     href: 'https://a-ok.shop/',
     label: 'Shop',
     isExternal: true,
