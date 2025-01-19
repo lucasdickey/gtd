@@ -32,7 +32,6 @@ Route Handlers and Middleware
 Layout and Page architecture
 Loading and Error UI patterns
 
-
 #Convex Key Concepts:
 Optimistic Updates
 Real-time Subscriptions
@@ -40,7 +39,6 @@ Database Schema Design
 Query and Mutation patterns
 File Storage patterns
 Backend Functions
-
 
 #TypeScript Best Practices:
 Strict Mode patterns
@@ -50,6 +48,7 @@ Utility types usage
 Generic patterns
 
 ## Project Stack
+
 - Next.js (with App Router based on directory structure)
 - Convex as backend/database
 - TypeScript
@@ -65,7 +64,9 @@ Generic patterns
 - Tiptap library for markdown in admin UI
 
 ## Type System Considerations
+
 1. Consider multiple type systems in play:
+
    - TypeScript types
    - Convex's generated types from schema
    - Zod schema types
@@ -79,7 +80,7 @@ Generic patterns
 
 2. When suggesting code:
    - Prefer TypeScript's built-in utility types where applicable
-   - Use Convex's generated types from _generated directory for database operations
+   - Use Convex's generated types from \_generated directory for database operations
    - Utilize Zod's infer utility for form schemas
    - Leverage React.FC for functional components with explicit prop types
    - Consider Next.js specific types for routing and server components
@@ -87,6 +88,7 @@ Generic patterns
    - Use AWS SDK v3 types for S3 operations
 
 ## File Structure Awareness
+
 - Maintain separation between client and server code per Convex requirements
 - Respect Next.js 13+ app directory conventions
 - Keep types in appropriate locations:
@@ -98,7 +100,9 @@ Generic patterns
   - S3 operation types in appropriate utility files
 
 ## Styling Guidelines
+
 1. Tailwind CSS:
+
    - Use Tailwind CSS exclusively for styling
    - Follow utility-first CSS patterns
    - Utilize Tailwind's configuration for custom values
@@ -114,7 +118,9 @@ Generic patterns
    - Maintain accessibility standards in styling
 
 ## Best Practices
+
 1. TypeScript:
+
    - Use strict mode compliance
    - Implement proper type narrowing
    - Avoid type assertions unless absolutely necessary
@@ -122,6 +128,7 @@ Generic patterns
    - Properly handle nullable and undefined values
 
 2. React + Next.js:
+
    - Consider server vs client components
    - Use proper data fetching patterns (Convex hooks)
    - Implement proper error boundaries
@@ -129,6 +136,7 @@ Generic patterns
    - Follow React Server Components conventions
 
 3. Convex:
+
    - Follow mutation vs query patterns
    - Implement proper pagination where needed
    - Use optimistic updates when appropriate
@@ -136,12 +144,14 @@ Generic patterns
    - Properly type database schemas
 
 4. Forms and Validation:
+
    - Coordinate between Zod schemas and TypeScript types
    - Implement proper form validation with React Hook Form
    - Handle error states and user feedback
    - Maintain type safety between form data and API endpoints
 
 5. Claude API Integration:
+
    - Implement proper error handling for API calls
    - Handle rate limiting appropriately
    - Maintain type safety for API responses
@@ -156,7 +166,9 @@ Generic patterns
    - Implement proper file size limitations
 
 ## Component Structure
+
 When suggesting component code:
+
 1. Use proper shadcn/ui component imports
 2. Implement Tailwind CSS patterns consistently
 3. Follow TypeScript best practices for props and state
@@ -166,6 +178,7 @@ When suggesting component code:
 7. Handle LLM response states appropriately
 
 ## Security Considerations
+
 1. Implement proper Clerk authentication checks
 2. Use appropriate Convex access controls
 3. Validate all user inputs with Zod
@@ -175,6 +188,7 @@ When suggesting component code:
 7. Validate and sanitize LLM responses
 
 ## Performance Considerations
+
 1. Implement proper code splitting
 2. Use appropriate React hooks for performance
 3. Consider proper caching strategies with Convex
@@ -184,6 +198,7 @@ When suggesting component code:
 7. Optimize S3 file transfers
 
 ## Error Handling
+
 1. Implement proper error boundaries
 2. Handle Convex query/mutation errors appropriately
 3. Provide proper user feedback
@@ -193,7 +208,9 @@ When suggesting component code:
 7. Handle S3 operation failures
 
 ## Testing Considerations
+
 When suggesting testable code:
+
 1. Make components easily testable
 2. Consider mocking Convex queries/mutations
 3. Handle proper type mocking
@@ -213,7 +230,7 @@ Please bear in mind this current file structure:
 ├── components.json
 ├── convex
 │   ├── README.md
-│   ├── _generated
+│   ├── \_generated
 │   ├── blogs.ts
 │   ├── files.ts
 │   ├── notes.ts
@@ -513,7 +530,7 @@ Please bear in mind this current file structure:
 │   ├── lint-staged
 │   ├── listr2
 │   ├── locate-path
-│   ├── lodash._reinterpolate
+│   ├── lodash.\_reinterpolate
 │   ├── lodash.castarray
 │   ├── lodash.isplainobject
 │   ├── lodash.merge
@@ -768,7 +785,7 @@ Please bear in mind this current file structure:
 ├── package-lock.json
 ├── package.json
 ├── pages
-│   └── _app.js
+│   └── \_app.js
 ├── postcss.config.js
 ├── postcss.config.mjs
 ├── public
@@ -804,3 +821,99 @@ Please bear in mind this current file structure:
 └── vercel.json
 
 551 directories, 45 files
+
+# Testing
+
+## Overview
+
+The project uses a comprehensive testing strategy with multiple layers:
+
+- Unit tests with Vitest
+- Integration tests for Convex functions
+- End-to-end tests with Playwright
+
+## Running Tests
+
+```bash
+# Run all tests
+npm run test
+
+# Run only unit tests
+npm run test:unit
+
+# Run only end-to-end tests
+npm run test:e2e
+
+# Generate test coverage report
+npm run test:coverage
+```
+
+## Test Structure
+
+### Unit Tests (`/tests/unit/`)
+
+- `claude/tagGeneration.test.ts`: Tests for Claude API integration and tag generation logic
+
+  - Validates successful tag generation
+  - Tests retry mechanism for malformed JSON responses
+  - Verifies error handling after max retries
+
+- `tags/tagAssociations.test.ts`: Tests for tag association management
+  - Tests creating new tag associations
+  - Validates updating existing associations
+  - Tests retrieving tags for blog posts
+
+### End-to-End Tests (`/tests/e2e/`)
+
+- `blog.spec.ts`: Tests the complete blog post and tag generation flow
+  - Tests admin authentication
+  - Validates blog post creation
+  - Verifies automatic tag generation
+  - Checks tag display on the blog page
+
+## Test Configuration
+
+- Vitest configuration in `vitest.config.ts`
+
+  - Uses jsdom for DOM environment
+  - Configured with React testing utilities
+  - Coverage reporting enabled
+
+- Playwright configuration in `playwright.config.ts`
+  - Tests run against local development server
+  - Configured for Chrome, Firefox, and Safari
+  - Automatic retry logic for CI environments
+
+## Writing Tests
+
+When adding new features, please ensure:
+
+1. Unit tests cover core logic and edge cases
+2. Integration tests verify Convex function behavior
+3. E2E tests validate complete user flows
+4. Tests follow the existing patterns in their respective directories
+
+## CI Integration
+
+Tests are automatically run:
+
+- On pull requests
+- Before deployment
+- In CI environment with stricter settings
+
+## Environment Setup
+
+To run tests locally:
+
+1. Ensure all dependencies are installed
+2. Set up required environment variables
+3. Start the development server for E2E tests
+4. Run the appropriate test command
+
+## Test Coverage
+
+We aim for:
+
+- High coverage of core business logic
+- Complete coverage of tag generation flows
+- Full E2E coverage of critical user paths

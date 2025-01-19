@@ -15,11 +15,17 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as blogs from "../blogs.js";
+import type * as claude_generateBlogTags from "../claude/generateBlogTags.js";
+import type * as claude_index from "../claude/index.js";
 import type * as claude from "../claude.js";
 import type * as files from "../files.js";
 import type * as notes from "../notes.js";
 import type * as projects from "../projects.js";
+import type * as tagAssociations from "../tagAssociations.js";
+import type * as tags from "../tags.js";
+import type * as tagsClaudeRuns from "../tagsClaudeRuns.js";
 import type * as tasks from "../tasks.js";
+import type * as testing from "../testing.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -32,11 +38,17 @@ import type * as tasks from "../tasks.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   blogs: typeof blogs;
+  "claude/generateBlogTags": typeof claude_generateBlogTags;
+  "claude/index": typeof claude_index;
   claude: typeof claude;
   files: typeof files;
   notes: typeof notes;
   projects: typeof projects;
+  tagAssociations: typeof tagAssociations;
+  tags: typeof tags;
+  tagsClaudeRuns: typeof tagsClaudeRuns;
   tasks: typeof tasks;
+  testing: typeof testing;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { LinkIcon } from 'lucide-react'
 import { showToast } from '@/utils/toast'
 import Cookies from 'js-cookie'
+import BlogTags from '@/app/blog/BlogTags'
 
 type BlogFormData = {
   title: string
@@ -43,6 +44,7 @@ export default function AdminBlogsPage() {
   const router = useRouter()
   const [formData, setFormData] = useState<BlogFormData>(defaultFormData)
   const [editingId, setEditingId] = useState<Id<'blogs'> | null>(null)
+  const [expandedBlogId, setExpandedBlogId] = useState<Id<'blogs'> | null>(null)
 
   const sessionToken = Cookies.get('adminSessionToken')
   const isValidSession = useQuery(
@@ -237,6 +239,26 @@ export default function AdminBlogsPage() {
                       {new Date(
                         blog.publishedAt || blog.publishDate || 0
                       ).toLocaleDateString()}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {blog._id && (
+                        <BlogTags
+                          blogId={blog._id}
+                          shouldLoad={expandedBlogId === blog._id}
+                        />
+                      )}
+                      <button
+                        onClick={() =>
+                          setExpandedBlogId(
+                            expandedBlogId === blog._id ? null : blog._id
+                          )
+                        }
+                        className="text-sm text-gray-500 hover:text-gray-700"
+                      >
+                        {expandedBlogId === blog._id
+                          ? 'Hide Tags'
+                          : 'Show Tags'}
+                      </button>
                     </div>
                   </div>
                   <div className="flex space-x-4">
