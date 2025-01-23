@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import React from 'react'
 
 export function HomePage() {
   const [text, setText] = useState('An Ape On Keys')
@@ -54,13 +55,14 @@ export function HomePage() {
               showMonkey ? 'animate-fade-in-blur' : 'opacity-0'
             }`}
           >
-            <Image
-              src="/a-okay-monkey-1.png"
-              alt="A-OK Monkey"
-              width={400}
-              height={400}
-              className="rounded-lg"
-            />
+            {React.createElement(Image, {
+              src: '/a-okay-monkey-1.png',
+              alt: 'A-OK Monkey',
+              width: 400,
+              height: 400,
+              priority: true,
+              className: 'rounded-lg',
+            })}
           </div>
 
           <div className="text-gray-600">

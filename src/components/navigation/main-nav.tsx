@@ -2,8 +2,9 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, FolderKanban, PenTool, User, ExternalLink } from 'lucide-react'
+import { Home, User, ExternalLink, FileText, Briefcase } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import React from 'react'
 
 export function MainNav({ isCollapsed }: { isCollapsed?: boolean }) {
   const pathname = usePathname()
@@ -12,31 +13,31 @@ export function MainNav({ isCollapsed }: { isCollapsed?: boolean }) {
     {
       title: 'Home',
       href: '/',
-      icon: <Home className="h-4 w-4" />,
+      icon: React.createElement(Home, { className: 'h-4 w-4' }),
       isExternal: false,
     },
     {
       title: 'Projects',
       href: '/projects',
-      icon: <FolderKanban className="h-4 w-4" />,
+      icon: React.createElement(Briefcase, { className: 'h-4 w-4' }),
       isExternal: false,
     },
     {
       title: 'Musings',
       href: '/blog',
-      icon: <PenTool className="h-4 w-4" />,
+      icon: React.createElement(FileText, { className: 'h-4 w-4' }),
       isExternal: false,
     },
     {
       title: 'About',
       href: '/about',
-      icon: <User className="h-4 w-4" />,
+      icon: React.createElement(User, { className: 'h-4 w-4' }),
       isExternal: false,
     },
     {
       title: 'Shop',
       href: 'https://a-ok.shop/',
-      icon: <ExternalLink className="h-4 w-4" />,
+      icon: React.createElement(ExternalLink, { className: 'h-4 w-4' }),
       isExternal: true,
     },
   ]
@@ -50,40 +51,50 @@ export function MainNav({ isCollapsed }: { isCollapsed?: boolean }) {
         <ul className="space-y-1">
           {items.map((item) => (
             <li key={item.href}>
-              {item.isExternal ? (
-                <a
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent'
+              {item.isExternal
+                ? React.createElement(
+                    Link,
+                    {
+                      key: item.href,
+                      href: item.href,
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                      className: cn(
+                        'flex items-center gap-2 px-2 py-1 rounded-md hover:bg-accent',
+                        isCollapsed && 'justify-center'
+                      ),
+                    },
+                    [
+                      item.icon,
+                      !isCollapsed &&
+                        React.createElement(
+                          'span',
+                          { key: 'title' },
+                          item.title
+                        ),
+                    ].filter(Boolean)
+                  )
+                : React.createElement(
+                    Link,
+                    {
+                      key: item.href,
+                      href: item.href,
+                      className: cn(
+                        'flex items-center gap-2 px-2 py-1 rounded-md hover:bg-accent',
+                        pathname === item.href && 'bg-accent',
+                        isCollapsed && 'justify-center'
+                      ),
+                    },
+                    [
+                      item.icon,
+                      !isCollapsed &&
+                        React.createElement(
+                          'span',
+                          { key: 'title' },
+                          item.title
+                        ),
+                    ].filter(Boolean)
                   )}
-                >
-                  {item.icon}
-                  {!isCollapsed && (
-                    <span className="flex items-center gap-1">
-                      {item.title}
-                    </span>
-                  )}
-                </a>
-              ) : (
-                <Link
-                  href={item.href}
-                  className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent',
-                    (
-                      item.href === '/'
-                        ? pathname === '/'
-                        : pathname?.startsWith(item.href)
-                    )
-                      ? 'bg-accent'
-                      : 'transparent'
-                  )}
-                >
-                  {item.icon}
-                  {!isCollapsed && <span>{item.title}</span>}
-                </Link>
-              )}
             </li>
           ))}
         </ul>

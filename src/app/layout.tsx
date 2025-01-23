@@ -4,6 +4,7 @@ import { ConvexClientProvider } from './ConvexClientProvider'
 import Navigation from '@/components/Navigation'
 import { VT323 } from 'next/font/google'
 import { metadata } from './layout.metadata'
+import React from 'react'
 
 export { metadata }
 
@@ -37,9 +38,9 @@ export default function RootLayout({
       >
         <div className="corner-triangle corner-triangle-top" />
         <div className="corner-triangle corner-triangle-bottom" />
-        <Navigation />
+        {React.createElement(Navigation)}
         <main className="pt-16">
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+          {React.createElement(ConvexClientProvider, null, children)}
         </main>
         <div
           id="toast"

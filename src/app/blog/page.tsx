@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import BlogList from './BlogList'
 import { getRouteTitle } from '../metadata.config'
+import React from 'react'
 
 export const metadata: Metadata = {
   title: getRouteTitle('/blog'),
@@ -39,9 +40,7 @@ export default function BlogPage() {
             A small collection of thoughts
           </h1>
         </div>
-        <div className="space-y-12 mt-8">
-          <BlogList />
-        </div>
+        <div className="space-y-12 mt-8">{React.createElement(BlogList)}</div>
       </div>
     </div>
   )

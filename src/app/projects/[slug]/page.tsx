@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import ProjectDetails from './ProjectDetails'
+import React from 'react'
 
 interface Props {
   params: { slug: string }
@@ -37,5 +38,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function ProjectPage({ params }: Props) {
-  return <ProjectDetails slug={params.slug} />
+  return React.createElement(ProjectDetails, { slug: params.slug })
 }

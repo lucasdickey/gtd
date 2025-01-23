@@ -169,91 +169,110 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
           className: 'border-b bg-gray-50 p-2 flex gap-2 flex-wrap',
         },
         [
-          React.createElement(Button, {
-            key: 'bullet-list',
-            type: 'button',
-            variant: 'ghost',
-            size: 'sm',
-            onClick: handleToolbarClick(() =>
-              editor.chain().focus().toggleBulletList().run()
-            ),
-            className: editor.isActive('bulletList') ? 'bg-gray-200' : '',
-            children: React.createElement(List, { className: 'h-4 w-4' }),
-          }),
+          React.createElement(
+            Button,
+            {
+              key: 'bullet-list',
+              type: 'button',
+              variant: 'ghost',
+              size: 'sm',
+              onClick: handleToolbarClick(() =>
+                editor.chain().focus().toggleBulletList().run()
+              ),
+              className: editor.isActive('bulletList') ? 'bg-gray-200' : '',
+            },
+            React.createElement(List, { className: 'h-4 w-4' })
+          ),
 
-          React.createElement(Button, {
-            key: 'ordered-list',
-            type: 'button',
-            variant: 'ghost',
-            size: 'sm',
-            onClick: handleToolbarClick(() =>
-              editor.chain().focus().toggleOrderedList().run()
-            ),
-            className: editor.isActive('orderedList') ? 'bg-gray-200' : '',
-            children: React.createElement(ListOrdered, {
-              className: 'h-4 w-4',
-            }),
-          }),
+          React.createElement(
+            Button,
+            {
+              key: 'ordered-list',
+              type: 'button',
+              variant: 'ghost',
+              size: 'sm',
+              onClick: handleToolbarClick(() =>
+                editor.chain().focus().toggleOrderedList().run()
+              ),
+              className: editor.isActive('orderedList') ? 'bg-gray-200' : '',
+            },
+            React.createElement(ListOrdered, { className: 'h-4 w-4' })
+          ),
 
-          React.createElement(Button, {
-            key: 'link',
-            type: 'button',
-            variant: 'ghost',
-            size: 'sm',
-            onClick: addLink,
-            className: editor.isActive('link') ? 'bg-gray-200' : '',
-            children: React.createElement(LinkIcon, { className: 'h-4 w-4' }),
-          }),
+          React.createElement(
+            Button,
+            {
+              key: 'link',
+              type: 'button',
+              variant: 'ghost',
+              size: 'sm',
+              onClick: addLink,
+              className: editor.isActive('link') ? 'bg-gray-200' : '',
+            },
+            React.createElement(LinkIcon, { className: 'h-4 w-4' })
+          ),
 
-          React.createElement(Button, {
-            key: 'blockquote',
-            type: 'button',
-            variant: 'ghost',
-            size: 'sm',
-            onClick: handleToolbarClick(() =>
-              editor.chain().focus().toggleBlockquote().run()
-            ),
-            className: editor.isActive('blockquote') ? 'bg-gray-200' : '',
-            children: React.createElement(Quote, { className: 'h-4 w-4' }),
-          }),
+          React.createElement(
+            Button,
+            {
+              key: 'blockquote',
+              type: 'button',
+              variant: 'ghost',
+              size: 'sm',
+              onClick: handleToolbarClick(() =>
+                editor.chain().focus().toggleBlockquote().run()
+              ),
+              className: editor.isActive('blockquote') ? 'bg-gray-200' : '',
+            },
+            React.createElement(Quote, { className: 'h-4 w-4' })
+          ),
 
-          React.createElement(Button, {
-            key: 'h2',
-            type: 'button',
-            variant: 'ghost',
-            size: 'sm',
-            onClick: handleToolbarClick(() =>
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            ),
-            className: editor.isActive('heading', { level: 2 })
-              ? 'bg-gray-200'
-              : '',
-            children: React.createElement(Heading2, { className: 'h-4 w-4' }),
-          }),
+          React.createElement(
+            Button,
+            {
+              key: 'h2',
+              type: 'button',
+              variant: 'ghost',
+              size: 'sm',
+              onClick: handleToolbarClick(() =>
+                editor.chain().focus().toggleHeading({ level: 2 }).run()
+              ),
+              className: editor.isActive('heading', { level: 2 })
+                ? 'bg-gray-200'
+                : '',
+            },
+            React.createElement(Heading2, { className: 'h-4 w-4' })
+          ),
 
-          React.createElement(Button, {
-            key: 'h3',
-            type: 'button',
-            variant: 'ghost',
-            size: 'sm',
-            onClick: handleToolbarClick(() =>
-              editor.chain().focus().toggleHeading({ level: 3 }).run()
-            ),
-            className: editor.isActive('heading', { level: 3 })
-              ? 'bg-gray-200'
-              : '',
-            children: React.createElement(Heading3, { className: 'h-4 w-4' }),
-          }),
+          React.createElement(
+            Button,
+            {
+              key: 'h3',
+              type: 'button',
+              variant: 'ghost',
+              size: 'sm',
+              onClick: handleToolbarClick(() =>
+                editor.chain().focus().toggleHeading({ level: 3 }).run()
+              ),
+              className: editor.isActive('heading', { level: 3 })
+                ? 'bg-gray-200'
+                : '',
+            },
+            React.createElement(Heading3, { className: 'h-4 w-4' })
+          ),
 
-          React.createElement(Button, {
-            key: 'image',
-            type: 'button',
-            variant: 'ghost',
-            size: 'sm',
-            onClick: addImage,
-            className: editor?.isActive('image') ? 'bg-gray-200' : '',
-            children: React.createElement(ImageIcon, { className: 'h-4 w-4' }),
-          }),
+          React.createElement(
+            Button,
+            {
+              key: 'image',
+              type: 'button',
+              variant: 'ghost',
+              size: 'sm',
+              onClick: addImage,
+              className: editor?.isActive('image') ? 'bg-gray-200' : '',
+            },
+            React.createElement(ImageIcon, { className: 'h-4 w-4' })
+          ),
         ]
       ),
 

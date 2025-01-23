@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import ProjectsList from './ProjectsList'
 import { getRouteTitle } from '../metadata.config'
+import React from 'react'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,5 +33,5 @@ export const metadata: Metadata = {
 }
 
 export default function ProjectsPage() {
-  return <ProjectsList />
+  return React.createElement(ProjectsList)
 }

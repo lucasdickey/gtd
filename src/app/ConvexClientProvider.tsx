@@ -1,5 +1,6 @@
 'use client'
 import { ConvexProvider, ConvexReactClient } from 'convex/react'
+import React from 'react'
 
 // Add console log to debug the environment variable
 console.log('Convex URL:', process.env.NEXT_PUBLIC_CONVEX_URL)
@@ -25,5 +26,5 @@ export function ConvexClientProvider({
 }: {
   children: React.ReactNode
 }) {
-  return <ConvexProvider client={convex}>{children}</ConvexProvider>
+  return React.createElement(ConvexProvider, { client: convex }, children)
 }

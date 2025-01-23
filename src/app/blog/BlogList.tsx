@@ -50,7 +50,7 @@ export default function BlogList() {
               className="text-gray-500 hover:text-gray-700 flex items-center"
               aria-label="Copy link to blog"
             >
-              <LinkIcon className="h-4 w-4" />
+              {React.createElement(LinkIcon, { className: 'h-4 w-4' })}
             </button>
           </header>
           <div className="text-sm text-gray-500">
