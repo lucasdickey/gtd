@@ -24,6 +24,12 @@ const navItems: NavItem[] = [
     isExternal: true,
     target: '_blank',
   },
+  {
+    href: 'https://a-ok.transistor.fm/',
+    label: 'Listen',
+    isExternal: true,
+    target: '_blank',
+  },
 ]
 
 export default function Navigation() {
