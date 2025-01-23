@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { LinkIcon } from 'lucide-react'
 import { showToast } from '@/utils/toast'
 import Cookies from 'js-cookie'
+import React from 'react'
 
 type BlogFormData = {
   title: string
@@ -153,17 +154,19 @@ export default function AdminBlogsPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Content
                 </label>
-                <div className="border border-gray-300 rounded-md">
-                  <MarkdownEditor
-                    content={formData.body}
-                    onChange={(html) => {
+                {React.createElement(
+                  'div',
+                  { className: 'border border-gray-300 rounded-md' },
+                  React.createElement(MarkdownEditor, {
+                    content: formData.body,
+                    onChange: (html) => {
                       setFormData((prev) => ({
                         ...prev,
                         body: html || '',
                       }))
-                    }}
-                  />
-                </div>
+                    },
+                  })
+                )}
               </div>
 
               <div>
@@ -212,12 +215,15 @@ export default function AdminBlogsPage() {
                 <div className="flex justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Link
-                        href={`/blog/${blog.slug}`}
-                        className="text-xl font-semibold hover:text-blue-600 transition-colors"
-                      >
-                        {blog.title}
-                      </Link>
+                      {React.createElement(
+                        Link,
+                        {
+                          href: `/blog/${blog.slug}`,
+                          className:
+                            'text-xl font-semibold hover:text-blue-600 transition-colors',
+                        },
+                        blog.title
+                      )}
                       <button
                         onClick={() => {
                           const url = `${window.location.origin}/blog/${blog.slug}`
@@ -227,7 +233,9 @@ export default function AdminBlogsPage() {
                         className="text-gray-500 hover:text-gray-700 transition-colors"
                         aria-label="Copy link to blog"
                       >
-                        <LinkIcon className="h-4 w-4" />
+                        {React.createElement(LinkIcon, {
+                          className: 'h-4 w-4',
+                        })}
                       </button>
                     </div>
                     <p className="text-gray-600 line-clamp-2">{blog.body}</p>

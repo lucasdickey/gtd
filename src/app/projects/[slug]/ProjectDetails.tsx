@@ -34,12 +34,12 @@ export default function ProjectDetails({ slug }: ProjectDetailsProps) {
 
       {/* Image Carousel */}
       <div className="relative h-96 mb-8">
-        <Image
-          src={project.images[currentImageIndex]}
-          alt={`${project.title} - Image ${currentImageIndex + 1}`}
-          fill
-          className="object-cover rounded-lg"
-        />
+        {React.createElement(Image, {
+          src: project.images[currentImageIndex],
+          alt: `${project.title} - Image ${currentImageIndex + 1}`,
+          fill: true,
+          className: 'object-cover rounded-lg',
+        })}
         <div className="absolute bottom-4 right-4 space-x-2">
           {project.images.map((_, index) => (
             <button

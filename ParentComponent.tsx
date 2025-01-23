@@ -13,13 +13,11 @@ const ParentComponent = () => {
     console.error('Upload error:', error)
   }, [])
 
-  return (
-    <FileUploader
-      projectId="general"
-      onUploadComplete={onUploadComplete}
-      onError={onError}
-    />
-  )
+  return React.createElement(FileUploader, {
+    projectId: 'general',
+    onUploadComplete,
+    onError,
+  })
 }
 
 export default ParentComponent

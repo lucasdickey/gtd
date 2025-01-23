@@ -8,6 +8,7 @@ import { FileUploader } from '@/components/FileUploader'
 import Image from 'next/image'
 import MarkdownEditor from '@/components/MarkdownEditor'
 import Cookies from 'js-cookie'
+import React from 'react'
 
 // Define the shape of our form data
 interface ProjectFormData {
@@ -233,15 +234,15 @@ export default function AdminProjects() {
             </div>
             <div>
               <label className="block text-sm font-bold mb-1">Content</label>
-              <MarkdownEditor
-                content={formData.content}
-                onChange={(markdown) => {
+              {React.createElement(MarkdownEditor, {
+                content: formData.content,
+                onChange: (markdown) => {
                   setFormData((prev) => ({
                     ...prev,
                     content: markdown || '',
                   }))
-                }}
-              />
+                },
+              })}
             </div>
             <div>
               <label className="block text-sm font-bold mb-1">Tools</label>
@@ -280,33 +281,33 @@ export default function AdminProjects() {
             <div>
               <label className="block text-sm font-bold mb-1">Images</label>
               <div className="space-y-4">
-                <FileUploader
-                  projectId={editingId || 'general'}
-                  onUploadComplete={(result) => {
+                {React.createElement(FileUploader, {
+                  projectId: editingId || 'general',
+                  onUploadComplete: (result) => {
                     setFormData({
                       ...formData,
                       images: [...formData.images, result.fileUrl],
                       imageUrl: formData.imageUrl || result.fileUrl,
                     })
-                  }}
-                  onError={(error) => {
+                  },
+                  onError: (error) => {
                     console.error('Upload error:', error)
                     alert('Failed to upload image: ' + error.message)
-                  }}
-                  allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
-                  maxSizeMB={5}
-                />
+                  },
+                  allowedTypes: ['image/jpeg', 'image/png', 'image/webp'],
+                  maxSizeMB: 5,
+                })}
 
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   {formData.images.map((imageUrl, index) => (
                     <div key={index} className="relative group">
-                      <Image
-                        src={imageUrl}
-                        alt={`Project image ${index + 1}`}
-                        width={200}
-                        height={200}
-                        className="object-cover rounded-lg"
-                      />
+                      {React.createElement(Image, {
+                        src: imageUrl,
+                        alt: `Project image ${index + 1}`,
+                        width: 200,
+                        height: 200,
+                        className: 'object-cover rounded-lg',
+                      })}
                       <button
                         type="button"
                         onClick={() => {

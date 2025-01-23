@@ -90,15 +90,16 @@ export default function ProjectsList() {
                       <span className="text-gray-400">Image not available</span>
                     </div>
                   ) : (
-                    <Image
-                      src={validateImageUrl(project.imageUrl)}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                      onError={() => handleImageError(project._id)}
-                      priority={sortedProjects.indexOf(project) === 0}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
+                    React.createElement(Image, {
+                      src: validateImageUrl(project.imageUrl),
+                      alt: project.title,
+                      fill: true,
+                      className: 'object-cover',
+                      onError: () => handleImageError(project._id),
+                      priority: sortedProjects.indexOf(project) === 0,
+                      sizes:
+                        '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+                    })
                   )}
                 </div>
                 <div className="p-4">
@@ -114,7 +115,7 @@ export default function ProjectsList() {
                       className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
                       aria-label="Copy link to project"
                     >
-                      <Link2Icon className="w-4 h-4" />
+                      {React.createElement(Link2Icon, { className: 'w-4 h-4' })}
                     </button>
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-500 mb-2">

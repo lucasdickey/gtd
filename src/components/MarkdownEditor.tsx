@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { EditorContent, useEditor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { Link as TiptapLink } from '@tiptap/extension-link'
@@ -32,7 +32,10 @@ const sanitizeContent = (content: string): string => {
     .trim()
 }
 
-const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
+const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
+  content,
+  onChange,
+}) => {
   const [isMounted, setIsMounted] = useState(false)
   const isUserTyping = useRef(false)
   const lastContentRef = useRef(content)
@@ -130,7 +133,9 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
     }
 
   if (!isMounted) {
-    return <div className="min-h-[400px] border rounded-lg" />
+    return React.createElement('div', {
+      className: 'min-h-[400px] border rounded-lg',
+    })
   }
 
   if (!editor) {
@@ -153,100 +158,121 @@ const MarkdownEditor = ({ content, onChange }: MarkdownEditorProps) => {
     }
   }
 
-  return (
-    <div className="border rounded-lg overflow-hidden flex flex-col">
-      <div className="border-b bg-gray-50 p-2 flex gap-2 flex-wrap">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={handleToolbarClick(() =>
-            editor.chain().focus().toggleBulletList().run()
-          )}
-          className={editor.isActive('bulletList') ? 'bg-gray-200' : ''}
-        >
-          <List className="h-4 w-4" />
-        </Button>
+  return React.createElement(
+    'div',
+    { className: 'border rounded-lg overflow-hidden flex flex-col' },
+    [
+      React.createElement(
+        'div',
+        {
+          key: 'toolbar',
+          className: 'border-b bg-gray-50 p-2 flex gap-2 flex-wrap',
+        },
+        [
+          React.createElement(Button, {
+            key: 'bullet-list',
+            type: 'button',
+            variant: 'ghost',
+            size: 'sm',
+            onClick: handleToolbarClick(() =>
+              editor.chain().focus().toggleBulletList().run()
+            ),
+            className: editor.isActive('bulletList') ? 'bg-gray-200' : '',
+            children: React.createElement(List, { className: 'h-4 w-4' }),
+          }),
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={handleToolbarClick(() =>
-            editor.chain().focus().toggleOrderedList().run()
-          )}
-          className={editor.isActive('orderedList') ? 'bg-gray-200' : ''}
-        >
-          <ListOrdered className="h-4 w-4" />
-        </Button>
+          React.createElement(Button, {
+            key: 'ordered-list',
+            type: 'button',
+            variant: 'ghost',
+            size: 'sm',
+            onClick: handleToolbarClick(() =>
+              editor.chain().focus().toggleOrderedList().run()
+            ),
+            className: editor.isActive('orderedList') ? 'bg-gray-200' : '',
+            children: React.createElement(ListOrdered, {
+              className: 'h-4 w-4',
+            }),
+          }),
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={addLink}
-          className={editor.isActive('link') ? 'bg-gray-200' : ''}
-        >
-          <LinkIcon className="h-4 w-4" />
-        </Button>
+          React.createElement(Button, {
+            key: 'link',
+            type: 'button',
+            variant: 'ghost',
+            size: 'sm',
+            onClick: addLink,
+            className: editor.isActive('link') ? 'bg-gray-200' : '',
+            children: React.createElement(LinkIcon, { className: 'h-4 w-4' }),
+          }),
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={handleToolbarClick(() =>
-            editor.chain().focus().toggleBlockquote().run()
-          )}
-          className={editor.isActive('blockquote') ? 'bg-gray-200' : ''}
-        >
-          <Quote className="h-4 w-4" />
-        </Button>
+          React.createElement(Button, {
+            key: 'blockquote',
+            type: 'button',
+            variant: 'ghost',
+            size: 'sm',
+            onClick: handleToolbarClick(() =>
+              editor.chain().focus().toggleBlockquote().run()
+            ),
+            className: editor.isActive('blockquote') ? 'bg-gray-200' : '',
+            children: React.createElement(Quote, { className: 'h-4 w-4' }),
+          }),
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={handleToolbarClick(() =>
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-          )}
-          className={
-            editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : ''
-          }
-        >
-          <Heading2 className="h-4 w-4" />
-        </Button>
+          React.createElement(Button, {
+            key: 'h2',
+            type: 'button',
+            variant: 'ghost',
+            size: 'sm',
+            onClick: handleToolbarClick(() =>
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+            ),
+            className: editor.isActive('heading', { level: 2 })
+              ? 'bg-gray-200'
+              : '',
+            children: React.createElement(Heading2, { className: 'h-4 w-4' }),
+          }),
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={handleToolbarClick(() =>
-            editor.chain().focus().toggleHeading({ level: 3 }).run()
-          )}
-          className={
-            editor.isActive('heading', { level: 3 }) ? 'bg-gray-200' : ''
-          }
-        >
-          <Heading3 className="h-4 w-4" />
-        </Button>
+          React.createElement(Button, {
+            key: 'h3',
+            type: 'button',
+            variant: 'ghost',
+            size: 'sm',
+            onClick: handleToolbarClick(() =>
+              editor.chain().focus().toggleHeading({ level: 3 }).run()
+            ),
+            className: editor.isActive('heading', { level: 3 })
+              ? 'bg-gray-200'
+              : '',
+            children: React.createElement(Heading3, { className: 'h-4 w-4' }),
+          }),
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={addImage}
-          className={editor?.isActive('image') ? 'bg-gray-200' : ''}
-        >
-          <ImageIcon className="h-4 w-4" />
-        </Button>
-      </div>
+          React.createElement(Button, {
+            key: 'image',
+            type: 'button',
+            variant: 'ghost',
+            size: 'sm',
+            onClick: addImage,
+            className: editor?.isActive('image') ? 'bg-gray-200' : '',
+            children: React.createElement(ImageIcon, { className: 'h-4 w-4' }),
+          }),
+        ]
+      ),
 
-      <div className="min-h-[200px] h-[200px] flex-grow bg-white resize-y overflow-auto">
-        <EditorContent editor={editor} className="h-full" />
-      </div>
-    </div>
+      React.createElement(
+        'div',
+        {
+          key: 'editor',
+          className:
+            'min-h-[200px] h-[200px] flex-grow bg-white resize-y overflow-auto',
+        },
+        React.createElement(EditorContent, {
+          editor: editor,
+          className: 'h-full',
+        })
+      ),
+    ]
   )
 }
+
 export default dynamic(() => Promise.resolve(MarkdownEditor), {
   ssr: false,
-}) as typeof MarkdownEditor
+})

@@ -1,4 +1,8 @@
 import { Id } from '@/convex/_generated/dataModel'
+import { useState, useCallback } from 'react'
+import { useMutation } from 'convex/react'
+import { api } from '@/convex/_generated/api'
+import React from 'react'
 
 export interface FileUploaderProps {
   onUploadComplete: (result: {
@@ -12,18 +16,13 @@ export interface FileUploaderProps {
   projectId?: Id<'projects'> | 'general'
 }
 
-// src/components/FileUploader/index.tsx
-import { useState, useCallback } from 'react'
-import { useMutation } from 'convex/react'
-import { api } from '@/convex/_generated/api'
-
-export const FileUploader = ({
+export const FileUploader: React.FC<FileUploaderProps> = ({
   projectId,
   onUploadComplete,
   onError,
   allowedTypes = ['image/jpeg', 'image/png'],
   maxSizeMB = 5,
-}: FileUploaderProps) => {
+}) => {
   const storeFileReference = useMutation(api.files.storeFileReference)
   const [uploading, setUploading] = useState(false)
   const [currentFile, setCurrentFile] = useState<File | null>(null)
@@ -104,58 +103,69 @@ export const FileUploader = ({
     [uploadFile, onUploadComplete, onError]
   )
 
-  return (
-    <div className="w-full max-w-md">
-      <input
-        type="file"
-        onChange={handleFileUpload}
-        disabled={uploading}
-        className="hidden"
-        id="file-upload"
-        accept={allowedTypes.join(',')}
-      />
-
-      <label
-        htmlFor="file-upload"
-        className={`
-          block w-full px-4 py-2 text-sm font-medium text-center text-white 
-          rounded-lg cursor-pointer transition-colors
-          ${uploading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}
-        `}
-      >
-        {uploading ? 'Uploading...' : 'Upload Files'}
-      </label>
-
-      {/* Progress Bar */}
-      {uploading && (
-        <div className="mt-4">
-          <div className="flex justify-between text-xs text-gray-600 mb-1">
-            <span>Uploading {currentFile?.name}</span>
-            <span>{progress}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Error Message */}
-      {error && (
-        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-md">
-          <p className="text-sm text-red-600">{error.message}</p>
-        </div>
-      )}
-
-      {/* File Type Info */}
-      <p className="mt-2 text-xs text-gray-500">
-        Allowed types:{' '}
-        {allowedTypes.map((type) => type.split('/')[1]).join(', ')}
-        <br />
-        Max size: {maxSizeMB}MB per file
-      </p>
-    </div>
-  )
+  return React.createElement('div', { className: 'w-full max-w-md' }, [
+    React.createElement('input', {
+      key: 'input',
+      type: 'file',
+      onChange: handleFileUpload,
+      disabled: uploading,
+      className: 'hidden',
+      id: 'file-upload',
+      accept: allowedTypes.join(','),
+    }),
+    React.createElement(
+      'label',
+      {
+        key: 'label',
+        htmlFor: 'file-upload',
+        className: `
+            block w-full px-4 py-2 text-sm font-medium text-center text-white 
+            rounded-lg cursor-pointer transition-colors
+            ${uploading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}
+          `,
+      },
+      uploading ? 'Uploading...' : 'Upload Files'
+    ),
+    uploading &&
+      React.createElement(
+        'div',
+        { key: 'progress', className: 'mt-4' },
+        React.createElement(
+          'div',
+          { className: 'flex justify-between text-xs text-gray-600 mb-1' },
+          React.createElement('span', null, `Uploading ${currentFile?.name}`),
+          React.createElement('span', null, `${progress}%`)
+        ),
+        React.createElement(
+          'div',
+          { className: 'w-full bg-gray-200 rounded-full h-2' },
+          React.createElement('div', {
+            className:
+              'bg-blue-600 h-2 rounded-full transition-all duration-300',
+            style: { width: `${progress}%` },
+          })
+        )
+      ),
+    error &&
+      React.createElement(
+        'div',
+        {
+          key: 'error',
+          className: 'mt-2 p-2 bg-red-50 border border-red-200 rounded-md',
+        },
+        React.createElement(
+          'p',
+          { className: 'text-sm text-red-600' },
+          error.message
+        )
+      ),
+    React.createElement(
+      'p',
+      { key: 'info', className: 'mt-2 text-xs text-gray-500' },
+      'Allowed types: ',
+      allowedTypes.map((type) => type.split('/')[1]).join(', '),
+      React.createElement('br'),
+      `Max size: ${maxSizeMB}MB per file`
+    ),
+  ])
 }
