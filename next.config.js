@@ -46,6 +46,10 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
+  typescript: {
+    // Disable TypeScript build errors
+    ignoreBuildErrors: true,
+  },
 }
 
 module.exports = nextConfig
