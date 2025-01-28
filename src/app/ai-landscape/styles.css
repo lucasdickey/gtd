@@ -234,3 +234,19 @@
     widows: 3;
   }
 }
+
+/* Force light mode styles */
+:root {
+  color-scheme: light;
+}
+
+.light {
+  color-scheme: light !important;
+}
+
+/* Override any dark mode styles */
+[data-theme='dark'] .light,
+.dark .light {
+  background-color: white !important;
+  color: black !important;
+}
