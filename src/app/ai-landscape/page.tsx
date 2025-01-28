@@ -34,7 +34,15 @@ const Page: FC = () => {
           <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg mb-8">
             <p className="text-gray-600 dark:text-gray-300 text-sm">
               Note: This synthesis pulls from 12 episodes from 8 podcasts in
-              this &quot;DeepSeek Hype&quot; list on{' '}
+              this{' '}
+              <a
+                href="https://deepcast.fm/podcast-list/deepseek-hype"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                &quot;DeepSeek Hype&quot; list
+              </a>{' '}
+              on{' '}
               <a
                 href="https://deepcast.fm"
                 target="_blank"
