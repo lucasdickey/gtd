@@ -1,0 +1,236 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Custom Markdown Styling */
+.prose {
+  --tw-prose-body: theme('colors.gray.700');
+  --tw-prose-headings: theme('colors.gray.900');
+  --tw-prose-links: theme('colors.blue.600');
+  --tw-prose-bold: theme('colors.gray.900');
+  --tw-prose-counters: theme('colors.gray.500');
+  --tw-prose-bullets: theme('colors.gray.300');
+  --tw-prose-hr: theme('colors.gray.200');
+  --tw-prose-quotes: theme('colors.gray.900');
+  --tw-prose-quote-borders: theme('colors.gray.200');
+  --tw-prose-captions: theme('colors.gray.500');
+  --tw-prose-code: theme('colors.gray.900');
+  --tw-prose-pre-code: theme('colors.gray.200');
+  --tw-prose-pre-bg: theme('colors.gray.800');
+  --tw-prose-th-borders: theme('colors.gray.300');
+  --tw-prose-td-borders: theme('colors.gray.200');
+  max-width: 100ch;
+  color: #374151;
+}
+
+.dark .prose {
+  --tw-prose-body: theme('colors.gray.300');
+  --tw-prose-headings: theme('colors.white');
+  --tw-prose-links: theme('colors.blue.400');
+  --tw-prose-bold: theme('colors.white');
+  --tw-prose-counters: theme('colors.gray.400');
+  --tw-prose-bullets: theme('colors.gray.600');
+  --tw-prose-hr: theme('colors.gray.700');
+  --tw-prose-quotes: theme('colors.gray.100');
+  --tw-prose-quote-borders: theme('colors.gray.700');
+  --tw-prose-captions: theme('colors.gray.400');
+  --tw-prose-code: theme('colors.white');
+  --tw-prose-pre-code: theme('colors.gray.100');
+  --tw-prose-pre-bg: theme('colors.gray.800');
+  --tw-prose-th-borders: theme('colors.gray.600');
+  --tw-prose-td-borders: theme('colors.gray.700');
+  color: #d1d5db;
+}
+
+.prose h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(to right, #3b82f6, #06b6d4);
+  -webkit-background-clip: text;
+  color: transparent;
+  color: #111827;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.prose h2 {
+  font-size: 2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--tw-prose-headings);
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--tw-prose-headings);
+  color: #374151;
+}
+
+.prose h4 {
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--tw-prose-headings);
+  color: #4b5563;
+}
+
+.prose p {
+  margin-bottom: 1.25rem;
+  line-height: 1.75;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+}
+
+.prose ul {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+
+.prose li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.prose a {
+  color: var(--tw-prose-links);
+  text-decoration: none;
+  transition: color 0.2s;
+  color: #2563eb;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+  color: #1d4ed8;
+}
+
+.dark .prose a {
+  color: #60a5fa;
+}
+
+.dark .prose a:hover {
+  color: #93c5fd;
+}
+
+.prose strong {
+  color: var(--tw-prose-bold);
+  font-weight: 600;
+}
+
+/* Add a subtle card effect to sections */
+.prose > div > section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Style blockquotes */
+.prose blockquote {
+  border-left: 4px solid var(--tw-prose-quote-borders);
+  padding-left: 1rem;
+  margin-left: 0;
+  font-style: italic;
+}
+
+/* Style code blocks */
+.prose pre {
+  background-color: var(--tw-prose-pre-bg);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.prose code {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+/* Footnotes */
+.prose [id^='footnote'] {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.dark .prose [id^='footnote'] {
+  color: #9ca3af;
+  border-top-color: #374151;
+}
+
+/* Animations */
+.prose > * {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .prose h1 {
+    font-size: 2rem;
+  }
+
+  .prose h2 {
+    font-size: 1.75rem;
+  }
+
+  .prose h3 {
+    font-size: 1.5rem;
+  }
+
+  .prose h4 {
+    font-size: 1.25rem;
+  }
+
+  .prose {
+    font-size: 1rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .prose {
+    max-width: none;
+  }
+
+  .prose a {
+    text-decoration: underline;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    break-after: avoid;
+  }
+
+  .prose p,
+  .prose ul {
+    orphans: 3;
+    widows: 3;
+  }
+}
