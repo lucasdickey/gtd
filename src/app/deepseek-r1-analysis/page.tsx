@@ -11,35 +11,35 @@ const Page: FC = () => {
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setShowToc(!showToc)}
-        className="fixed top-4 right-4 z-50 md:hidden bg-white dark:bg-gray-800 p-2 rounded-lg shadow-lg"
+        className="fixed top-4 right-4 z-50 md:hidden bg-white p-2 rounded-lg shadow-lg"
       >
         {showToc ? '✕' : '☰'}
       </button>
 
       {/* Main content - adjusted margins for both mobile and desktop */}
       <div className="flex-1 w-full px-4 md:max-w-3xl md:ml-8 md:mr-80 py-8">
-        <article className="prose prose-lg dark:prose-invert">
+        <article className="prose prose-lg">
           <h1 id="title" className="text-4xl font-bold mb-8 pb-2 border-b">
             <a
               href="https://huggingface.co/deepseek-ai/DeepSeek-R1"
               target="_blank"
               rel="noopener noreferrer"
-              className="no-underline hover:text-blue-600 dark:hover:text-blue-400"
+              className="no-underline hover:text-blue-600"
             >
               DEEPSEEK R1
             </a>{' '}
             IMPACT ANALYSIS - COMPLETE REPORT
           </h1>
 
-          <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg mb-8">
-            <p className="text-gray-600 dark:text-gray-300 text-sm">
+          <div className="bg-gray-50 p-4 rounded-lg mb-8">
+            <p className="text-gray-600 text-sm">
               Note: This synthesis pulls from 12 episodes from 8 podcasts in
               this &quot;DeepSeek Hype&quot; list on{' '}
               <a
                 href="https://deepcast.fm"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                className="text-blue-600 hover:text-blue-800"
               >
                 DeepCast.fm
               </a>
@@ -62,25 +62,25 @@ const Page: FC = () => {
             KEY TAKEAWAYS:
           </h3>
           <ul className="list-disc pl-6 my-4 space-y-2">
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               <a
                 href="https://www.deepseek.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 DeepSeek
               </a>
               &apos;s claimed $6M training cost vs. hundreds of millions for
               Western competitors
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               Pricing at ~3% of{' '}
               <a
                 href="https://openai.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 OpenAI
               </a>
@@ -89,30 +89,30 @@ const Page: FC = () => {
                 href="https://www.nvidia.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 NVDA
               </a>{' '}
               selloff
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               <a
                 href="https://opensource.org/licenses/MIT"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 MIT license
               </a>{' '}
               release enables local running on consumer hardware
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               Achieves performance parity with{' '}
               <a
                 href="https://openai.com/gpt-4"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 OpenAI&apos;s GPT-4
               </a>
@@ -121,12 +121,12 @@ const Page: FC = () => {
                 href="https://www.anthropic.com/claude"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 Claude
               </a>
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               Suggests US chip export controls may be less effective than
               intended
             </li>
@@ -136,31 +136,31 @@ const Page: FC = () => {
             IMMEDIATE MARKET IMPLICATIONS:
           </h3>
           <ul className="list-disc pl-6 my-4 space-y-2">
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               AI infrastructure stocks experiencing significant volatility
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               API pricing pressure across industry
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               Edge computing companies (
               <a
                 href="https://www.apple.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 AAPL
               </a>
               ) positioned to benefit
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               Application-focused companies (
               <a
                 href="https://www.microsoft.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 MSFT
               </a>
@@ -169,19 +169,19 @@ const Page: FC = () => {
                 href="https://about.meta.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 META
               </a>
               ) may outperform pure infrastructure plays
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               Total addressable market could expand due to lower costs (
               <a
                 href="https://en.wikipedia.org/wiki/Jevons_paradox"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="hover:text-blue-600"
               >
                 Jevon&apos;s Paradox
               </a>
@@ -193,19 +193,17 @@ const Page: FC = () => {
             STRATEGIC SHIFTS:
           </h3>
           <ul className="list-disc pl-6 my-4 space-y-2">
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               Value moving from model development to applications
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               Inference optimization becoming critical differentiator
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">
               US strategic advantage in AI potentially eroding
             </li>
-            <li className="text-gray-600 dark:text-gray-300">
-              Open source momentum accelerating
-            </li>
-            <li className="text-gray-600 dark:text-gray-300">
+            <li className="text-gray-600">Open source momentum accelerating</li>
+            <li className="text-gray-600">
               Industry likely to fragment into specialized providers
             </li>
           </ul>
@@ -226,7 +224,7 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 Immediate Market Impact
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 The fundamental economics of AI development are being challenged
                 by DeepSeek&apos;s breakthrough. Their reported $6M training
                 cost represents less than 1% of typical Western development
@@ -240,7 +238,7 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 Stock Market Response
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 This cost efficiency disruption has triggered significant market
                 reactions, with Nvidia experiencing its largest single-day
                 market cap loss in history. The broader implications suggest a
@@ -256,13 +254,13 @@ const Page: FC = () => {
                 Key Open Questions
               </h4>
               <ul className="list-disc pl-6 my-4 space-y-2">
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   What is the true floor for AI training and inference costs?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   How will established players adapt their pricing strategies?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   Will commoditization of base AI capabilities create new value
                   capture opportunities?
                 </li>
@@ -277,7 +275,7 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 Model Accessibility Impact
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 DeepSeek&apos;s MIT license release represents a pivotal moment
                 in the open source AI movement. The model&apos;s ability to
                 match or exceed proprietary solutions while running locally on
@@ -290,14 +288,14 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 Technical Validation & Replication
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 The open source nature of R1 enables independent verification of
                 DeepSeek&apos;s claims.{' '}
                 <a
                   href="https://huggingface.co/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-blue-600 dark:hover:text-blue-400"
+                  className="hover:text-blue-600"
                 >
                   Hugging Face
                 </a>{' '}
@@ -311,14 +309,14 @@ const Page: FC = () => {
                 Key Open Questions
               </h4>
               <ul className="list-disc pl-6 my-4 space-y-2">
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   Can closed source models maintain any sustainable competitive
                   advantage?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   How will API-based business models evolve to remain viable?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   What new monetization strategies will emerge in an open-source
                   dominated landscape?
                 </li>
@@ -333,7 +331,7 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 Architectural Breakthroughs
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 DeepSeek&apos;s technical innovations focus on efficiency rather
                 than raw scale. Key advances include 8-bit floating point
                 numbers throughout training, compressed key-value indices,
@@ -346,12 +344,12 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 Hardware Utilization
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 <a
                   href="https://scale.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-blue-600 dark:hover:text-blue-400"
+                  className="hover:text-blue-600"
                 >
                   Scale AI
                 </a>
@@ -363,14 +361,14 @@ const Page: FC = () => {
                 Key Open Questions
               </h4>
               <ul className="list-disc pl-6 my-4 space-y-2">
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   Will these efficiency gains translate to other model
                   architectures?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   How will hardware manufacturers adapt their roadmaps?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   Can these optimizations scale to more complex models?
                 </li>
               </ul>
@@ -384,7 +382,7 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 Export Control Effectiveness
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 DeepSeek&apos;s emergence challenges the US strategy of
                 maintaining AI leadership through export controls and
                 infrastructure advantages. The ability to achieve
@@ -395,7 +393,7 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 International Competition
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 This development could accelerate international efforts to
                 develop alternative AI hardware architectures and challenge
                 US-centric AI supply chains. Countries may increasingly view
@@ -407,14 +405,14 @@ const Page: FC = () => {
                 Key Open Questions
               </h4>
               <ul className="list-disc pl-6 my-4 space-y-2">
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   How will US policy adapt to this new reality?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   Will this accelerate international AI collaboration or
                   competition?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   What new forms of strategic advantage will emerge?
                 </li>
               </ul>
@@ -428,7 +426,7 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 Market Fragmentation
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 The demonstrated ability to achieve competitive performance at
                 dramatically lower cost points could reshape industry structure.
                 This may enable more companies to compete at the frontier of AI
@@ -439,7 +437,7 @@ const Page: FC = () => {
               <h4 className="text-xl font-bold mt-6 mb-3">
                 Investment Implications
               </h4>
-              <p className="my-4 leading-7 text-gray-600 dark:text-gray-300">
+              <p className="my-4 leading-7 text-gray-600">
                 Companies like OpenAI and Anthropic, which have raised massive
                 capital based on assumptions about necessary scale, may face
                 increased scrutiny. The trend could accelerate movement toward
@@ -450,13 +448,13 @@ const Page: FC = () => {
                 Key Open Questions
               </h4>
               <ul className="list-disc pl-6 my-4 space-y-2">
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   How will current market leaders adapt their strategies?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   What new business models will emerge?
                 </li>
-                <li className="text-gray-600 dark:text-gray-300">
+                <li className="text-gray-600">
                   Will specialization or consolidation dominate the next phase
                   of industry evolution?
                 </li>
@@ -467,13 +465,13 @@ const Page: FC = () => {
               <h3 className="text-2xl font-bold mt-8 mb-4">
                 EPISODE REFERENCES
               </h3>
-              <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+              <div className="space-y-2 text-sm text-gray-600">
                 <p>
                   <a
                     href="https://deepcast.fm/episode/deepseeks-ai-brings-tech-rout"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [1] Bloomberg Technology Podcast - Discussion of
                     DeepSeek&apos;s claimed training costs
@@ -484,7 +482,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/why-is-deepseek-so-popular"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [2] Daily Tech News Show - Market reaction coverage
                   </a>
@@ -494,7 +492,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/thursdai-jan-23-2025-deepseek-r1-is-here-openai-operator-agent-500b-ai-manh"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [3] ThursdAI - Benchmark comparisons between R1 and other
                     models
@@ -505,7 +503,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/bonus-the-deepseek-reckoning-in-silicon-valley"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [4] Big Technology Podcast - Satya Nadella&apos;s comments
                     on Jevon&apos;s Paradox
@@ -516,7 +514,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/deepseeks-ai-brings-tech-rout"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [5] Bloomberg Technology - Alexander Wang&apos;s comments on
                     DeepSeek&apos;s chip access
@@ -527,7 +525,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/outlasting-noam-shazeer-crowdsourcing-chat-ai-with-14m-dau-and-becoming-the"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [6] Latent Space - Technical discussion of DeepSeek&apos;s
                     architecture
@@ -538,7 +536,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/deepseeks-ai-brings-tech-rout"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [7] Bloomberg Technology - Market impact coverage
                   </a>
@@ -548,7 +546,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/emergency-pod-reinforcement-learning-works-reflecting-on-chinese-reasoning-"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [8] Cognitive Revolution - Analysis of open source
                     implications
@@ -559,7 +557,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/deepseek-rises-stargate-drama-openais-operator-debuts"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [9] Big Technology Podcast - Geopolitical implications
                     discussion
@@ -570,7 +568,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/thursdai-jan-23-2025-deepseek-r1-is-here-openai-operator-agent-500b-ai-manh"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [10] ThursdAI - Technical breakdown of DeepSeek innovations
                   </a>
@@ -580,7 +578,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/preview-72-hours-of-deepseek-hysteria-what-deepseek-means-for-big-tech-less"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [11] Sharp Tech with Ben Thompson - Ben Thompson&apos;s
                     analysis of hardware implications
@@ -591,7 +589,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/yes-deepseek-is-actually-a-massive-deal-for-ai"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [12] AI Daily Brief - Discussion of export control
                     implications
@@ -602,7 +600,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/emergency-pod-reinforcement-learning-works-reflecting-on-chinese-reasoning-"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [13] Cognitive Revolution - International response analysis
                   </a>
@@ -612,7 +610,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/bonus-the-deepseek-reckoning-in-silicon-valley"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [14] Big Technology Podcast - Industry structure
                     implications
@@ -623,7 +621,7 @@ const Page: FC = () => {
                     href="https://deepcast.fm/episode/deepseeks-ai-brings-tech-rout"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400"
+                    className="hover:text-blue-600"
                   >
                     [15] Bloomberg Technology - Impact on AI company valuations
                   </a>
@@ -638,20 +636,20 @@ const Page: FC = () => {
       <div
         className={`
         fixed top-0 right-0 w-full h-full md:w-72 md:h-auto md:top-8 md:right-8 
-        bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-lg overflow-auto 
+        bg-gray-50 p-4 rounded-lg shadow-lg overflow-auto 
         transition-transform duration-200 ease-in-out z-40
         ${showToc ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
         md:max-h-[calc(100vh-4rem)]
       `}
       >
-        <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+        <h4 className="text-lg font-semibold mb-4 text-gray-900">
           Table of Contents
         </h4>
         <ul className="space-y-2 text-sm">
           <li>
             <a
               href="#executive-summary"
-              className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-bold"
+              className="text-gray-600 hover:text-blue-600 font-bold"
             >
               Executive Summary
             </a>
@@ -659,7 +657,7 @@ const Page: FC = () => {
               <li>
                 <a
                   href="#key-takeaways"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  className="text-gray-600 hover:text-blue-600"
                 >
                   Key Takeaways
                 </a>
@@ -667,7 +665,7 @@ const Page: FC = () => {
               <li>
                 <a
                   href="#market-implications"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  className="text-gray-600 hover:text-blue-600"
                 >
                   Market Implications
                 </a>
@@ -675,7 +673,7 @@ const Page: FC = () => {
               <li>
                 <a
                   href="#strategic-shifts"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  className="text-gray-600 hover:text-blue-600"
                 >
                   Strategic Shifts
                 </a>
@@ -685,7 +683,7 @@ const Page: FC = () => {
           <li>
             <a
               href="#detailed-analysis"
-              className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-bold"
+              className="text-gray-600 hover:text-blue-600 font-bold"
             >
               Detailed Analysis
             </a>
@@ -693,7 +691,7 @@ const Page: FC = () => {
               <li>
                 <a
                   href="#cost-disruption"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  className="text-gray-600 hover:text-blue-600"
                 >
                   Cost Disruption & Market Efficiency
                 </a>
@@ -701,7 +699,7 @@ const Page: FC = () => {
               <li>
                 <a
                   href="#open-source"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  className="text-gray-600 hover:text-blue-600"
                 >
                   Open Source vs. Closed Source
                 </a>
@@ -709,7 +707,7 @@ const Page: FC = () => {
               <li>
                 <a
                   href="#technical-innovation"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  className="text-gray-600 hover:text-blue-600"
                 >
                   Technical Innovation & Efficiency
                 </a>
@@ -717,7 +715,7 @@ const Page: FC = () => {
               <li>
                 <a
                   href="#geopolitical"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  className="text-gray-600 hover:text-blue-600"
                 >
                   Geopolitical & Regulatory Implications
                 </a>
@@ -725,7 +723,7 @@ const Page: FC = () => {
               <li>
                 <a
                   href="#industry-structure"
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  className="text-gray-600 hover:text-blue-600"
                 >
                   Industry Structure & Competition
                 </a>
@@ -735,7 +733,7 @@ const Page: FC = () => {
           <li>
             <a
               href="#footnotes"
-              className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-bold"
+              className="text-gray-600 hover:text-blue-600 font-bold"
             >
               Episode References
             </a>

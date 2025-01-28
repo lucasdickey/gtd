@@ -29,6 +29,11 @@ const nextConfig = {
         destination: '/chilled-monkey-brains',
         permanent: true,
       },
+      {
+        source: '/ai-landscape',
+        destination: '/deepseek-r1-analysis',
+        permanent: true,
+      },
     ]
   },
   async headers() {
